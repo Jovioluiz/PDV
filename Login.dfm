@@ -24,10 +24,6 @@ object FrmLogin: TFrmLogin
     Height = 794
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 72
-    ExplicitTop = 88
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object imgFundo: TImage
       Left = 1
       Top = 1
@@ -17581,22 +17577,50 @@ object FrmLogin: TFrmLogin
         ExplicitLeft = -7
         ExplicitTop = -23
       end
-      object btnEntrar: TButton
+      object btnLogin: TSpeedButton
         Left = 32
         Top = 208
         Width = 285
-        Height = 49
+        Height = 47
+        Cursor = crHandPoint
         Caption = 'ENTRAR'
+        Flat = True
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindow
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        OnClick = btnLoginClick
+      end
+      object edtUsuario: TEdit
+        Left = 64
+        Top = 113
+        Width = 249
+        Height = 20
+        BorderStyle = bsNone
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 0
       end
-      object Edit1: TEdit
+      object edtSenha: TEdit
         Left = 64
-        Top = 104
+        Top = 168
         Width = 249
-        Height = 37
+        Height = 20
         BorderStyle = bsNone
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        PasswordChar = '*'
         TabOrder = 1
-        Text = 'Edit1'
       end
     end
   end
