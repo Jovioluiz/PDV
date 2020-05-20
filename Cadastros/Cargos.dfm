@@ -1,11 +1,11 @@
-object FrmFuncionarios: TFrmFuncionarios
+object FrmCargos: TFrmCargos
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'Funcion'#225'rios'
-  ClientHeight = 609
-  ClientWidth = 883
+  Caption = 'Cargos'
+  ClientHeight = 423
+  ClientWidth = 435
   Color = clMoneyGreen
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,57 +14,24 @@ object FrmFuncionarios: TFrmFuncionarios
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 496
-    Top = 27
-    Width = 32
-    Height = 13
-    Caption = 'Buscar'
-  end
   object Label2: TLabel
-    Left = 72
-    Top = 168
+    Left = 24
+    Top = 64
     Width = 31
     Height = 13
     Caption = 'Nome:'
   end
-  object Label3: TLabel
-    Left = 54
-    Top = 208
-    Width = 49
-    Height = 13
-    Caption = 'Endere'#231'o:'
-  end
-  object Label4: TLabel
-    Left = 352
-    Top = 168
-    Width = 23
-    Height = 13
-    Caption = 'CPF:'
-  end
-  object Label5: TLabel
-    Left = 544
-    Top = 168
-    Width = 46
-    Height = 13
-    Caption = 'Telefone:'
-  end
-  object Label6: TLabel
-    Left = 557
-    Top = 208
-    Width = 33
-    Height = 13
-    Caption = 'Cargo:'
-  end
   object btnSalvar: TSpeedButton
-    Left = 352
-    Top = 544
+    Left = 329
+    Top = 175
     Width = 73
     Height = 42
     Cursor = crHandPoint
     Caption = 'Salvar'
+    Enabled = False
     Flat = True
     Glyph.Data = {
       FA090000424DFA09000000000000360000002800000019000000190000000100
@@ -148,10 +115,11 @@ object FrmFuncionarios: TFrmFuncionarios
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnSalvarClick
   end
   object btnNovo: TSpeedButton
-    Left = 265
-    Top = 544
+    Left = 329
+    Top = 112
     Width = 73
     Height = 42
     Cursor = crHandPoint
@@ -239,14 +207,16 @@ object FrmFuncionarios: TFrmFuncionarios
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnNovoClick
   end
   object btnEditar: TSpeedButton
-    Left = 440
-    Top = 544
+    Left = 329
+    Top = 247
     Width = 73
     Height = 42
     Cursor = crHandPoint
     Caption = 'Editar'
+    Enabled = False
     Flat = True
     Glyph.Data = {
       FA090000424DFA09000000000000360000002800000019000000190000000100
@@ -332,12 +302,13 @@ object FrmFuncionarios: TFrmFuncionarios
     Transparent = False
   end
   object btnExcluir: TSpeedButton
-    Left = 527
-    Top = 544
+    Left = 329
+    Top = 319
     Width = 73
     Height = 42
     Cursor = crHandPoint
     Caption = 'Excluir'
+    Enabled = False
     Flat = True
     Glyph.Data = {
       FA090000424DFA09000000000000360000002800000019000000190000000100
@@ -422,86 +393,19 @@ object FrmFuncionarios: TFrmFuncionarios
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
   end
-  object edtBuscarNome: TEdit
-    Left = 720
-    Top = 24
-    Width = 121
+  object edtNomeCargo: TEdit
+    Left = 61
+    Top = 61
+    Width = 217
     Height = 21
     TabOrder = 0
   end
-  object rbNome: TRadioButton
-    Left = 552
-    Top = 26
-    Width = 57
-    Height = 17
-    Caption = 'Nome'
-    TabOrder = 1
-  end
-  object rbCpf: TRadioButton
-    Left = 640
-    Top = 26
-    Width = 57
-    Height = 17
-    Caption = 'CPF'
-    TabOrder = 2
-  end
-  object edtBuscarCpf: TMaskEdit
-    Left = 720
-    Top = 51
-    Width = 120
-    Height = 21
-    EditMask = '000.000.000-00;1;_'
-    MaxLength = 14
-    TabOrder = 3
-    Text = '   .   .   -  '
-  end
-  object edtNome: TEdit
-    Left = 109
-    Top = 165
-    Width = 220
-    Height = 21
-    TabOrder = 4
-  end
-  object edtEndereco: TEdit
-    Left = 109
-    Top = 205
-    Width = 380
-    Height = 21
-    TabOrder = 5
-  end
-  object edtCpf: TMaskEdit
-    Left = 381
-    Top = 165
-    Width = 106
-    Height = 21
-    EditMask = '000.000.000-00;0;_'
-    MaxLength = 14
-    TabOrder = 6
-    Text = ''
-  end
-  object edtTelefone: TMaskEdit
-    Left = 605
-    Top = 165
-    Width = 97
-    Height = 21
-    EditMask = '!\(99\)00000-0000;1;_'
-    MaxLength = 14
-    TabOrder = 7
-    Text = '(  )     -    '
-  end
-  object cbCargo: TComboBox
-    Left = 605
-    Top = 205
-    Width = 101
-    Height = 21
-    TabOrder = 8
-  end
   object DBGrid1: TDBGrid
-    Left = 54
-    Top = 272
-    Width = 786
-    Height = 249
-    TabOrder = 9
+    Left = 24
+    Top = 112
+    Width = 289
+    Height = 273
+    TabOrder = 1
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
