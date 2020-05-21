@@ -300,6 +300,7 @@ object FrmCargos: TFrmCargos
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnEditarClick
   end
   object btnExcluir: TSpeedButton
     Left = 329
@@ -392,24 +393,29 @@ object FrmCargos: TFrmCargos
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnExcluirClick
   end
   object edtNomeCargo: TEdit
     Left = 61
     Top = 61
     Width = 217
     Height = 21
+    Enabled = False
     TabOrder = 0
   end
-  object DBGrid1: TDBGrid
+  object gridCargos: TDBGrid
     Left = 24
     Top = 112
     Width = 289
     Height = 273
+    DataSource = dm.dsCargos
+    ReadOnly = True
     TabOrder = 1
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
+    OnCellClick = gridCargosCellClick
   end
 end

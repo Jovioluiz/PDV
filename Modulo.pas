@@ -14,12 +14,12 @@ type
   Tdm = class(TDataModule)
     fd: TFDConnection;
     tbCargos: TFDTable;
-    tbCargosid_cargo: TIntegerField;
-    tbCargosnm_cargo: TStringField;
     queryCargos: TFDQuery;
     queryCargosid_cargo: TIntegerField;
     queryCargosnm_cargo: TStringField;
     FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink;
+    dsCargos: TDataSource;
+    procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -34,5 +34,10 @@ implementation
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
+
+procedure Tdm.DataModuleCreate(Sender: TObject);
+begin
+  fd.Connected := True;
+end;
 
 end.

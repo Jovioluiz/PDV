@@ -1,5 +1,6 @@
 object dm: Tdm
   OldCreateOrder = False
+  OnCreate = DataModuleCreate
   Height = 408
   Width = 679
   object fd: TFDConnection
@@ -9,29 +10,17 @@ object dm: Tdm
       'User_Name=root'
       'Password=jovio'
       'DriverID=MySQL')
-    Connected = True
     LoginPrompt = False
     Left = 64
     Top = 48
   end
   object tbCargos: TFDTable
-    Active = True
     IndexFieldNames = 'id_cargo'
     Connection = fd
     UpdateOptions.UpdateTableName = 'PDV.cargos'
     TableName = 'PDV.cargos'
     Left = 64
     Top = 112
-    object tbCargosid_cargo: TIntegerField
-      FieldName = 'id_cargo'
-      Origin = 'id_cargo'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
-    end
-    object tbCargosnm_cargo: TStringField
-      FieldName = 'nm_cargo'
-      Origin = 'nm_cargo'
-      Size = 25
-    end
   end
   object queryCargos: TFDQuery
     Connection = fd
@@ -56,5 +45,10 @@ object dm: Tdm
     VendorLib = 'C:\Users\FlexSmart\Documents\Delphi\PDV\trunk\lib\libmySQL.dll'
     Left = 568
     Top = 48
+  end
+  object dsCargos: TDataSource
+    DataSet = queryCargos
+    Left = 128
+    Top = 176
   end
 end
