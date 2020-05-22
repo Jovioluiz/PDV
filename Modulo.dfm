@@ -10,6 +10,7 @@ object dm: Tdm
       'User_Name=root'
       'Password=jovio'
       'DriverID=MySQL')
+    Connected = True
     LoginPrompt = False
     Left = 64
     Top = 48
@@ -25,9 +26,9 @@ object dm: Tdm
   object queryCargos: TFDQuery
     Connection = fd
     SQL.Strings = (
-      'select * from cargos')
-    Left = 64
-    Top = 176
+      'select * from cargos order by nm_cargo asc')
+    Left = 56
+    Top = 232
     object queryCargosid_cargo: TIntegerField
       DisplayLabel = 'ID'
       FieldName = 'id_cargo'
@@ -48,7 +49,112 @@ object dm: Tdm
   end
   object dsCargos: TDataSource
     DataSet = queryCargos
-    Left = 128
-    Top = 176
+    Left = 136
+    Top = 232
+  end
+  object tbFuncionario: TFDTable
+    Connection = fd
+    UpdateOptions.UpdateTableName = 'PDV.funcionarios'
+    TableName = 'PDV.funcionarios'
+    Left = 136
+    Top = 112
+  end
+  object queryFuncionario: TFDQuery
+    Connection = fd
+    SQL.Strings = (
+      'select *from funcionarios')
+    Left = 232
+    Top = 232
+    object queryFuncionarioid_funcionario: TFDAutoIncField
+      FieldName = 'id_funcionario'
+      Origin = 'id_funcionario'
+      ProviderFlags = [pfInWhere, pfInKey]
+      Visible = False
+      DisplayFormat = 'ID'
+    end
+    object queryFuncionariocargo: TStringField
+      DisplayLabel = 'Cargo'
+      FieldName = 'cargo'
+      Origin = 'cargo'
+      Required = True
+      Size = 25
+    end
+    object queryFuncionarionm_funcionario: TStringField
+      DisplayLabel = 'Funcion'#225'rio'
+      FieldName = 'nm_funcionario'
+      Origin = 'nm_funcionario'
+      Required = True
+      Size = 25
+    end
+    object queryFuncionariocpf: TStringField
+      DisplayLabel = 'CPF'
+      FieldName = 'cpf'
+      Origin = 'cpf'
+      Required = True
+      Size = 15
+    end
+    object queryFuncionariorg: TStringField
+      DisplayLabel = 'RG'
+      FieldName = 'rg'
+      Origin = 'rg'
+      Required = True
+    end
+    object queryFuncionariotelefone: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Telefone'
+      FieldName = 'telefone'
+      Origin = 'telefone'
+      Size = 10
+    end
+    object queryFuncionariologradouro: TStringField
+      DisplayLabel = 'Logradouro'
+      FieldName = 'logradouro'
+      Origin = 'logradouro'
+      Required = True
+      Size = 30
+    end
+    object queryFuncionarionumero: TIntegerField
+      DisplayLabel = 'Numero'
+      FieldName = 'numero'
+      Origin = 'numero'
+      Required = True
+    end
+    object queryFuncionariobairro: TStringField
+      DisplayLabel = 'Bairro'
+      FieldName = 'bairro'
+      Origin = 'bairro'
+      Required = True
+    end
+    object queryFuncionariocidade: TStringField
+      DisplayLabel = 'Cidade'
+      FieldName = 'cidade'
+      Origin = 'cidade'
+      Required = True
+    end
+    object queryFuncionariouf: TStringField
+      DisplayLabel = 'UF'
+      FieldName = 'uf'
+      Origin = 'uf'
+      Required = True
+      Size = 3
+    end
+    object queryFuncionariocep: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'CEP'
+      FieldName = 'cep'
+      Origin = 'cep'
+      Size = 10
+    end
+    object queryFuncionariodata_cadastro: TDateField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Data Cadastro'
+      FieldName = 'data_cadastro'
+      Origin = 'data_cadastro'
+    end
+  end
+  object dsFuncionario: TDataSource
+    DataSet = queryFuncionario
+    Left = 320
+    Top = 232
   end
 end

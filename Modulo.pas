@@ -19,6 +19,22 @@ type
     queryCargosnm_cargo: TStringField;
     FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink;
     dsCargos: TDataSource;
+    tbFuncionario: TFDTable;
+    queryFuncionario: TFDQuery;
+    dsFuncionario: TDataSource;
+    queryFuncionarioid_funcionario: TFDAutoIncField;
+    queryFuncionariocargo: TStringField;
+    queryFuncionarionm_funcionario: TStringField;
+    queryFuncionariocpf: TStringField;
+    queryFuncionariorg: TStringField;
+    queryFuncionariotelefone: TStringField;
+    queryFuncionariologradouro: TStringField;
+    queryFuncionarionumero: TIntegerField;
+    queryFuncionariobairro: TStringField;
+    queryFuncionariocidade: TStringField;
+    queryFuncionariouf: TStringField;
+    queryFuncionariocep: TStringField;
+    queryFuncionariodata_cadastro: TDateField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }

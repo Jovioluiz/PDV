@@ -14,6 +14,7 @@ object FrmFuncionarios: TFrmFuncionarios
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -25,35 +26,35 @@ object FrmFuncionarios: TFrmFuncionarios
   end
   object Label2: TLabel
     Left = 72
-    Top = 168
+    Top = 107
     Width = 31
     Height = 13
     Caption = 'Nome:'
   end
   object Label3: TLabel
-    Left = 54
-    Top = 208
-    Width = 49
+    Left = 44
+    Top = 152
+    Width = 59
     Height = 13
-    Caption = 'Endere'#231'o:'
+    Caption = 'Logradouro:'
   end
   object Label4: TLabel
-    Left = 352
-    Top = 168
+    Left = 354
+    Top = 107
     Width = 23
     Height = 13
     Caption = 'CPF:'
   end
   object Label5: TLabel
-    Left = 544
-    Top = 168
+    Left = 552
+    Top = 152
     Width = 46
     Height = 13
     Caption = 'Telefone:'
   end
   object Label6: TLabel
-    Left = 557
-    Top = 208
+    Left = 565
+    Top = 194
     Width = 33
     Height = 13
     Caption = 'Cargo:'
@@ -65,6 +66,7 @@ object FrmFuncionarios: TFrmFuncionarios
     Height = 42
     Cursor = crHandPoint
     Caption = 'Salvar'
+    Enabled = False
     Flat = True
     Glyph.Data = {
       FA090000424DFA09000000000000360000002800000019000000190000000100
@@ -148,6 +150,7 @@ object FrmFuncionarios: TFrmFuncionarios
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnSalvarClick
   end
   object btnNovo: TSpeedButton
     Left = 265
@@ -239,6 +242,7 @@ object FrmFuncionarios: TFrmFuncionarios
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnNovoClick
   end
   object btnEditar: TSpeedButton
     Left = 440
@@ -247,6 +251,7 @@ object FrmFuncionarios: TFrmFuncionarios
     Height = 42
     Cursor = crHandPoint
     Caption = 'Editar'
+    Enabled = False
     Flat = True
     Glyph.Data = {
       FA090000424DFA09000000000000360000002800000019000000190000000100
@@ -330,6 +335,7 @@ object FrmFuncionarios: TFrmFuncionarios
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnEditarClick
   end
   object btnExcluir: TSpeedButton
     Left = 527
@@ -338,6 +344,7 @@ object FrmFuncionarios: TFrmFuncionarios
     Height = 42
     Cursor = crHandPoint
     Caption = 'Excluir'
+    Enabled = False
     Flat = True
     Glyph.Data = {
       FA090000424DFA09000000000000360000002800000019000000190000000100
@@ -422,6 +429,48 @@ object FrmFuncionarios: TFrmFuncionarios
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
   end
+  object Label7: TLabel
+    Left = 336
+    Top = 152
+    Width = 41
+    Height = 13
+    Caption = 'Numero:'
+  end
+  object Label8: TLabel
+    Left = 71
+    Top = 194
+    Width = 32
+    Height = 13
+    Caption = 'Bairro:'
+  end
+  object Label9: TLabel
+    Left = 66
+    Top = 234
+    Width = 37
+    Height = 13
+    Caption = 'Cidade:'
+  end
+  object Label10: TLabel
+    Left = 360
+    Top = 234
+    Width = 17
+    Height = 13
+    Caption = 'UF:'
+  end
+  object Label11: TLabel
+    Left = 354
+    Top = 194
+    Width = 23
+    Height = 13
+    Caption = 'CEP:'
+  end
+  object Label12: TLabel
+    Left = 580
+    Top = 107
+    Width = 18
+    Height = 13
+    Caption = 'RG:'
+  end
   object edtBuscarNome: TEdit
     Left = 720
     Top = 24
@@ -435,7 +484,7 @@ object FrmFuncionarios: TFrmFuncionarios
     Width = 57
     Height = 17
     Caption = 'Nome'
-    TabOrder = 1
+    TabOrder = 15
   end
   object rbCpf: TRadioButton
     Left = 640
@@ -443,7 +492,7 @@ object FrmFuncionarios: TFrmFuncionarios
     Width = 57
     Height = 17
     Caption = 'CPF'
-    TabOrder = 2
+    TabOrder = 14
   end
   object edtBuscarCpf: TMaskEdit
     Left = 720
@@ -452,60 +501,107 @@ object FrmFuncionarios: TFrmFuncionarios
     Height = 21
     EditMask = '000.000.000-00;1;_'
     MaxLength = 14
-    TabOrder = 3
+    TabOrder = 1
     Text = '   .   .   -  '
   end
   object edtNome: TEdit
     Left = 109
-    Top = 165
+    Top = 104
     Width = 220
     Height = 21
-    TabOrder = 4
+    TabOrder = 2
   end
-  object edtEndereco: TEdit
+  object edtLogradouro: TEdit
     Left = 109
-    Top = 205
-    Width = 380
+    Top = 144
+    Width = 220
     Height = 21
     TabOrder = 5
   end
   object edtCpf: TMaskEdit
-    Left = 381
-    Top = 165
+    Left = 383
+    Top = 104
     Width = 106
     Height = 21
     EditMask = '000.000.000-00;0;_'
     MaxLength = 14
-    TabOrder = 6
+    TabOrder = 3
     Text = ''
   end
   object edtTelefone: TMaskEdit
-    Left = 605
-    Top = 165
-    Width = 97
+    Left = 604
+    Top = 144
+    Width = 93
     Height = 21
-    EditMask = '!\(99\)00000-0000;1;_'
+    EditMask = '!\(99\)00000-0000;0;_'
     MaxLength = 14
     TabOrder = 7
-    Text = '(  )     -    '
+    Text = ''
   end
   object cbCargo: TComboBox
-    Left = 605
-    Top = 205
-    Width = 101
+    Left = 604
+    Top = 186
+    Width = 93
     Height = 21
-    TabOrder = 8
+    TabOrder = 12
   end
   object DBGrid1: TDBGrid
     Left = 54
     Top = 272
     Width = 786
     Height = 249
-    TabOrder = 9
+    DataSource = dm.dsFuncionario
+    TabOrder = 13
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
+    OnCellClick = DBGrid1CellClick
+  end
+  object edtNum: TEdit
+    Left = 383
+    Top = 144
+    Width = 58
+    Height = 21
+    TabOrder = 6
+  end
+  object edtBairro: TEdit
+    Left = 109
+    Top = 186
+    Width = 220
+    Height = 21
+    TabOrder = 8
+  end
+  object edtCidade: TEdit
+    Left = 109
+    Top = 226
+    Width = 220
+    Height = 21
+    TabOrder = 10
+  end
+  object edtUf: TEdit
+    Left = 383
+    Top = 226
+    Width = 58
+    Height = 21
+    TabOrder = 11
+  end
+  object edtCEP: TMaskEdit
+    Left = 383
+    Top = 186
+    Width = 94
+    Height = 21
+    EditMask = '00000\-999;0;_'
+    MaxLength = 9
+    TabOrder = 9
+    Text = ''
+  end
+  object edtRg: TEdit
+    Left = 604
+    Top = 104
+    Width = 93
+    Height = 21
+    TabOrder = 4
   end
 end
