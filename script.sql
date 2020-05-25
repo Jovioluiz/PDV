@@ -21,3 +21,15 @@ CREATE TABLE `funcionarios` (
   `data_cadastro` date DEFAULT NULL,
   PRIMARY KEY (`id_funcionario`)
 ) 
+
+
+CREATE TABLE `usuarios` (
+  `id_usuario` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(30) DEFAULT NULL,
+  `usuario` varchar(30) NOT NULL,
+  `senha` varchar(25) NOT NULL,
+  `cargo` varchar(25) NOT NULL,
+  `id_funcionario` int NOT NULL,
+  PRIMARY KEY (`id_usuario`),
+  KEY `id_funcionario` (`id_funcionario`)
+) 
