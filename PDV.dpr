@@ -7,7 +7,8 @@ uses
   Usuarios in 'Cadastros\Usuarios.pas' {FrmUsuarios},
   Funcionarios in 'Cadastros\Funcionarios.pas' {FrmFuncionarios},
   Cargos in 'Cadastros\Cargos.pas' {FrmCargos},
-  Modulo in 'Modulo.pas' {dm: TDataModule};
+  Modulo in 'Modulo.pas' {dm: TDataModule},
+  Fornecedores in 'Cadastros\Fornecedores.pas' {frmFornecedor};
 
 {$R *.res}
 
@@ -16,5 +17,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(Tdm, dm);
+  Application.CreateForm(TfrmFornecedor, frmFornecedor);
   Application.Run;
 end.

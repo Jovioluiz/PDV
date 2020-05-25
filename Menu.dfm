@@ -16,6 +16,7 @@ object FrmMenu: TFrmMenu
   OldCreateOrder = False
   Position = poDesktopCenter
   WindowState = wsMaximized
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object MainMenu1: TMainMenu
@@ -372,6 +373,7 @@ object FrmMenu: TFrmMenu
       end
       object Usurios1: TMenuItem
         Caption = 'Usu'#225'rios'
+        Enabled = False
         OnClick = Usurios1Click
       end
       object Funcionrios1: TMenuItem

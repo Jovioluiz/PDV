@@ -15,13 +15,16 @@ type
     fd: TFDConnection;
     tbCargos: TFDTable;
     queryCargos: TFDQuery;
-    queryCargosid_cargo: TIntegerField;
-    queryCargosnm_cargo: TStringField;
     FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink;
     dsCargos: TDataSource;
     tbFuncionario: TFDTable;
     queryFuncionario: TFDQuery;
     dsFuncionario: TDataSource;
+    queryCargosid_cargo: TFDAutoIncField;
+    queryCargosnm_cargo: TStringField;
+    tbUsuarios: TFDTable;
+    queryUsuarios: TFDQuery;
+    dsUsuarios: TDataSource;
     queryFuncionarioid_funcionario: TFDAutoIncField;
     queryFuncionariocargo: TStringField;
     queryFuncionarionm_funcionario: TStringField;
@@ -35,6 +38,12 @@ type
     queryFuncionariouf: TStringField;
     queryFuncionariocep: TStringField;
     queryFuncionariodata_cadastro: TDateField;
+    queryUsuariosid_usuario: TFDAutoIncField;
+    queryUsuariosnome: TStringField;
+    queryUsuariosusuario: TStringField;
+    queryUsuariossenha: TStringField;
+    queryUsuarioscargo: TStringField;
+    queryUsuariosid_funcionario: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -44,6 +53,17 @@ type
 
 var
   dm: Tdm;
+
+  //declaração de variáveis globais
+
+  idFuncionario : String;
+  nomeFuncionario : String;
+  cargoFuncionario : String;
+
+  chamada : String;
+
+  nomeUsuario : String;
+  cargoUsuario : String;
 
 implementation
 

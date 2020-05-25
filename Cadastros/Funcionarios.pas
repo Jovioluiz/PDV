@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, Data.DB,
-  Vcl.Buttons, Vcl.Grids, Vcl.DBGrids;
+  Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, System.UITypes, Modulo,
+  FireDAC.Stan.Param;
 
 type
   TFrmFuncionarios = class(TForm)
@@ -47,6 +48,12 @@ type
     procedure btnSalvarClick(Sender: TObject);
     procedure DBGrid1CellClick(Column: TColumn);
     procedure btnEditarClick(Sender: TObject);
+    procedure btnExcluirClick(Sender: TObject);
+    procedure edtBuscarNomeChange(Sender: TObject);
+    procedure edtBuscarCpfChange(Sender: TObject);
+    procedure rbNomeClick(Sender: TObject);
+    procedure rbCpfClick(Sender: TObject);
+    procedure DBGrid1DblClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -70,12 +77,11 @@ type
 var
   FrmFuncionarios: TFrmFuncionarios;
   id : String;
+  cpfAntigo : String;
 
 implementation
 
 {$R *.dfm}
-
-uses Modulo;
 
 { TFrmFuncionarios }
 
@@ -102,12 +108,12 @@ var
 begin
 validaCampos;
 
-//verifica se o cpf já está cadastrado
-
-dm.queryFuncionario.Close;
-dm.queryFuncionario.SQL.Clear;
-dm.queryFuncionario.SQL.Add('select * from funcionarios where cpf = ' + QuotedStr(Trim(edtCpf.Text)));
-dm.queryFuncionario.Open();
+if cpfAntigo <> edtCpf.Text then
+begin
+  dm.queryFuncionario.Close;
+  dm.queryFuncionario.SQL.Clear;
+  dm.queryFuncionario.SQL.Add('select * from funcionarios where cpf = ' + QuotedStr(Trim(edtCpf.Text)));
+  dm.queryFuncionario.Open();
 
 if not dm.queryFuncionario.IsEmpty then
 begin
@@ -117,14 +123,51 @@ begin
   edtCpf.SetFocus;
   Exit;
 end;
+end;
 
+//verifica se o cpf já está cadastrado
   associarCampos;
   dm.queryFuncionario.Close;
   dm.queryFuncionario.SQL.Clear;
-  dm.queryFuncionario.SQL.Add('update funcionarios set nm_funcionario, cpf, = :nm_cargo where id_cargo = :id_cargo');
-  dm.queryFuncionario.ParamByName('nm_cargo').Text := edtNome.Text;
-  dm.queryFuncionario.ParamByName('id_cargo').Text := id;
+  dm.queryFuncionario.SQL.Add('update '+
+                                    'funcionarios set '+
+                                    'nm_funcionario = :nm_funcionario, '+
+                                    'cpf = :cpf, '+
+                                    'rg = :rg, '+
+                                    'telefone = :telefone, '+
+                                    'logradouro = :logradouro, '+
+                                    'numero = :numero, '+
+                                    'bairro = :bairro,'+
+                                    'cidade = :cidade, '+
+                                    'uf = :uf, '+
+                                    'cep = :cep, '+
+                                    'cargo = :cargo '+
+                              'where id_funcionario = :id_funcionario');
+  dm.queryFuncionario.ParamByName('nm_funcionario').AsString := edtNome.Text;
+  dm.queryFuncionario.ParamByName('cpf').AsString := edtCpf.Text;
+  dm.queryFuncionario.ParamByName('rg').AsString := edtRg.Text;
+  dm.queryFuncionario.ParamByName('telefone').AsString := edtTelefone.Text;
+  dm.queryFuncionario.ParamByName('logradouro').AsString := edtLogradouro.Text;
+  dm.queryFuncionario.ParamByName('numero').AsInteger := StrToInt(edtNum.Text);
+  dm.queryFuncionario.ParamByName('bairro').AsString := edtBairro.Text;
+  dm.queryFuncionario.ParamByName('cidade').AsString := edtCidade.Text;
+  dm.queryFuncionario.ParamByName('uf').AsString := edtUf.Text;
+  dm.queryFuncionario.ParamByName('cep').AsString := edtCEP.Text;
+  dm.queryFuncionario.ParamByName('cargo').AsString := cbCargo.Text;
+  dm.queryFuncionario.ParamByName('id_funcionario').Value := id;
   dm.queryFuncionario.ExecSQL;
+
+  //editar cargo usuario
+
+  dm.queryUsuarios.Close;
+  dm.queryUsuarios.SQL.Clear;
+  dm.queryUsuarios.SQL.Add('update '+
+                                    'usuarios set '+
+                                    'cargo = :cargo '+
+                              'where id_funcionario = :id_funcionario');
+  dm.queryUsuarios.ParamByName('cargo').AsString := cbCargo.Text;
+  dm.queryUsuarios.ParamByName('id_funcionario').Value := id;
+  dm.queryUsuarios.ExecSQL;
 
   listar;
   MessageDlg('Editado com Sucesso', mtInformation, mbOKCancel, 0);
@@ -134,6 +177,30 @@ end;
   limpar;
   desabilitarCampos;
 
+end;
+
+procedure TFrmFuncionarios.btnExcluirClick(Sender: TObject);
+begin
+  if MessageDlg('Deseja Excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    dm.tbFuncionario.Delete;
+    MessageDlg('Excluido com Sucesso', mtInformation, mbOKCancel, 0);
+
+    listar;
+    btnEditar.Enabled := false;
+    btnExcluir.Enabled := false;
+    limpar;
+  end;
+
+  //deletar também usuário associado
+
+  dm.queryUsuarios.Close;
+  dm.queryUsuarios.SQL.Clear;
+  dm.queryUsuarios.SQL.Add('delete from usuarios where id_funcionario = :id_funcionario');
+  dm.queryUsuarios.ParamByName('id_funcionario').Value := id;
+  dm.queryUsuarios.Execute;
+
+  listar;
 end;
 
 procedure TFrmFuncionarios.btnNovoClick(Sender: TObject);
@@ -176,12 +243,32 @@ end;
 
 procedure TFrmFuncionarios.buscarCpf;
 begin
-
+  dm.queryFuncionario.Close;
+  dm.queryFuncionario.SQL.Clear;
+  dm.queryFuncionario.SQL.Add('select * '+
+                                  'from '+
+                              'funcionarios '+
+                                  'where '+
+                              'cpf = :cpf '+
+                                  'order by '+
+                              'nm_funcionario asc');
+  dm.queryFuncionario.ParamByName('cpf').AsString := edtBuscarCpf.Text;
+  dm.queryFuncionario.Open();
 end;
 
 procedure TFrmFuncionarios.buscarNome;
 begin
-
+  dm.queryFuncionario.Close;
+  dm.queryFuncionario.SQL.Clear;
+  dm.queryFuncionario.SQL.Add('select * '+
+                                  'from '+
+                              'funcionarios '+
+                                  'where '+
+                              'nm_funcionario like :nm_funcionario '+
+                                  'order by '+
+                              'nm_funcionario asc');
+  dm.queryFuncionario.ParamByName('nm_funcionario').AsString := edtBuscarNome.Text + '%';
+  dm.queryFuncionario.Open();
 end;
 
 procedure TFrmFuncionarios.carregarComboBox;
@@ -204,26 +291,43 @@ begin
   btnEditar.Enabled := True;
   btnExcluir.Enabled := True;
 
+  dm.tbFuncionario.Edit;
+
   if dm.queryFuncionario.FieldByName('nm_funcionario').Text <> null then
-    edtNome.Text := dm.queryCargos.FieldByName('nm_funcionario').Text;
+    edtNome.Text := dm.queryFuncionario.FieldByName('nm_funcionario').AsString;
 
-  edtCpf.Text := dm.queryCargos.FieldByName('cpf').Text;
-  edtRg.Text := dm.queryCargos.FieldByName('rg').Text;
+  edtCpf.Text := dm.queryFuncionario.FieldByName('cpf').AsString;
+  edtRg.Text := dm.queryFuncionario.FieldByName('rg').AsString;
 
-  if dm.queryFuncionario.FieldByName('telefone').Text <> null then
-    edtNome.Text := dm.queryFuncionario.FieldByName('telefone').Text;
+  if dm.queryFuncionario.FieldByName('telefone').AsString <> null then
+    edtTelefone.Text := dm.queryFuncionario.FieldByName('telefone').AsString;
 
-  edtLogradouro.Text := dm.queryFuncionario.FieldByName('logradouro').Text;
+  edtLogradouro.Text := dm.queryFuncionario.FieldByName('logradouro').AsString;
   edtNum.Text := dm.queryFuncionario.FieldByName('numero').Text;
-  edtBairro.Text := dm.queryFuncionario.FieldByName('bairro').Text;
-  edtCidade.Text := dm.queryFuncionario.FieldByName('cidade').Text;
-  edtUf.Text := dm.queryFuncionario.FieldByName('uf').Text;
-  cbCargo.Text := dm.queryFuncionario.FieldByName('cargo').Text;
+  edtBairro.Text := dm.queryFuncionario.FieldByName('bairro').AsString;
+  edtCidade.Text := dm.queryFuncionario.FieldByName('cidade').AsString;
+  edtUf.Text := dm.queryFuncionario.FieldByName('uf').AsString;
+  cbCargo.Text := dm.queryFuncionario.FieldByName('cargo').AsString;
 
-  if dm.queryFuncionario.FieldByName('cep').Text <> null then
-    edtCEP.Text := dm.queryFuncionario.FieldByName('cep').Text;
+  if dm.queryFuncionario.FieldByName('cep').AsString <> null then
+    edtCEP.Text := dm.queryFuncionario.FieldByName('cep').AsString;
 
-  id := dm.queryFuncionario.FieldByName('id_funcionario').Text;
+  id := dm.queryFuncionario.FieldByName('id_funcionario').AsString;
+
+  cpfAntigo := dm.queryFuncionario.FieldByName('cpf').AsString;
+end;
+
+procedure TFrmFuncionarios.DBGrid1DblClick(Sender: TObject);
+begin
+if chamada = 'Func' then
+begin
+  idFuncionario := dm.queryFuncionario.FieldByName('id_funcionario').AsString;
+  nomeFuncionario := dm.queryFuncionario.FieldByName('nm_funcionario').AsString;
+  cargoFuncionario := dm.queryFuncionario.FieldByName('cargo').AsString;
+  Close;
+  chamada := '';
+end;
+
 end;
 
 procedure TFrmFuncionarios.desabilitarCampos;
@@ -241,6 +345,16 @@ begin
   cbCargo.Enabled := false;
 end;
 
+procedure TFrmFuncionarios.edtBuscarCpfChange(Sender: TObject);
+begin
+  buscarCpf;
+end;
+
+procedure TFrmFuncionarios.edtBuscarNomeChange(Sender: TObject);
+begin
+  buscarNome;
+end;
+
 procedure TFrmFuncionarios.FormCreate(Sender: TObject);
 begin
   desabilitarCampos;
@@ -248,15 +362,9 @@ begin
   listar;
   carregarComboBox;
   cbCargo.ItemIndex := 0;
+  edtBuscarCpf.Visible := false;
+  rbNome.Checked := True;
 end;
-
-{
-procedure TFrmFuncionarios.FormShow(Sender: TObject);
-begin
-  desabilitarCampos;
-  dm.tbFuncionario.Active := True;
-  carregarComboBox;
-end;  }
 
 procedure TFrmFuncionarios.habilitarCampos;
 begin
@@ -295,9 +403,23 @@ begin
   dm.queryFuncionario.Open();
 end;
 
+procedure TFrmFuncionarios.rbCpfClick(Sender: TObject);
+begin
+  listar;
+  edtBuscarCpf.Visible := True;
+  edtBuscarNome.Visible := False;
+end;
+
+procedure TFrmFuncionarios.rbNomeClick(Sender: TObject);
+begin
+  listar;
+  edtBuscarCpf.Visible := false;
+  edtBuscarNome.Visible := True;
+end;
+
 procedure TFrmFuncionarios.validaCampos;
-var
-  sim : Boolean;
+//var
+  //sim : Boolean;
 begin
   if (Trim(edtNome.Text) = '') and (Trim(edtCpf.Text) = '') and (Trim(edtRg.Text) = '') and
   (Trim(edtLogradouro.Text) = '') and (Trim(edtNum.Text) = '') and (Trim(edtBairro.Text) = '') and

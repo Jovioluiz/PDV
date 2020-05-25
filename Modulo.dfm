@@ -6,9 +6,9 @@ object dm: Tdm
   object fd: TFDConnection
     Params.Strings = (
       'Server=localhost'
-      'Database=PDV'
-      'User_Name=root'
-      'Password=jovio'
+      'Database=pdv'
+      'User_Name=jovio'
+      'Password=MaverickV8'
       'DriverID=MySQL')
     Connected = True
     LoginPrompt = False
@@ -18,8 +18,8 @@ object dm: Tdm
   object tbCargos: TFDTable
     IndexFieldNames = 'id_cargo'
     Connection = fd
-    UpdateOptions.UpdateTableName = 'PDV.cargos'
-    TableName = 'PDV.cargos'
+    UpdateOptions.UpdateTableName = 'cargos'
+    TableName = 'cargos'
     Left = 64
     Top = 112
   end
@@ -29,21 +29,22 @@ object dm: Tdm
       'select * from cargos order by nm_cargo asc')
     Left = 56
     Top = 232
-    object queryCargosid_cargo: TIntegerField
-      DisplayLabel = 'ID'
+    object queryCargosid_cargo: TFDAutoIncField
       FieldName = 'id_cargo'
       Origin = 'id_cargo'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      ProviderFlags = [pfInWhere, pfInKey]
     end
     object queryCargosnm_cargo: TStringField
-      DisplayLabel = 'Cargo'
+      AutoGenerateValue = arDefault
       FieldName = 'nm_cargo'
       Origin = 'nm_cargo'
       Size = 25
     end
   end
   object FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink
-    VendorLib = 'C:\Users\FlexSmart\Documents\Delphi\PDV\trunk\lib\libmySQL.dll'
+    VendorLib = 
+      'C:\Users\jovio\Desktop\codigos_fontes\Delphi\PDV\trunk\lib\libmy' +
+      'sql.dll'
     Left = 568
     Top = 48
   end
@@ -53,24 +54,23 @@ object dm: Tdm
     Top = 232
   end
   object tbFuncionario: TFDTable
+    IndexFieldNames = 'id_funcionario'
     Connection = fd
-    UpdateOptions.UpdateTableName = 'PDV.funcionarios'
-    TableName = 'PDV.funcionarios'
+    UpdateOptions.UpdateTableName = 'funcionarios'
+    TableName = 'funcionarios'
     Left = 136
     Top = 112
   end
   object queryFuncionario: TFDQuery
     Connection = fd
     SQL.Strings = (
-      'select *from funcionarios')
+      'select * from funcionarios')
     Left = 232
     Top = 232
     object queryFuncionarioid_funcionario: TFDAutoIncField
       FieldName = 'id_funcionario'
       Origin = 'id_funcionario'
       ProviderFlags = [pfInWhere, pfInKey]
-      Visible = False
-      DisplayFormat = 'ID'
     end
     object queryFuncionariocargo: TStringField
       DisplayLabel = 'Cargo'
@@ -80,7 +80,7 @@ object dm: Tdm
       Size = 25
     end
     object queryFuncionarionm_funcionario: TStringField
-      DisplayLabel = 'Funcion'#225'rio'
+      DisplayLabel = 'Funcionario'
       FieldName = 'nm_funcionario'
       Origin = 'nm_funcionario'
       Required = True
@@ -104,14 +104,14 @@ object dm: Tdm
       DisplayLabel = 'Telefone'
       FieldName = 'telefone'
       Origin = 'telefone'
-      Size = 10
+      Size = 15
     end
     object queryFuncionariologradouro: TStringField
       DisplayLabel = 'Logradouro'
       FieldName = 'logradouro'
       Origin = 'logradouro'
       Required = True
-      Size = 30
+      Size = 50
     end
     object queryFuncionarionumero: TIntegerField
       DisplayLabel = 'Numero'
@@ -124,19 +124,21 @@ object dm: Tdm
       FieldName = 'bairro'
       Origin = 'bairro'
       Required = True
+      Size = 50
     end
     object queryFuncionariocidade: TStringField
       DisplayLabel = 'Cidade'
       FieldName = 'cidade'
       Origin = 'cidade'
       Required = True
+      Size = 50
     end
     object queryFuncionariouf: TStringField
       DisplayLabel = 'UF'
       FieldName = 'uf'
       Origin = 'uf'
       Required = True
-      Size = 3
+      Size = 2
     end
     object queryFuncionariocep: TStringField
       AutoGenerateValue = arDefault
@@ -155,6 +157,67 @@ object dm: Tdm
   object dsFuncionario: TDataSource
     DataSet = queryFuncionario
     Left = 320
+    Top = 232
+  end
+  object tbUsuarios: TFDTable
+    IndexFieldNames = 'id_usuario'
+    Connection = fd
+    UpdateOptions.UpdateTableName = 'pdv.usuarios'
+    TableName = 'pdv.usuarios'
+    Left = 216
+    Top = 112
+  end
+  object queryUsuarios: TFDQuery
+    Connection = fd
+    SQL.Strings = (
+      'select *from usuarios')
+    Left = 408
+    Top = 232
+    object queryUsuariosid_usuario: TFDAutoIncField
+      DisplayLabel = 'ID'
+      FieldName = 'id_usuario'
+      Origin = 'id_usuario'
+      ProviderFlags = [pfInWhere, pfInKey]
+    end
+    object queryUsuariosnome: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Nome'
+      FieldName = 'nome'
+      Origin = 'nome'
+      Size = 30
+    end
+    object queryUsuariosusuario: TStringField
+      DisplayLabel = 'Usuario'
+      FieldName = 'usuario'
+      Origin = 'usuario'
+      Required = True
+      Size = 30
+    end
+    object queryUsuariossenha: TStringField
+      DisplayLabel = 'Senha'
+      FieldName = 'senha'
+      Origin = 'senha'
+      Required = True
+      Size = 25
+    end
+    object queryUsuarioscargo: TStringField
+      DisplayLabel = 'Cargo'
+      FieldName = 'cargo'
+      Origin = 'cargo'
+      Required = True
+      Size = 25
+    end
+    object queryUsuariosid_funcionario: TIntegerField
+      DisplayLabel = 'ID'
+      FieldName = 'id_funcionario'
+      Origin = 'id_funcionario'
+      Required = True
+      Visible = False
+    end
+  end
+  object dsUsuarios: TDataSource
+    DataSet = queryUsuarios
+    Left = 480
     Top = 232
   end
 end

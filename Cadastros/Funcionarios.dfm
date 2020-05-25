@@ -428,6 +428,7 @@ object FrmFuncionarios: TFrmFuncionarios
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnExcluirClick
   end
   object Label7: TLabel
     Left = 336
@@ -477,6 +478,7 @@ object FrmFuncionarios: TFrmFuncionarios
     Width = 121
     Height = 21
     TabOrder = 0
+    OnChange = edtBuscarNomeChange
   end
   object rbNome: TRadioButton
     Left = 552
@@ -485,6 +487,7 @@ object FrmFuncionarios: TFrmFuncionarios
     Height = 17
     Caption = 'Nome'
     TabOrder = 15
+    OnClick = rbNomeClick
   end
   object rbCpf: TRadioButton
     Left = 640
@@ -493,16 +496,18 @@ object FrmFuncionarios: TFrmFuncionarios
     Height = 17
     Caption = 'CPF'
     TabOrder = 14
+    OnClick = rbCpfClick
   end
   object edtBuscarCpf: TMaskEdit
     Left = 720
-    Top = 51
-    Width = 120
+    Top = 24
+    Width = 97
     Height = 21
     EditMask = '000.000.000-00;1;_'
     MaxLength = 14
     TabOrder = 1
     Text = '   .   .   -  '
+    OnChange = edtBuscarCpfChange
   end
   object edtNome: TEdit
     Left = 109
@@ -521,12 +526,12 @@ object FrmFuncionarios: TFrmFuncionarios
   object edtCpf: TMaskEdit
     Left = 383
     Top = 104
-    Width = 106
+    Width = 104
     Height = 21
-    EditMask = '000.000.000-00;0;_'
+    EditMask = '000.000.000-00;1;_'
     MaxLength = 14
     TabOrder = 3
-    Text = ''
+    Text = '   .   .   -  '
   end
   object edtTelefone: TMaskEdit
     Left = 604
@@ -558,6 +563,7 @@ object FrmFuncionarios: TFrmFuncionarios
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
     OnCellClick = DBGrid1CellClick
+    OnDblClick = DBGrid1DblClick
   end
   object edtNum: TEdit
     Left = 383

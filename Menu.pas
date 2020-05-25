@@ -22,6 +22,7 @@ type
     procedure Usurios1Click(Sender: TObject);
     procedure Funcionrios1Click(Sender: TObject);
     procedure Cargos1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -35,12 +36,21 @@ implementation
 
 {$R *.dfm}
 
-uses Usuarios, Funcionarios, Cargos;
+uses Usuarios, Funcionarios, Cargos, Modulo;
 
 procedure TFrmMenu.Cargos1Click(Sender: TObject);
 begin
   FrmCargos := TFrmCargos.Create(Self);
   FrmCargos.ShowModal;
+end;
+
+procedure TFrmMenu.FormShow(Sender: TObject);
+begin
+  if (cargoUsuario = 'Admin') or (cargoUsuario = 'Gerente') then
+  begin
+    Usurios1.Enabled := True;
+  end;
+
 end;
 
 procedure TFrmMenu.Funcionrios1Click(Sender: TObject);
