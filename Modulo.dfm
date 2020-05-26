@@ -7,7 +7,7 @@ object dm: Tdm
     Params.Strings = (
       'Server=localhost'
       'Database=pdv'
-      'User_Name=jovio'
+      'User_Name=root'
       'Password=MaverickV8'
       'DriverID=MySQL')
     Connected = True
@@ -27,12 +27,13 @@ object dm: Tdm
     Connection = fd
     SQL.Strings = (
       'select * from cargos order by nm_cargo asc')
-    Left = 56
-    Top = 232
+    Left = 40
+    Top = 192
     object queryCargosid_cargo: TFDAutoIncField
       FieldName = 'id_cargo'
       Origin = 'id_cargo'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object queryCargosnm_cargo: TStringField
       AutoGenerateValue = arDefault
@@ -42,16 +43,14 @@ object dm: Tdm
     end
   end
   object FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink
-    VendorLib = 
-      'C:\Users\jovio\Desktop\codigos_fontes\Delphi\PDV\trunk\lib\libmy' +
-      'sql.dll'
+    VendorLib = 'C:\Users\FlexSmart\Documents\Delphi\PDV\trunk\lib\libmySQL.dll'
     Left = 568
     Top = 48
   end
   object dsCargos: TDataSource
     DataSet = queryCargos
-    Left = 136
-    Top = 232
+    Left = 120
+    Top = 192
   end
   object tbFuncionario: TFDTable
     IndexFieldNames = 'id_funcionario'
@@ -65,12 +64,13 @@ object dm: Tdm
     Connection = fd
     SQL.Strings = (
       'select * from funcionarios')
-    Left = 232
-    Top = 232
+    Left = 216
+    Top = 192
     object queryFuncionarioid_funcionario: TFDAutoIncField
       FieldName = 'id_funcionario'
       Origin = 'id_funcionario'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object queryFuncionariocargo: TStringField
       DisplayLabel = 'Cargo'
@@ -156,8 +156,8 @@ object dm: Tdm
   end
   object dsFuncionario: TDataSource
     DataSet = queryFuncionario
-    Left = 320
-    Top = 232
+    Left = 304
+    Top = 192
   end
   object tbUsuarios: TFDTable
     IndexFieldNames = 'id_usuario'
@@ -171,13 +171,14 @@ object dm: Tdm
     Connection = fd
     SQL.Strings = (
       'select *from usuarios')
-    Left = 408
-    Top = 232
+    Left = 392
+    Top = 192
     object queryUsuariosid_usuario: TFDAutoIncField
       DisplayLabel = 'ID'
       FieldName = 'id_usuario'
       Origin = 'id_usuario'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object queryUsuariosnome: TStringField
       AutoGenerateValue = arDefault
@@ -217,7 +218,120 @@ object dm: Tdm
   end
   object dsUsuarios: TDataSource
     DataSet = queryUsuarios
-    Left = 480
-    Top = 232
+    Left = 464
+    Top = 192
+  end
+  object tbFornecedor: TFDTable
+    Connection = fd
+    UpdateOptions.UpdateTableName = 'pdv.fornecedor'
+    TableName = 'pdv.fornecedor'
+    Left = 288
+    Top = 112
+  end
+  object queryFornecedor: TFDQuery
+    Connection = fd
+    SQL.Strings = (
+      'select *from fornecedor')
+    Left = 536
+    Top = 192
+    object queryFornecedorid_fornecedor: TFDAutoIncField
+      DisplayLabel = 'ID'
+      FieldName = 'id_fornecedor'
+      Origin = 'id_fornecedor'
+      ProviderFlags = [pfInWhere, pfInKey]
+    end
+    object queryFornecedornm_fornecedor: TStringField
+      DisplayLabel = 'Nome'
+      FieldName = 'nm_fornecedor'
+      Origin = 'nm_fornecedor'
+      Required = True
+      Size = 25
+    end
+    object queryFornecedorcpf_cnpj: TStringField
+      DisplayLabel = 'CPF/CNPJ'
+      FieldName = 'cpf_cnpj'
+      Origin = 'cpf_cnpj'
+      Required = True
+      Size = 15
+    end
+    object queryFornecedorrg_ie: TStringField
+      DisplayLabel = 'RG/IE'
+      FieldName = 'rg_ie'
+      Origin = 'rg_ie'
+      Required = True
+    end
+    object queryFornecedortelefone: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Telefone'
+      FieldName = 'telefone'
+      Origin = 'telefone'
+      Size = 15
+    end
+    object queryFornecedorlogradouro: TStringField
+      DisplayLabel = 'Logradouro'
+      FieldName = 'logradouro'
+      Origin = 'logradouro'
+      Required = True
+      Size = 50
+    end
+    object queryFornecedornumero: TIntegerField
+      DisplayLabel = 'Numero'
+      FieldName = 'numero'
+      Origin = 'numero'
+      Required = True
+    end
+    object queryFornecedorbairro: TStringField
+      DisplayLabel = 'Bairro'
+      FieldName = 'bairro'
+      Origin = 'bairro'
+      Required = True
+      Size = 50
+    end
+    object queryFornecedorcidade: TStringField
+      DisplayLabel = 'Cidade'
+      FieldName = 'cidade'
+      Origin = 'cidade'
+      Required = True
+      Size = 50
+    end
+    object queryFornecedoruf: TStringField
+      DisplayLabel = 'UF'
+      FieldName = 'uf'
+      Origin = 'uf'
+      Required = True
+      Size = 2
+    end
+    object queryFornecedorcep: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'CEP'
+      FieldName = 'cep'
+      Origin = 'cep'
+      Size = 10
+    end
+    object queryFornecedortipo_produto: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Tipo Produto'
+      FieldName = 'tipo_produto'
+      Origin = 'tipo_produto'
+      Size = 50
+    end
+    object queryFornecedordata_cadastro: TDateField
+      AutoGenerateValue = arDefault
+      FieldName = 'data_cadastro'
+      Origin = 'data_cadastro'
+      Visible = False
+    end
+    object queryFornecedortp_pessoa: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Pessoa'
+      FieldName = 'tp_pessoa'
+      Origin = 'tp_pessoa'
+      Size = 1
+    end
+  end
+  object dsFonecedor: TDataSource
+    DataSet = queryFornecedor
+    Left = 608
+    Top = 192
   end
 end

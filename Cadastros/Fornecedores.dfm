@@ -4,8 +4,8 @@ object frmFornecedor: TfrmFornecedor
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Fornecedores'
-  ClientHeight = 609
-  ClientWidth = 883
+  ClientHeight = 622
+  ClientWidth = 892
   Color = clMoneyGreen
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object frmFornecedor: TfrmFornecedor
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 665
-    Top = 32
+    Left = 54
+    Top = 40
     Width = 32
     Height = 13
     Caption = 'Buscar'
@@ -45,18 +45,11 @@ object frmFornecedor: TfrmFornecedor
     Caption = 'CPF:'
   end
   object Label5: TLabel
-    Left = 552
+    Left = 501
     Top = 152
     Width = 46
     Height = 13
     Caption = 'Telefone:'
-  end
-  object Label6: TLabel
-    Left = 565
-    Top = 194
-    Width = 33
-    Height = 13
-    Caption = 'Cargo:'
   end
   object btnSalvar: TSpeedButton
     Left = 352
@@ -461,15 +454,22 @@ object frmFornecedor: TfrmFornecedor
     Caption = 'CEP:'
   end
   object Label12: TLabel
-    Left = 580
+    Left = 528
     Top = 107
     Width = 18
     Height = 13
     Caption = 'RG:'
   end
+  object Label13: TLabel
+    Left = 481
+    Top = 194
+    Width = 65
+    Height = 13
+    Caption = 'Tipo Produto:'
+  end
   object edtBuscarNome: TEdit
-    Left = 720
-    Top = 24
+    Left = 109
+    Top = 32
     Width = 116
     Height = 21
     TabOrder = 0
@@ -486,34 +486,27 @@ object frmFornecedor: TfrmFornecedor
     Top = 144
     Width = 216
     Height = 21
-    TabOrder = 2
+    TabOrder = 3
   end
-  object edtCpf: TMaskEdit
+  object edtCpfCnpj: TMaskEdit
     Left = 383
     Top = 104
     Width = 101
     Height = 21
     EditMask = '000.000.000-00;1;_'
     MaxLength = 14
-    TabOrder = 3
+    TabOrder = 2
     Text = '   .   .   -  '
   end
   object edtTelefone: TMaskEdit
-    Left = 604
+    Left = 553
     Top = 144
     Width = 92
     Height = 21
     EditMask = '!\(99\)00000-0000;0;_'
     MaxLength = 14
-    TabOrder = 4
+    TabOrder = 8
     Text = ''
-  end
-  object cbCargo: TComboBox
-    Left = 604
-    Top = 186
-    Width = 92
-    Height = 21
-    TabOrder = 5
   end
   object DBGrid1: TDBGrid
     Left = 54
@@ -521,7 +514,7 @@ object frmFornecedor: TfrmFornecedor
     Width = 785
     Height = 249
     DataSource = dm.dsFuncionario
-    TabOrder = 6
+    TabOrder = 12
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
@@ -533,14 +526,14 @@ object frmFornecedor: TfrmFornecedor
     Top = 144
     Width = 57
     Height = 21
-    TabOrder = 7
+    TabOrder = 4
   end
   object edtBairro: TEdit
     Left = 109
     Top = 186
     Width = 219
     Height = 21
-    TabOrder = 8
+    TabOrder = 6
   end
   object edtCidade: TEdit
     Left = 109
@@ -559,18 +552,36 @@ object frmFornecedor: TfrmFornecedor
   object edtCEP: TMaskEdit
     Left = 383
     Top = 186
-    Width = 94
+    Width = 57
     Height = 21
     EditMask = '00000\-999;0;_'
     MaxLength = 9
-    TabOrder = 11
+    TabOrder = 7
     Text = ''
   end
-  object edtRg: TEdit
-    Left = 604
+  object edtRgIe: TEdit
+    Left = 552
     Top = 104
     Width = 93
     Height = 21
-    TabOrder = 12
+    TabOrder = 5
+  end
+  object edttipoProduto: TEdit
+    Left = 552
+    Top = 186
+    Width = 125
+    Height = 21
+    TabOrder = 11
+  end
+  object rgTpPessoa: TRadioGroup
+    Left = 383
+    Top = 25
+    Width = 101
+    Height = 60
+    Caption = 'Pessoa'
+    Items.Strings = (
+      'Fisica'
+      'Juridica')
+    TabOrder = 13
   end
 end

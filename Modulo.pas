@@ -44,6 +44,23 @@ type
     queryUsuariossenha: TStringField;
     queryUsuarioscargo: TStringField;
     queryUsuariosid_funcionario: TIntegerField;
+    tbFornecedor: TFDTable;
+    queryFornecedor: TFDQuery;
+    dsFonecedor: TDataSource;
+    queryFornecedorid_fornecedor: TFDAutoIncField;
+    queryFornecedornm_fornecedor: TStringField;
+    queryFornecedorcpf_cnpj: TStringField;
+    queryFornecedorrg_ie: TStringField;
+    queryFornecedortelefone: TStringField;
+    queryFornecedorlogradouro: TStringField;
+    queryFornecedornumero: TIntegerField;
+    queryFornecedorbairro: TStringField;
+    queryFornecedorcidade: TStringField;
+    queryFornecedoruf: TStringField;
+    queryFornecedorcep: TStringField;
+    queryFornecedortipo_produto: TStringField;
+    queryFornecedordata_cadastro: TDateField;
+    queryFornecedortp_pessoa: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
