@@ -25,19 +25,6 @@ type
     tbUsuarios: TFDTable;
     queryUsuarios: TFDQuery;
     dsUsuarios: TDataSource;
-    queryFuncionarioid_funcionario: TFDAutoIncField;
-    queryFuncionariocargo: TStringField;
-    queryFuncionarionm_funcionario: TStringField;
-    queryFuncionariocpf: TStringField;
-    queryFuncionariorg: TStringField;
-    queryFuncionariotelefone: TStringField;
-    queryFuncionariologradouro: TStringField;
-    queryFuncionarionumero: TIntegerField;
-    queryFuncionariobairro: TStringField;
-    queryFuncionariocidade: TStringField;
-    queryFuncionariouf: TStringField;
-    queryFuncionariocep: TStringField;
-    queryFuncionariodata_cadastro: TDateField;
     queryUsuariosid_usuario: TFDAutoIncField;
     queryUsuariosnome: TStringField;
     queryUsuariosusuario: TStringField;
@@ -61,6 +48,32 @@ type
     queryFornecedortipo_produto: TStringField;
     queryFornecedordata_cadastro: TDateField;
     queryFornecedortp_pessoa: TStringField;
+    queryFuncionarioid_funcionario: TFDAutoIncField;
+    queryFuncionariocargo: TStringField;
+    queryFuncionarionm_funcionario: TStringField;
+    queryFuncionariocpf: TStringField;
+    queryFuncionariorg: TStringField;
+    queryFuncionariotelefone: TStringField;
+    queryFuncionariologradouro: TStringField;
+    queryFuncionarionumero: TIntegerField;
+    queryFuncionariobairro: TStringField;
+    queryFuncionariocidade: TStringField;
+    queryFuncionariouf: TStringField;
+    queryFuncionariocep: TStringField;
+    queryFuncionariodata_cadastro: TDateField;
+    tbProdutos: TFDTable;
+    queryProdutos: TFDQuery;
+    dsProdutos: TDataSource;
+    queryProdutosid_produto: TFDAutoIncField;
+    queryProdutoscodigo_barras: TStringField;
+    queryProdutosnm_produto: TStringField;
+    queryProdutosdescricao: TStringField;
+    queryProdutosvalor: TBCDField;
+    queryProdutosqtd_estoque: TBCDField;
+    queryProdutosun_medida: TStringField;
+    queryProdutosfator_convesao: TIntegerField;
+    queryProdutosdata_cadastro: TDateField;
+    queryProdutosimagem: TBlobField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -81,6 +94,8 @@ var
 
   nomeUsuario : String;
   cargoUsuario : String;
+
+  codigoProduto : String;
 
 implementation
 

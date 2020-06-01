@@ -367,9 +367,11 @@ object FrmMenu: TFrmMenu
       Caption = 'Cadastros'
       object Produtos1: TMenuItem
         Caption = 'Produtos'
+        OnClick = Produtos1Click
       end
       object Fornecedores1: TMenuItem
         Caption = 'Fornecedores'
+        OnClick = Fornecedores1Click
       end
       object Usurios1: TMenuItem
         Caption = 'Usu'#225'rios'
@@ -7064,6 +7066,10 @@ object FrmMenu: TFrmMenu
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
       Caption = 'Sair'
+      object Sair2: TMenuItem
+        Caption = 'Sair'
+        OnClick = Sair2Click
+      end
     end
   end
 end

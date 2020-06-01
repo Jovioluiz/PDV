@@ -213,11 +213,8 @@ begin
                                   'from '+
                             'usuarios '+
                                   'where '+
-                            'nome like :nome '+
-                            'and cargo <> :cargo'+
-                                  'order by '+
-                            'nome asc');
-  dm.queryUsuarios.ParamByName('nome').AsString := edtBuscarNome.Text + '%';
+                            'cargo <> :cargo and '+
+                            'nome like '+QuotedStr('%'+edtBuscarNome.Text +'%'));
   dm.queryUsuarios.ParamByName('cargo').AsString := 'Admin';
   dm.queryUsuarios.Open();
 end;

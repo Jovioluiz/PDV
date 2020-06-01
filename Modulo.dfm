@@ -7,7 +7,7 @@ object dm: Tdm
     Params.Strings = (
       'Server=localhost'
       'Database=pdv'
-      'User_Name=root'
+      'User_Name=jovio'
       'Password=MaverickV8'
       'DriverID=MySQL')
     Connected = True
@@ -20,14 +20,14 @@ object dm: Tdm
     Connection = fd
     UpdateOptions.UpdateTableName = 'cargos'
     TableName = 'cargos'
-    Left = 64
+    Left = 16
     Top = 112
   end
   object queryCargos: TFDQuery
     Connection = fd
     SQL.Strings = (
       'select * from cargos order by nm_cargo asc')
-    Left = 40
+    Left = 32
     Top = 192
     object queryCargosid_cargo: TFDAutoIncField
       FieldName = 'id_cargo'
@@ -43,13 +43,15 @@ object dm: Tdm
     end
   end
   object FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink
-    VendorLib = 'C:\Users\FlexSmart\Documents\Delphi\PDV\trunk\lib\libmySQL.dll'
+    VendorLib = 
+      'C:\Users\jovio\Desktop\codigos_fontes\Delphi\PDV\trunk\lib\libmy' +
+      'sql.dll'
     Left = 568
     Top = 48
   end
   object dsCargos: TDataSource
     DataSet = queryCargos
-    Left = 120
+    Left = 104
     Top = 192
   end
   object tbFuncionario: TFDTable
@@ -57,14 +59,14 @@ object dm: Tdm
     Connection = fd
     UpdateOptions.UpdateTableName = 'funcionarios'
     TableName = 'funcionarios'
-    Left = 136
+    Left = 72
     Top = 112
   end
   object queryFuncionario: TFDQuery
     Connection = fd
     SQL.Strings = (
       'select * from funcionarios')
-    Left = 216
+    Left = 168
     Top = 192
     object queryFuncionarioid_funcionario: TFDAutoIncField
       FieldName = 'id_funcionario'
@@ -80,7 +82,7 @@ object dm: Tdm
       Size = 25
     end
     object queryFuncionarionm_funcionario: TStringField
-      DisplayLabel = 'Funcionario'
+      DisplayLabel = 'Nome Funcionario'
       FieldName = 'nm_funcionario'
       Origin = 'nm_funcionario'
       Required = True
@@ -142,21 +144,20 @@ object dm: Tdm
     end
     object queryFuncionariocep: TStringField
       AutoGenerateValue = arDefault
-      DisplayLabel = 'CEP'
       FieldName = 'cep'
       Origin = 'cep'
       Size = 10
     end
     object queryFuncionariodata_cadastro: TDateField
       AutoGenerateValue = arDefault
-      DisplayLabel = 'Data Cadastro'
       FieldName = 'data_cadastro'
       Origin = 'data_cadastro'
+      Visible = False
     end
   end
   object dsFuncionario: TDataSource
     DataSet = queryFuncionario
-    Left = 304
+    Left = 248
     Top = 192
   end
   object tbUsuarios: TFDTable
@@ -164,14 +165,14 @@ object dm: Tdm
     Connection = fd
     UpdateOptions.UpdateTableName = 'pdv.usuarios'
     TableName = 'pdv.usuarios'
-    Left = 216
+    Left = 136
     Top = 112
   end
   object queryUsuarios: TFDQuery
     Connection = fd
     SQL.Strings = (
       'select *from usuarios')
-    Left = 392
+    Left = 328
     Top = 192
     object queryUsuariosid_usuario: TFDAutoIncField
       DisplayLabel = 'ID'
@@ -218,27 +219,28 @@ object dm: Tdm
   end
   object dsUsuarios: TDataSource
     DataSet = queryUsuarios
-    Left = 464
+    Left = 408
     Top = 192
   end
   object tbFornecedor: TFDTable
     Connection = fd
     UpdateOptions.UpdateTableName = 'pdv.fornecedor'
     TableName = 'pdv.fornecedor'
-    Left = 288
+    Left = 208
     Top = 112
   end
   object queryFornecedor: TFDQuery
     Connection = fd
     SQL.Strings = (
       'select *from fornecedor')
-    Left = 536
+    Left = 488
     Top = 192
     object queryFornecedorid_fornecedor: TFDAutoIncField
       DisplayLabel = 'ID'
       FieldName = 'id_fornecedor'
       Origin = 'id_fornecedor'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object queryFornecedornm_fornecedor: TStringField
       DisplayLabel = 'Nome'
@@ -331,7 +333,98 @@ object dm: Tdm
   end
   object dsFonecedor: TDataSource
     DataSet = queryFornecedor
-    Left = 608
+    Left = 568
     Top = 192
+  end
+  object tbProdutos: TFDTable
+    Connection = fd
+    UpdateOptions.UpdateTableName = 'pdv.produtos'
+    TableName = 'pdv.produtos'
+    Left = 272
+    Top = 112
+  end
+  object queryProdutos: TFDQuery
+    Connection = fd
+    SQL.Strings = (
+      'select *from produtos')
+    Left = 32
+    Top = 272
+    object queryProdutosid_produto: TFDAutoIncField
+      DisplayLabel = 'ID'
+      DisplayWidth = 5
+      FieldName = 'id_produto'
+      Origin = 'id_produto'
+      ProviderFlags = [pfInWhere, pfInKey]
+    end
+    object queryProdutoscodigo_barras: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Codigo Barras'
+      DisplayWidth = 25
+      FieldName = 'codigo_barras'
+      Origin = 'codigo_barras'
+      Size = 50
+    end
+    object queryProdutosnm_produto: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Nome Produto'
+      DisplayWidth = 25
+      FieldName = 'nm_produto'
+      Origin = 'nm_produto'
+      Size = 50
+    end
+    object queryProdutosdescricao: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Descri'#231#227'o'
+      DisplayWidth = 25
+      FieldName = 'descricao'
+      Origin = 'descricao'
+      Size = 100
+    end
+    object queryProdutosvalor: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Valor'
+      DisplayWidth = 10
+      FieldName = 'valor'
+      Origin = 'valor'
+      Precision = 15
+    end
+    object queryProdutosqtd_estoque: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Estoque'
+      DisplayWidth = 5
+      FieldName = 'qtd_estoque'
+      Origin = 'qtd_estoque'
+      Precision = 15
+    end
+    object queryProdutosun_medida: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'UN Medida'
+      FieldName = 'un_medida'
+      Origin = 'un_medida'
+      Size = 5
+    end
+    object queryProdutosfator_convesao: TIntegerField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Fator Conversao'
+      DisplayWidth = 5
+      FieldName = 'fator_conversao'
+      Origin = 'fator_convesao'
+    end
+    object queryProdutosdata_cadastro: TDateField
+      AutoGenerateValue = arDefault
+      FieldName = 'data_cadastro'
+      Origin = 'data_cadastro'
+      Visible = False
+    end
+    object queryProdutosimagem: TBlobField
+      AutoGenerateValue = arDefault
+      FieldName = 'imagem'
+      Origin = 'imagem'
+    end
+  end
+  object dsProdutos: TDataSource
+    DataSet = queryProdutos
+    Left = 104
+    Top = 272
   end
 end

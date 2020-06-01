@@ -115,6 +115,7 @@ begin
   dm.queryFuncionario.SQL.Add('select * from funcionarios where cpf = ' + QuotedStr(Trim(edtCpf.Text)));
   dm.queryFuncionario.Open();
 
+  //verifica se o cpf já está cadastrado
 if not dm.queryFuncionario.IsEmpty then
 begin
   cpf := dm.queryFuncionario['cpf'];
@@ -125,7 +126,7 @@ begin
 end;
 end;
 
-//verifica se o cpf já está cadastrado
+
   associarCampos;
   dm.queryFuncionario.Close;
   dm.queryFuncionario.SQL.Clear;
@@ -264,10 +265,7 @@ begin
                                   'from '+
                               'funcionarios '+
                                   'where '+
-                              'nm_funcionario like :nm_funcionario '+
-                                  'order by '+
-                              'nm_funcionario asc');
-  dm.queryFuncionario.ParamByName('nm_funcionario').AsString := edtBuscarNome.Text + '%';
+                              'nm_funcionario like ' + QuotedStr('%'+edtBuscarNome.Text +'%'));
   dm.queryFuncionario.Open();
 end;
 
@@ -426,6 +424,7 @@ begin
   (Trim(edtCidade.Text) = '') and (Trim(edtUf.Text) = '') then
   begin
     MessageDlg('Os campos não podem ser vazios', mtInformation, mbOKCancel, 0);
+    edtNome.SetFocus;
     exit;
   end;
 end;
