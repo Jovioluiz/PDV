@@ -12,8 +12,8 @@ object dm: Tdm
       'DriverID=MySQL')
     Connected = True
     LoginPrompt = False
-    Left = 64
-    Top = 48
+    Left = 24
+    Top = 56
   end
   object tbCargos: TFDTable
     IndexFieldNames = 'id_cargo'
@@ -355,6 +355,7 @@ object dm: Tdm
       FieldName = 'id_produto'
       Origin = 'id_produto'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object queryProdutoscodigo_barras: TStringField
       AutoGenerateValue = arDefault

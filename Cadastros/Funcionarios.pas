@@ -6,7 +6,9 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, Data.DB,
   Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, System.UITypes, Modulo,
-  FireDAC.Stan.Param;
+  FireDAC.Stan.Param, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
 
 type
   TFrmFuncionarios = class(TForm)
@@ -42,6 +44,7 @@ type
     edtCEP: TMaskEdit;
     Label12: TLabel;
     edtRg: TEdit;
+    sqlEndereco: TFDQuery;
     //procedure FormShow(Sender: TObject);
     procedure btnNovoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -54,6 +57,7 @@ type
     procedure rbNomeClick(Sender: TObject);
     procedure rbCpfClick(Sender: TObject);
     procedure DBGrid1DblClick(Sender: TObject);
+    procedure edtCEPExit(Sender: TObject);
   private
     { Private declarations }
 
@@ -351,6 +355,42 @@ end;
 procedure TFrmFuncionarios.edtBuscarNomeChange(Sender: TObject);
 begin
   buscarNome;
+end;
+
+procedure TFrmFuncionarios.edtCEPExit(Sender: TObject);
+begin
+  sqlEndereco.Close;
+  sqlEndereco.SQL.Text := 'select distinct  '+
+                          '    e.endereco_logradouro, '+
+                          '    b.bairro_descricao, '+
+                          '    c.nm_cidade, '+
+                          '    es.uf '+
+                          'from '+
+                          '    endereco e '+
+                          'join bairro b on '+
+                          '    e.bairro_codigo = b.bairro_codigo '+
+                          'join cidade c on '+
+                          '    b.cidade_codigo = c.cd_cidade '+
+                          'join estado es on '+
+                          '    c.uf = es.uf '+
+                          'where '+
+                          '    e.endereco_cep = :cep ';
+  sqlEndereco.ParamByName('cep').AsString := edtCEP.Text;
+  sqlEndereco.Open();
+
+  if not sqlEndereco.IsEmpty then
+  begin
+    edtLogradouro.Text := sqlEndereco.FieldByName('endereco_logradouro').AsString;
+    edtBairro.Text := sqlEndereco.FieldByName('bairro_descricao').AsString;
+    edtCidade.Text := sqlEndereco.FieldByName('nm_cidade').AsString;
+    edtUf.Text := sqlEndereco.FieldByName('uf').AsString;
+  end
+  else
+  begin
+    ShowMessage('CEP não encontrado!');  //só mostra aviso que não foi encontrado
+    Exit;
+  end;
+
 end;
 
 procedure TFrmFuncionarios.FormCreate(Sender: TObject);

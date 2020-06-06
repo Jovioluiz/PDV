@@ -47,8 +47,8 @@ object frmFornecedor: TfrmFornecedor
     Caption = 'CPF:'
   end
   object Label5: TLabel
-    Left = 501
-    Top = 152
+    Left = 500
+    Top = 226
     Width = 46
     Height = 13
     Caption = 'Telefone:'
@@ -467,8 +467,8 @@ object frmFornecedor: TfrmFornecedor
     Caption = 'RG:'
   end
   object Label13: TLabel
-    Left = 482
-    Top = 192
+    Left = 481
+    Top = 266
     Width = 65
     Height = 13
     Caption = 'Tipo Produto:'
@@ -478,6 +478,7 @@ object frmFornecedor: TfrmFornecedor
     Top = 32
     Width = 116
     Height = 21
+    CharCase = ecUpperCase
     TabOrder = 0
     OnChange = edtBuscarNomeChange
   end
@@ -486,6 +487,7 @@ object frmFornecedor: TfrmFornecedor
     Top = 104
     Width = 216
     Height = 21
+    CharCase = ecUpperCase
     TabOrder = 2
   end
   object edtLogradouro: TEdit
@@ -493,7 +495,8 @@ object frmFornecedor: TfrmFornecedor
     Top = 184
     Width = 216
     Height = 21
-    TabOrder = 5
+    CharCase = ecUpperCase
+    TabOrder = 6
   end
   object edtCpfCnpj: TMaskEdit
     Left = 383
@@ -504,13 +507,13 @@ object frmFornecedor: TfrmFornecedor
     Text = ''
   end
   object edtTelefone: TMaskEdit
-    Left = 553
-    Top = 144
+    Left = 552
+    Top = 218
     Width = 92
     Height = 21
     EditMask = '!\(99\)00000-0000;0;_'
     MaxLength = 14
-    TabOrder = 7
+    TabOrder = 11
     Text = ''
   end
   object DBGrid1: TDBGrid
@@ -532,13 +535,14 @@ object frmFornecedor: TfrmFornecedor
     Top = 184
     Width = 66
     Height = 21
-    TabOrder = 6
+    TabOrder = 7
   end
   object edtBairro: TEdit
     Left = 109
     Top = 218
     Width = 219
     Height = 21
+    CharCase = ecUpperCase
     TabOrder = 8
   end
   object edtCidade: TEdit
@@ -546,22 +550,25 @@ object frmFornecedor: TfrmFornecedor
     Top = 258
     Width = 219
     Height = 21
-    TabOrder = 10
+    CharCase = ecUpperCase
+    TabOrder = 9
   end
   object edtUf: TEdit
     Left = 383
     Top = 258
     Width = 66
     Height = 21
-    TabOrder = 11
+    CharCase = ecUpperCase
+    TabOrder = 10
   end
   object edtCEP: TMaskEdit
     Left = 109
     Top = 144
-    Width = 66
+    Width = 84
     Height = 21
-    TabOrder = 9
+    TabOrder = 5
     Text = ''
+    OnExit = edtCEPExit
   end
   object edtRgIe: TEdit
     Left = 552
@@ -571,10 +578,11 @@ object frmFornecedor: TfrmFornecedor
     TabOrder = 4
   end
   object edttipoProduto: TEdit
-    Left = 553
-    Top = 184
+    Left = 552
+    Top = 258
     Width = 125
     Height = 21
+    CharCase = ecUpperCase
     TabOrder = 12
   end
   object rgTpPessoa: TRadioGroup
@@ -588,5 +596,10 @@ object frmFornecedor: TfrmFornecedor
       'Juridica')
     TabOrder = 1
     OnClick = rgTpPessoaClick
+  end
+  object sqlendereco: TFDQuery
+    Connection = dm.fd
+    Left = 792
+    Top = 104
   end
 end

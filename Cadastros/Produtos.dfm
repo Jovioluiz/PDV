@@ -537,7 +537,7 @@ object frmProdutos: TfrmProdutos
     BevelOuter = bvNone
     Color = clGreen
     ParentBackground = False
-    TabOrder = 6
+    TabOrder = 7
     object btnAddImagen: TSpeedButton
       Left = 0
       Top = -2
@@ -559,6 +559,7 @@ object frmProdutos: TfrmProdutos
     Top = 21
     Width = 116
     Height = 21
+    CharCase = ecUpperCase
     TabOrder = 0
   end
   object DBGrid1: TDBGrid
@@ -567,7 +568,7 @@ object frmProdutos: TfrmProdutos
     Width = 800
     Height = 249
     DataSource = dm.dsProdutos
-    TabOrder = 7
+    TabOrder = 8
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
@@ -580,14 +581,16 @@ object frmProdutos: TfrmProdutos
     Top = 144
     Width = 216
     Height = 21
-    TabOrder = 1
+    CharCase = ecUpperCase
+    TabOrder = 2
   end
   object edtDescricao: TMaskEdit
     Left = 396
     Top = 144
     Width = 209
     Height = 21
-    TabOrder = 2
+    CharCase = ecUpperCase
+    TabOrder = 3
     Text = ''
   end
   object edtValor: TMaskEdit
@@ -595,7 +598,7 @@ object frmProdutos: TfrmProdutos
     Top = 227
     Width = 68
     Height = 21
-    TabOrder = 5
+    TabOrder = 6
     Text = ''
   end
   object edtUNMedida: TEdit
@@ -604,14 +607,14 @@ object frmProdutos: TfrmProdutos
     Width = 44
     Height = 21
     CharCase = ecUpperCase
-    TabOrder = 3
+    TabOrder = 4
   end
   object edtFatorConversao: TEdit
     Left = 269
     Top = 184
     Width = 44
     Height = 21
-    TabOrder = 4
+    TabOrder = 5
   end
   object edtIdProduto: TEdit
     Left = 97
@@ -619,7 +622,7 @@ object frmProdutos: TfrmProdutos
     Width = 44
     Height = 21
     Enabled = False
-    TabOrder = 8
+    TabOrder = 9
   end
   object edtCodBarras: TMaskEdit
     Left = 97
@@ -628,7 +631,7 @@ object frmProdutos: TfrmProdutos
     Height = 21
     EditMask = '0000000000000;1;_'
     MaxLength = 13
-    TabOrder = 9
+    TabOrder = 1
     Text = '             '
   end
   object Panel2: TPanel

@@ -32,7 +32,7 @@ object FrmFuncionarios: TFrmFuncionarios
     Caption = 'Nome:'
   end
   object Label3: TLabel
-    Left = 44
+    Left = 227
     Top = 152
     Width = 59
     Height = 13
@@ -47,14 +47,14 @@ object FrmFuncionarios: TFrmFuncionarios
   end
   object Label5: TLabel
     Left = 552
-    Top = 152
+    Top = 194
     Width = 46
     Height = 13
     Caption = 'Telefone:'
   end
   object Label6: TLabel
     Left = 565
-    Top = 194
+    Top = 234
     Width = 33
     Height = 13
     Caption = 'Cargo:'
@@ -431,7 +431,7 @@ object FrmFuncionarios: TFrmFuncionarios
     OnClick = btnExcluirClick
   end
   object Label7: TLabel
-    Left = 336
+    Left = 557
     Top = 152
     Width = 41
     Height = 13
@@ -459,8 +459,8 @@ object FrmFuncionarios: TFrmFuncionarios
     Caption = 'UF:'
   end
   object Label11: TLabel
-    Left = 354
-    Top = 194
+    Left = 80
+    Top = 152
     Width = 23
     Height = 13
     Caption = 'CEP:'
@@ -477,6 +477,7 @@ object FrmFuncionarios: TFrmFuncionarios
     Top = 24
     Width = 121
     Height = 21
+    CharCase = ecUpperCase
     TabOrder = 0
     OnChange = edtBuscarNomeChange
   end
@@ -503,10 +504,8 @@ object FrmFuncionarios: TFrmFuncionarios
     Top = 24
     Width = 97
     Height = 21
-    EditMask = '000.000.000-00;1;_'
-    MaxLength = 14
     TabOrder = 1
-    Text = '   .   .   -  '
+    Text = ''
     OnChange = edtBuscarCpfChange
   end
   object edtNome: TEdit
@@ -514,38 +513,40 @@ object FrmFuncionarios: TFrmFuncionarios
     Top = 104
     Width = 220
     Height = 21
+    CharCase = ecUpperCase
     TabOrder = 2
   end
   object edtLogradouro: TEdit
-    Left = 109
+    Left = 292
     Top = 144
     Width = 220
     Height = 21
-    TabOrder = 5
+    CharCase = ecUpperCase
+    TabOrder = 6
   end
   object edtCpf: TMaskEdit
     Left = 383
     Top = 104
-    Width = 104
+    Width = 102
     Height = 21
-    EditMask = '000.000.000-00;1;_'
+    EditMask = '000.000.000-00;0;_'
     MaxLength = 14
     TabOrder = 3
-    Text = '   .   .   -  '
+    Text = ''
   end
   object edtTelefone: TMaskEdit
     Left = 604
-    Top = 144
+    Top = 186
     Width = 93
     Height = 21
     EditMask = '!\(99\)00000-0000;0;_'
     MaxLength = 14
-    TabOrder = 7
+    TabOrder = 11
     Text = ''
   end
   object cbCargo: TComboBox
     Left = 604
-    Top = 186
+    Top = 226
     Width = 93
     Height = 21
     TabOrder = 12
@@ -566,17 +567,18 @@ object FrmFuncionarios: TFrmFuncionarios
     OnDblClick = DBGrid1DblClick
   end
   object edtNum: TEdit
-    Left = 383
+    Left = 604
     Top = 144
     Width = 58
     Height = 21
-    TabOrder = 6
+    TabOrder = 7
   end
   object edtBairro: TEdit
     Left = 109
     Top = 186
     Width = 220
     Height = 21
+    CharCase = ecUpperCase
     TabOrder = 8
   end
   object edtCidade: TEdit
@@ -584,24 +586,25 @@ object FrmFuncionarios: TFrmFuncionarios
     Top = 226
     Width = 220
     Height = 21
-    TabOrder = 10
+    CharCase = ecUpperCase
+    TabOrder = 9
   end
   object edtUf: TEdit
     Left = 383
     Top = 226
     Width = 58
     Height = 21
-    TabOrder = 11
+    CharCase = ecUpperCase
+    TabOrder = 10
   end
   object edtCEP: TMaskEdit
-    Left = 383
-    Top = 186
-    Width = 94
+    Left = 109
+    Top = 144
+    Width = 84
     Height = 21
-    EditMask = '00000\-999;0;_'
-    MaxLength = 9
-    TabOrder = 9
+    TabOrder = 5
     Text = ''
+    OnExit = edtCEPExit
   end
   object edtRg: TEdit
     Left = 604
@@ -609,5 +612,10 @@ object FrmFuncionarios: TFrmFuncionarios
     Width = 93
     Height = 21
     TabOrder = 4
+  end
+  object sqlEndereco: TFDQuery
+    Connection = dm.fd
+    Left = 792
+    Top = 96
   end
 end
