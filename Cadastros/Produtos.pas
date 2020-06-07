@@ -225,11 +225,12 @@ end;
 
 procedure TfrmProdutos.validaCampos;
 begin
-  if (Trim(edtNomeProduto.Text) = '') and (Trim(edtCodBarras.Text) = '') then
+  if (Trim(edtNomeProduto.Text) = '') and (Trim(edtCodBarras.Text) = '') and
+     (Trim(edtUNMedida.Text) = '') and (Trim(edtFatorConversao.Text) = '') then
   begin
     MessageDlg('Os campos não podem ser vazios', mtInformation, mbOKCancel, 0);
     edtCodBarras.SetFocus;
-    Exit;
+    Abort;
   end;
 end;
 

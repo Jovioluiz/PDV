@@ -283,7 +283,7 @@ begin
                           'join estado es on '+
                           '    c.uf = es.uf '+
                           'where '+
-                          '    e.endereco_cep = :cep ';
+                          '    e.endereco_cep = :cep';
   sqlEndereco.ParamByName('cep').AsString := edtCEP.Text;
   sqlEndereco.Open();
 
@@ -313,7 +313,7 @@ begin
   if Key = #13 then
     begin
       Key := #0;
-      Perform(WM_NEXTDLGCTL,0,0)
+      Perform(WM_NEXTDLGCTL, 0, 0);
     end;
 end;
 
@@ -387,7 +387,7 @@ begin
   begin
     MessageDlg('Os campos não podem ser vazios', mtInformation, mbOKCancel, 0);
     edtNome.SetFocus;
-    Exit;
+    Abort;
   end;
 end;
 

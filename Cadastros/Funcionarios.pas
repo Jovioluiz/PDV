@@ -456,8 +456,6 @@ begin
 end;
 
 procedure TFrmFuncionarios.validaCampos;
-//var
-  //sim : Boolean;
 begin
   if (Trim(edtNome.Text) = '') and (Trim(edtCpf.Text) = '') and (Trim(edtRg.Text) = '') and
   (Trim(edtLogradouro.Text) = '') and (Trim(edtNum.Text) = '') and (Trim(edtBairro.Text) = '') and
@@ -465,7 +463,7 @@ begin
   begin
     MessageDlg('Os campos não podem ser vazios', mtInformation, mbOKCancel, 0);
     edtNome.SetFocus;
-    exit;
+    Abort;
   end;
 end;
 
