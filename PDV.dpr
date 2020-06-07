@@ -11,7 +11,8 @@ uses
   Fornecedores in 'Cadastros\Fornecedores.pas' {frmFornecedor},
   uValidaDcto in 'uValidaDcto.pas',
   Produtos in 'Cadastros\Produtos.pas' {frmProdutos},
-  ImprimirBarras in 'Cadastros\ImprimirBarras.pas' {frmImprimirBarras};
+  ImprimirBarras in 'Cadastros\ImprimirBarras.pas' {frmImprimirBarras},
+  EntradasProdutos in 'Estoque\EntradasProdutos.pas' {frmEntradaProdutos};
 
 {$R *.res}
 
@@ -20,8 +21,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(Tdm, dm);
-  Application.CreateForm(TfrmFornecedor, frmFornecedor);
-  Application.CreateForm(TfrmProdutos, frmProdutos);
-  Application.CreateForm(TfrmImprimirBarras, frmImprimirBarras);
+  Application.CreateForm(TfrmEntradaProdutos, frmEntradaProdutos);
   Application.Run;
 end.

@@ -1,7 +1,6 @@
 object FrmMenu: TFrmMenu
   Left = 0
   Top = 0
-  BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Menu Principal'
   ClientHeight = 680
@@ -904,6 +903,15 @@ object FrmMenu: TFrmMenu
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
       Caption = 'Estoque'
+      object EntradasProdutos1: TMenuItem
+        Caption = 'Entradas Produtos'
+      end
+      object SadasProdutos1: TMenuItem
+        Caption = 'Sa'#237'das Produtos'
+      end
+      object Nvel1: TMenuItem
+        Caption = 'N'#237'vel Baixo'
+      end
     end
     object Movimentaes1: TMenuItem
       Bitmap.Data = {

@@ -17,13 +17,6 @@ object frmProdutos: TfrmProdutos
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 639
-    Top = 24
-    Width = 36
-    Height = 13
-    Caption = 'Buscar:'
-  end
   object btnNovo: TSpeedButton
     Left = 265
     Top = 544
@@ -300,6 +293,7 @@ object frmProdutos: TfrmProdutos
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnEditarClick
   end
   object btnExcluir: TSpeedButton
     Left = 527
@@ -392,6 +386,7 @@ object frmProdutos: TfrmProdutos
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnExcluirClick
   end
   object Label11: TLabel
     Left = 340
@@ -432,6 +427,7 @@ object frmProdutos: TfrmProdutos
     Top = 107
     Width = 157
     Height = 142
+    Stretch = True
   end
   object Label5: TLabel
     Left = 36
@@ -529,6 +525,13 @@ object frmProdutos: TfrmProdutos
     Transparent = False
     OnClick = btnImprimirClick
   end
+  object Label1: TLabel
+    Left = 512
+    Top = 24
+    Width = 32
+    Height = 13
+    Caption = 'Buscar'
+  end
   object Panel1: TPanel
     Left = 802
     Top = 227
@@ -537,7 +540,7 @@ object frmProdutos: TfrmProdutos
     BevelOuter = bvNone
     Color = clGreen
     ParentBackground = False
-    TabOrder = 7
+    TabOrder = 6
     object btnAddImagen: TSpeedButton
       Left = 0
       Top = -2
@@ -552,15 +555,8 @@ object frmProdutos: TfrmProdutos
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      OnClick = btnAddImagenClick
     end
-  end
-  object edtBuscarNome: TEdit
-    Left = 680
-    Top = 21
-    Width = 116
-    Height = 21
-    CharCase = ecUpperCase
-    TabOrder = 0
   end
   object DBGrid1: TDBGrid
     Left = 25
@@ -568,7 +564,8 @@ object frmProdutos: TfrmProdutos
     Width = 800
     Height = 249
     DataSource = dm.dsProdutos
-    TabOrder = 8
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    TabOrder = 7
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
@@ -582,7 +579,7 @@ object frmProdutos: TfrmProdutos
     Width = 216
     Height = 21
     CharCase = ecUpperCase
-    TabOrder = 2
+    TabOrder = 1
   end
   object edtDescricao: TMaskEdit
     Left = 396
@@ -590,7 +587,7 @@ object frmProdutos: TfrmProdutos
     Width = 209
     Height = 21
     CharCase = ecUpperCase
-    TabOrder = 3
+    TabOrder = 2
     Text = ''
   end
   object edtValor: TMaskEdit
@@ -598,7 +595,7 @@ object frmProdutos: TfrmProdutos
     Top = 227
     Width = 68
     Height = 21
-    TabOrder = 6
+    TabOrder = 5
     Text = ''
   end
   object edtUNMedida: TEdit
@@ -607,14 +604,14 @@ object frmProdutos: TfrmProdutos
     Width = 44
     Height = 21
     CharCase = ecUpperCase
-    TabOrder = 4
+    TabOrder = 3
   end
   object edtFatorConversao: TEdit
     Left = 269
     Top = 184
     Width = 44
     Height = 21
-    TabOrder = 5
+    TabOrder = 4
   end
   object edtIdProduto: TEdit
     Left = 97
@@ -622,7 +619,7 @@ object frmProdutos: TfrmProdutos
     Width = 44
     Height = 21
     Enabled = False
-    TabOrder = 9
+    TabOrder = 8
   end
   object edtCodBarras: TMaskEdit
     Left = 97
@@ -631,8 +628,9 @@ object frmProdutos: TfrmProdutos
     Height = 21
     EditMask = '0000000000000;1;_'
     MaxLength = 13
-    TabOrder = 1
+    TabOrder = 0
     Text = '             '
+    OnChange = edtCodBarrasChange
   end
   object Panel2: TPanel
     Left = 97
@@ -642,7 +640,7 @@ object frmProdutos: TfrmProdutos
     BevelOuter = bvNone
     Color = clGreen
     ParentBackground = False
-    TabOrder = 10
+    TabOrder = 9
     object btnGerarCodigo: TSpeedButton
       Left = 0
       Top = 0
@@ -660,5 +658,47 @@ object frmProdutos: TfrmProdutos
       ParentFont = False
       OnClick = btnGerarCodigoClick
     end
+  end
+  object edtBuscarNome: TEdit
+    Left = 696
+    Top = 21
+    Width = 121
+    Height = 21
+    CharCase = ecUpperCase
+    TabOrder = 10
+    OnChange = edtBuscarNomeChange
+  end
+  object rbNome: TRadioButton
+    Left = 558
+    Top = 23
+    Width = 47
+    Height = 17
+    Caption = 'Nome'
+    Checked = True
+    TabOrder = 11
+    TabStop = True
+    OnClick = rbNomeClick
+  end
+  object rbCpf: TRadioButton
+    Left = 611
+    Top = 23
+    Width = 54
+    Height = 17
+    Caption = 'C'#243'digo'
+    TabOrder = 12
+    OnClick = rbCpfClick
+  end
+  object edtBuscarCodigo: TMaskEdit
+    Left = 696
+    Top = 21
+    Width = 121
+    Height = 21
+    TabOrder = 13
+    Text = ''
+    OnChange = edtBuscarCodigoChange
+  end
+  object dialog: TOpenPictureDialog
+    Left = 584
+    Top = 224
   end
 end

@@ -74,6 +74,7 @@ type
     queryProdutosfator_convesao: TIntegerField;
     queryProdutosdata_cadastro: TDateField;
     queryProdutosimagem: TBlobField;
+    queryCoringa: TFDQuery;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }

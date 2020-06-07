@@ -472,6 +472,13 @@ object FrmFuncionarios: TFrmFuncionarios
     Height = 13
     Caption = 'RG:'
   end
+  object Label13: TLabel
+    Left = 72
+    Top = 11
+    Width = 15
+    Height = 13
+    Caption = 'ID:'
+  end
   object edtBuscarNome: TEdit
     Left = 720
     Top = 24
@@ -612,6 +619,15 @@ object FrmFuncionarios: TFrmFuncionarios
     Width = 93
     Height = 21
     TabOrder = 4
+  end
+  object edtIdFuncionario: TEdit
+    Left = 109
+    Top = 8
+    Width = 36
+    Height = 21
+    CharCase = ecUpperCase
+    Enabled = False
+    TabOrder = 16
   end
   object sqlEndereco: TFDQuery
     Connection = dm.fd

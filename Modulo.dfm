@@ -180,6 +180,7 @@ object dm: Tdm
       Origin = 'id_usuario'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
+      Visible = False
     end
     object queryUsuariosnome: TStringField
       AutoGenerateValue = arDefault
@@ -427,5 +428,10 @@ object dm: Tdm
     DataSet = queryProdutos
     Left = 104
     Top = 272
+  end
+  object queryCoringa: TFDQuery
+    Connection = fd
+    Left = 312
+    Top = 32
   end
 end

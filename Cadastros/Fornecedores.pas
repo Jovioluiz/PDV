@@ -43,6 +43,8 @@ type
     Label13: TLabel;
     rgTpPessoa: TRadioGroup;
     sqlendereco: TFDQuery;
+    Label4: TLabel;
+    edtIdFornecedor: TEdit;
     procedure btnNovoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure rgTpPessoaClick(Sender: TObject);
@@ -107,6 +109,7 @@ end;
 
 procedure TfrmFornecedor.btnEditarClick(Sender: TObject);
 begin
+  validaCampos;
   associarCampos;
   dm.queryFornecedor.Close;
   dm.queryFornecedor.SQL.Clear;
@@ -160,7 +163,10 @@ procedure TfrmFornecedor.btnExcluirClick(Sender: TObject);
 begin
   if MessageDlg('Deseja Excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
-    dm.tbFornecedor.Delete;
+    dm.queryCoringa.Close;
+    dm.queryCoringa.SQL.Text := 'delete from fornecedor where id_fornecedor = :id_fornecedor';
+    dm.queryCoringa.ParamByName('id_fornecedor').AsInteger := StrToInt(edtIdFornecedor.Text);
+    dm.queryCoringa.ExecSQL;
     MessageDlg('Excluido com Sucesso', mtInformation, mbOKCancel, 0);
 
     btnEditar.Enabled := false;
@@ -242,7 +248,7 @@ begin
     edtCEP.Text := dm.queryFornecedor.FieldByName('cep').AsString;
 
   edttipoProduto.Text := dm.queryFornecedor.FieldByName('tipo_produto').AsString;
-
+  edtIdFornecedor.Text := dm.queryFornecedor.FieldByName('id_fornecedor').Text;
   id := dm.queryFornecedor.FieldByName('id_fornecedor').AsString;
 end;
 

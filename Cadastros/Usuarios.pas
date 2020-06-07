@@ -23,6 +23,8 @@ type
     edtUsuario: TEdit;
     Label4: TLabel;
     edtSenha: TEdit;
+    Label5: TLabel;
+    edtIdUsuario: TEdit;
     procedure btnBuscarClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -95,7 +97,7 @@ begin
 
   if usuarioAntigo <> edtUsuario.Text then
   begin
-    //verifica se o usário já esta cadastrado
+    //verifica se o usuário já esta cadastrado
     dm.queryUsuarios.Close;
     dm.queryUsuarios.SQL.Clear;
     dm.queryUsuarios.SQL.Add('select * from usuarios where usuario = ' + QuotedStr(Trim(edtUsuario.Text)));
@@ -140,7 +142,10 @@ procedure TFrmUsuarios.btnExcluirClick(Sender: TObject);
 begin
   if MessageDlg('Deseja Excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
-    dm.tbUsuarios.Delete;
+    dm.queryCoringa.Close;
+    dm.queryCoringa.SQL.Text := 'delete from usuarios where id_usuario = :id_usuario';
+    dm.queryCoringa.ParamByName('id_usuario').AsInteger := StrToInt(edtIdUsuario.Text);
+    dm.queryCoringa.ExecSQL;
     MessageDlg('Excluido com Sucesso', mtInformation, mbOKCancel, 0);
 
     listar;
@@ -182,7 +187,7 @@ begin
   end;
 
 
-  //verifica se o usário já esta cadastrado
+  //verifica se o usuário já esta cadastrado
   dm.queryUsuarios.Close;
   dm.queryUsuarios.SQL.Clear;
   dm.queryUsuarios.SQL.Add('select * from usuarios where usuario = ' + QuotedStr(Trim(edtUsuario.Text)));
@@ -229,6 +234,7 @@ begin
   edtNome.Text := dm.queryUsuarios.FieldByName('nome').AsString;
   edtUsuario.Text := dm.queryUsuarios.FieldByName('nome').AsString;
   edtSenha.Text := dm.queryUsuarios.FieldByName('senha').AsString;
+  edtIdUsuario.Text := dm.queryUsuarios.FieldByName('id_usuario').Text;
   id := dm.queryUsuarios.FieldByName('id_usuario').AsString;
   usuarioAntigo := dm.queryUsuarios.FieldByName('usuario').AsString;
 end;

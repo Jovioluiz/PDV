@@ -20,6 +20,9 @@ type
     Funcionrios1: TMenuItem;
     Cargos1: TMenuItem;
     Sair2: TMenuItem;
+    EntradasProdutos1: TMenuItem;
+    SadasProdutos1: TMenuItem;
+    Nvel1: TMenuItem;
     procedure Usurios1Click(Sender: TObject);
     procedure Funcionrios1Click(Sender: TObject);
     procedure Cargos1Click(Sender: TObject);

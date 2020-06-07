@@ -76,7 +76,7 @@ begin
     // Pintar o fundo do código de branco
     Canvas.Brush.Color := clWhite;
     Canvas.Pen.Color := clWhite;
-    Canvas.Rectangle(10,10, 500, 79);
+    Canvas.Rectangle(0,0, 500, 50);
     // Definir as cores da caneta
     Canvas.Brush.Color := clBlack;
     Canvas.Pen.Color := clBlack;
@@ -87,7 +87,7 @@ begin
       t := strToInt(s[i]) * 2 + 1;
       // Imprimir apenas barra sim barra não (preto/branco - intercalado);
       if i mod 2 = 1 then
-      Canvas.Rectangle(x, 0, x + t, 79);
+      Canvas.Rectangle(x, 0, x + t, 50);
       // Passar para a próxima barra
       x := x + t;
     end;

@@ -45,7 +45,8 @@ type
     Label12: TLabel;
     edtRg: TEdit;
     sqlEndereco: TFDQuery;
-    //procedure FormShow(Sender: TObject);
+    Label13: TLabel;
+    edtIdFuncionario: TEdit;
     procedure btnNovoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnSalvarClick(Sender: TObject);
@@ -188,7 +189,10 @@ procedure TFrmFuncionarios.btnExcluirClick(Sender: TObject);
 begin
   if MessageDlg('Deseja Excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
-    dm.tbFuncionario.Delete;
+    dm.queryCoringa.Close;
+    dm.queryCoringa.SQL.Text := 'delete from funcionarios where id_funcionario = :id_funcionario';
+    dm.queryCoringa.ParamByName('id_funcionario').AsInteger := StrToInt(edtIdFuncionario.Text);
+    dm.queryCoringa.ExecSQL;
     MessageDlg('Excluido com Sucesso', mtInformation, mbOKCancel, 0);
 
     listar;
@@ -314,6 +318,7 @@ begin
   if dm.queryFuncionario.FieldByName('cep').AsString <> null then
     edtCEP.Text := dm.queryFuncionario.FieldByName('cep').AsString;
 
+  edtIdFuncionario.Text := dm.queryFuncionario.FieldByName('id_funcionario').Text;
   id := dm.queryFuncionario.FieldByName('id_funcionario').AsString;
 
   cpfAntigo := dm.queryFuncionario.FieldByName('cpf').AsString;

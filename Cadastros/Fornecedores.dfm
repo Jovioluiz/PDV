@@ -19,8 +19,8 @@ object frmFornecedor: TfrmFornecedor
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 54
-    Top = 40
+    Left = 71
+    Top = 43
     Width = 32
     Height = 13
     Caption = 'Buscar'
@@ -33,7 +33,7 @@ object frmFornecedor: TfrmFornecedor
     Caption = 'Nome:'
   end
   object Label3: TLabel
-    Left = 35
+    Left = 44
     Top = 187
     Width = 59
     Height = 13
@@ -473,9 +473,16 @@ object frmFornecedor: TfrmFornecedor
     Height = 13
     Caption = 'Tipo Produto:'
   end
+  object Label4: TLabel
+    Left = 72
+    Top = 8
+    Width = 15
+    Height = 13
+    Caption = 'ID:'
+  end
   object edtBuscarNome: TEdit
     Left = 109
-    Top = 32
+    Top = 40
     Width = 116
     Height = 21
     CharCase = ecUpperCase
@@ -596,6 +603,14 @@ object frmFornecedor: TfrmFornecedor
       'Juridica')
     TabOrder = 1
     OnClick = rgTpPessoaClick
+  end
+  object edtIdFornecedor: TEdit
+    Left = 109
+    Top = 5
+    Width = 36
+    Height = 21
+    Enabled = False
+    TabOrder = 14
   end
   object sqlendereco: TFDQuery
     Connection = dm.fd
