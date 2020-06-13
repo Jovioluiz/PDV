@@ -56,6 +56,7 @@ type
     procedure edtBuscarNomeChange(Sender: TObject);
     procedure btnAddImagenClick(Sender: TObject);
     procedure edtCodBarrasChange(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     procedure limpar;
@@ -352,6 +353,15 @@ begin
   rbNome.Checked := True;
   edtBuscarCodigo.Visible := False;
   dialog.FileName := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
+end;
+
+procedure TfrmProdutos.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+    begin
+      Key := #0;
+      Perform(WM_NEXTDLGCTL, 0, 0);
+    end;
 end;
 
 //gera o código de barras

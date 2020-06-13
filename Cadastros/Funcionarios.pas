@@ -59,6 +59,7 @@ type
     procedure rbCpfClick(Sender: TObject);
     procedure DBGrid1DblClick(Sender: TObject);
     procedure edtCEPExit(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
 
@@ -407,6 +408,15 @@ begin
   cbCargo.ItemIndex := 0;
   edtBuscarCpf.Visible := false;
   rbNome.Checked := True;
+end;
+
+procedure TFrmFuncionarios.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+    begin
+      Key := #0;
+      Perform(WM_NEXTDLGCTL, 0, 0);
+    end;
 end;
 
 procedure TFrmFuncionarios.habilitarCampos;
