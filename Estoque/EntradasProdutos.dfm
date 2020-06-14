@@ -14,6 +14,8 @@ object frmEntradaProdutos: TfrmEntradaProdutos
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  OnActivate = FormActivate
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label2: TLabel
@@ -113,6 +115,7 @@ object frmEntradaProdutos: TfrmEntradaProdutos
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnNovoClick
   end
   object btnSalvar: TSpeedButton
     Left = 310
@@ -205,6 +208,7 @@ object frmEntradaProdutos: TfrmEntradaProdutos
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
     Transparent = False
+    OnClick = btnSalvarClick
   end
   object btnEditar: TSpeedButton
     Left = 398
@@ -467,6 +471,7 @@ object frmEntradaProdutos: TfrmEntradaProdutos
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCCEACF9ED6A382CA886CC17366BE
       6E6BC0727FC9869BD5A0C7E8CAFBFDFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFF00}
+    OnClick = btnBuscarProdutoClick
   end
   object Label3: TLabel
     Left = 323
@@ -559,6 +564,7 @@ object frmEntradaProdutos: TfrmEntradaProdutos
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCCEACF9ED6A382CA886CC17366BE
       6E6BC0727FC9869BD5A0C7E8CAFBFDFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFF00}
+    OnClick = btnBuscarFornecedorClick
   end
   object Label6: TLabel
     Left = 448
@@ -568,9 +574,9 @@ object frmEntradaProdutos: TfrmEntradaProdutos
     Caption = 'UN Medida:'
   end
   object lblTotal: TLabel
-    Left = 699
+    Left = 773
     Top = 496
-    Width = 77
+    Width = 3
     Height = 13
     Alignment = taRightJustify
   end
@@ -586,7 +592,7 @@ object frmEntradaProdutos: TfrmEntradaProdutos
     Top = 192
     Width = 755
     Height = 281
-    DataSource = dm.dsUsuarios
+    DataSource = dm.dsEntradaProdutos
     TabOrder = 1
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
@@ -600,6 +606,8 @@ object frmEntradaProdutos: TfrmEntradaProdutos
     Width = 52
     Height = 21
     TabOrder = 2
+    Text = '1'
+    OnChange = edtQuantidadeChange
   end
   object edtValor: TEdit
     Left = 389
@@ -607,6 +615,8 @@ object frmEntradaProdutos: TfrmEntradaProdutos
     Width = 52
     Height = 21
     TabOrder = 3
+    Text = '0'
+    OnChange = edtValorChange
   end
   object edtFornecedor: TEdit
     Left = 77
@@ -624,7 +634,7 @@ object frmEntradaProdutos: TfrmEntradaProdutos
     Time = 0.863238055557303600
     TabOrder = 5
   end
-  object Edit1: TEdit
+  object edtUnMedida: TEdit
     Left = 514
     Top = 104
     Width = 52

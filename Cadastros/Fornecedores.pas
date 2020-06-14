@@ -55,6 +55,7 @@ type
     procedure edtBuscarNomeChange(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure edtCEPExit(Sender: TObject);
+    procedure DBGrid1DblClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -250,6 +251,17 @@ begin
   edttipoProduto.Text := dm.queryFornecedor.FieldByName('tipo_produto').AsString;
   edtIdFornecedor.Text := dm.queryFornecedor.FieldByName('id_fornecedor').Text;
   id := dm.queryFornecedor.FieldByName('id_fornecedor').AsString;
+end;
+
+procedure TfrmFornecedor.DBGrid1DblClick(Sender: TObject);
+begin
+if chamada = 'Forn' then
+begin
+  idFornecedor := dm.queryFornecedor.FieldByName('id_fornecedor').AsString;
+  nomeFornecedor := dm.queryFornecedor.FieldByName('nm_fornecedor').AsString;
+  Close;
+  chamada := '';
+end;
 end;
 
 procedure TfrmFornecedor.desabilitarCampos;

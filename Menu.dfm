@@ -905,6 +905,7 @@ object FrmMenu: TFrmMenu
       Caption = 'Estoque'
       object EntradasProdutos1: TMenuItem
         Caption = 'Entradas Produtos'
+        OnClick = EntradasProdutos1Click
       end
       object SadasProdutos1: TMenuItem
         Caption = 'Sa'#237'das Produtos'

@@ -75,6 +75,16 @@ type
     queryProdutosdata_cadastro: TDateField;
     queryProdutosimagem: TBlobField;
     queryCoringa: TFDQuery;
+    tbEntradaProdutos: TFDTable;
+    queryEntradaProdutos: TFDQuery;
+    dsEntradaProdutos: TDataSource;
+    queryEntradaProdutosid_entrada: TFDAutoIncField;
+    queryEntradaProdutosid_produto: TIntegerField;
+    queryEntradaProdutosqtdade: TBCDField;
+    queryEntradaProdutosid_fornecedor: TIntegerField;
+    queryEntradaProdutosvalor: TBCDField;
+    queryEntradaProdutostotal: TBCDField;
+    queryEntradaProdutosdata_entrada: TDateField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -97,6 +107,13 @@ var
   cargoUsuario : String;
 
   codigoProduto : String;
+
+  idFornecedor : String;
+  nomeFornecedor : String;
+
+  nomeProduto : String;
+  estoqueProduto : String;
+  idproduto : String;
 
 implementation
 

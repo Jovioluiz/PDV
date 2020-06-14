@@ -574,6 +574,7 @@ object frmProdutos: TfrmProdutos
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
     OnCellClick = DBGrid1CellClick
+    OnDblClick = DBGrid1DblClick
   end
   object edtNomeProduto: TEdit
     Left = 97

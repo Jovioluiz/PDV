@@ -431,7 +431,72 @@ object dm: Tdm
   end
   object queryCoringa: TFDQuery
     Connection = fd
-    Left = 312
-    Top = 32
+    Left = 432
+    Top = 8
+  end
+  object tbEntradaProdutos: TFDTable
+    IndexFieldNames = 'id_entrada'
+    Connection = fd
+    UpdateOptions.UpdateTableName = 'pdv.entrada_produtos'
+    TableName = 'pdv.entrada_produtos'
+    Left = 352
+    Top = 112
+  end
+  object queryEntradaProdutos: TFDQuery
+    Connection = fd
+    SQL.Strings = (
+      'select *from entrada_produtos')
+    Left = 192
+    Top = 272
+    object queryEntradaProdutosid_entrada: TFDAutoIncField
+      FieldName = 'id_entrada'
+      Origin = 'id_entrada'
+      ProviderFlags = [pfInWhere, pfInKey]
+      Visible = False
+    end
+    object queryEntradaProdutosid_produto: TIntegerField
+      DisplayLabel = 'ID Produto'
+      FieldName = 'id_produto'
+      Origin = 'id_produto'
+      Required = True
+    end
+    object queryEntradaProdutosqtdade: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Qtdade'
+      FieldName = 'qtdade'
+      Origin = 'qtdade'
+      Precision = 12
+    end
+    object queryEntradaProdutosid_fornecedor: TIntegerField
+      DisplayLabel = 'ID Fornecedor'
+      FieldName = 'id_fornecedor'
+      Origin = 'id_fornecedor'
+      Required = True
+    end
+    object queryEntradaProdutosvalor: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Valor'
+      FieldName = 'valor'
+      Origin = 'valor'
+      Precision = 12
+    end
+    object queryEntradaProdutostotal: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Total'
+      FieldName = 'total'
+      Origin = 'total'
+      Precision = 12
+    end
+    object queryEntradaProdutosdata_entrada: TDateField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Data Entrada'
+      FieldName = 'data_entrada'
+      Origin = 'data_entrada'
+    end
+  end
+  object dsEntradaProdutos: TDataSource
+    DataSet = tbEntradaProdutos
+    Left = 296
+    Top = 272
   end
 end

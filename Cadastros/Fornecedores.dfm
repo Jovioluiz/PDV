@@ -537,6 +537,7 @@ object frmFornecedor: TfrmFornecedor
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
     OnCellClick = DBGrid1CellClick
+    OnDblClick = DBGrid1DblClick
   end
   object edtNum: TEdit
     Left = 383

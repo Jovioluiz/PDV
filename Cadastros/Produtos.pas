@@ -57,6 +57,7 @@ type
     procedure btnAddImagenClick(Sender: TObject);
     procedure edtCodBarrasChange(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure DBGrid1DblClick(Sender: TObject);
   private
     { Private declarations }
     procedure limpar;
@@ -306,6 +307,18 @@ begin
   if dm.queryProdutos.FieldByName('imagem').Value <> null then
     ExibeFoto(dm.queryProdutos, 'imagem', imgProduto);
 
+end;
+
+procedure TfrmProdutos.DBGrid1DblClick(Sender: TObject);
+begin
+if chamada = 'Prod' then
+  begin
+    idproduto := dm.queryProdutos.FieldByName('id_produto').AsString;
+    nomeProduto := dm.queryProdutos.FieldByName('nm_produto').AsString;
+    estoqueProduto := dm.queryProdutos.FieldByName('qtd_estoque').AsString;
+    Close;
+    chamada := '';
+  end;
 end;
 
 procedure TfrmProdutos.desabilitarCampos;
