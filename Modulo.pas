@@ -85,6 +85,7 @@ type
     queryEntradaProdutosvalor: TBCDField;
     queryEntradaProdutostotal: TBCDField;
     queryEntradaProdutosdata_entrada: TDateField;
+    queryEntradaProdutosun_compra: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -112,8 +113,9 @@ var
   nomeFornecedor : String;
 
   nomeProduto : String;
-  estoqueProduto : String;
+  estoqueProduto : Double;
   idproduto : String;
+  unMedida : String;
 
 implementation
 

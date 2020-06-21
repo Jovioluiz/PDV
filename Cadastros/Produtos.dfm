@@ -566,7 +566,7 @@ object frmProdutos: TfrmProdutos
     Width = 800
     Height = 249
     DataSource = dm.dsProdutos
-    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
     TabOrder = 7
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText

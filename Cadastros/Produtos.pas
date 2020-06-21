@@ -315,7 +315,8 @@ if chamada = 'Prod' then
   begin
     idproduto := dm.queryProdutos.FieldByName('id_produto').AsString;
     nomeProduto := dm.queryProdutos.FieldByName('nm_produto').AsString;
-    estoqueProduto := dm.queryProdutos.FieldByName('qtd_estoque').AsString;
+    estoqueProduto := dm.queryProdutos.FieldByName('qtd_estoque').AsFloat;
+    unMedida := dm.queryProdutos.FieldByName('un_medida').AsString;
     Close;
     chamada := '';
   end;

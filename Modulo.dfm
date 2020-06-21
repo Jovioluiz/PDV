@@ -341,7 +341,7 @@ object dm: Tdm
     Connection = fd
     UpdateOptions.UpdateTableName = 'pdv.produtos'
     TableName = 'pdv.produtos'
-    Left = 272
+    Left = 264
     Top = 112
   end
   object queryProdutos: TFDQuery
@@ -435,7 +435,6 @@ object dm: Tdm
     Top = 8
   end
   object tbEntradaProdutos: TFDTable
-    IndexFieldNames = 'id_entrada'
     Connection = fd
     UpdateOptions.UpdateTableName = 'pdv.entrada_produtos'
     TableName = 'pdv.entrada_produtos'
@@ -449,10 +448,11 @@ object dm: Tdm
     Left = 192
     Top = 272
     object queryEntradaProdutosid_entrada: TFDAutoIncField
+      DisplayLabel = 'ID Entrada'
       FieldName = 'id_entrada'
       Origin = 'id_entrada'
       ProviderFlags = [pfInWhere, pfInKey]
-      Visible = False
+      ReadOnly = True
     end
     object queryEntradaProdutosid_produto: TIntegerField
       DisplayLabel = 'ID Produto'
@@ -493,9 +493,16 @@ object dm: Tdm
       FieldName = 'data_entrada'
       Origin = 'data_entrada'
     end
+    object queryEntradaProdutosun_compra: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'UN Compra'
+      FieldName = 'un_compra'
+      Origin = 'un_compra'
+      Size = 5
+    end
   end
   object dsEntradaProdutos: TDataSource
-    DataSet = tbEntradaProdutos
+    DataSet = queryEntradaProdutos
     Left = 296
     Top = 272
   end
