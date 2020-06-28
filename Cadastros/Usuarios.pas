@@ -34,6 +34,7 @@ type
     procedure btnEditarClick(Sender: TObject);
     procedure DBGrid1CellClick(Column: TColumn);
     procedure btnExcluirClick(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     procedure limpar;
@@ -255,6 +256,15 @@ end;
 procedure TFrmUsuarios.FormActivate(Sender: TObject);
 begin
 edtNome.Text := nomeFuncionario;
+end;
+
+procedure TFrmUsuarios.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+    begin
+      Key := #0;
+      Perform(WM_NEXTDLGCTL, 0, 0);
+    end;
 end;
 
 procedure TFrmUsuarios.FormShow(Sender: TObject);

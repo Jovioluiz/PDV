@@ -86,6 +86,19 @@ type
     queryEntradaProdutostotal: TBCDField;
     queryEntradaProdutosdata_entrada: TDateField;
     queryEntradaProdutosun_compra: TStringField;
+    queryEntradaProdutostelefone: TStringField;
+    queryEntradaProdutosnm_fornecedor: TStringField;
+    queryProdutosdata_ult_compra: TDateField;
+    tbSaidaProdutos: TFDTable;
+    querySaidaProdutos: TFDQuery;
+    dsSaidaProdutos: TDataSource;
+    querySaidaProdutosid_saida: TFDAutoIncField;
+    querySaidaProdutosid_produto: TIntegerField;
+    querySaidaProdutosqtdade: TBCDField;
+    querySaidaProdutosmotivo: TStringField;
+    querySaidaProdutosdata_saida: TDateField;
+    querySaidaProdutosun_saida: TStringField;
+    queryEntradaProdutosnm_produto: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }

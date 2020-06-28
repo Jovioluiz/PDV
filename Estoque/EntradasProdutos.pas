@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
-  Vcl.StdCtrls, Vcl.Buttons, Vcl.ComCtrls;
+  Vcl.StdCtrls, Vcl.Buttons, Vcl.ComCtrls, System.UITypes, FireDAC.Stan.Param;
 
 type
   TfrmEntradaProdutos = class(TForm)
@@ -40,6 +40,8 @@ type
     procedure btnSalvarClick(Sender: TObject);
     procedure DBGrid1CellClick(Column: TColumn);
     procedure btnExcluirClick(Sender: TObject);
+    procedure edtDataBuscarChange(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     procedure limpar;
@@ -157,8 +159,10 @@ end;
 
 procedure TfrmEntradaProdutos.btnSalvarClick(Sender: TObject);
 begin
+
+  validaCampos;
+
   try
-    validaCampos;
     associarCampos;
     dm.fd.StartTransaction;
     dm.tbEntradaProdutos.Post;
@@ -169,11 +173,13 @@ begin
     dm.queryProdutos.Close;
     dm.queryProdutos.SQL.Clear;
     dm.queryProdutos.SQL.Add('update '+
-                              'produtos set qtd_estoque = :qtd_estoque '+
-                                  'where '+
-                              'id_produto = :id_produto');
+                                  'produtos set qtd_estoque = :qtd_estoque, '+
+                                  'data_ult_compra = :data_ult_compra '+
+                             'where '+
+                                  'id_produto = :id_produto');
     dm.queryProdutos.ParamByName('qtd_estoque').Value := qt_estoque;
     dm.queryProdutos.ParamByName('id_produto').Value := idproduto;
+    dm.queryProdutos.ParamByName('data_ult_compra').Value := Date;
     dm.queryProdutos.ExecSQL;
 
     dm.fd.Commit;
@@ -187,6 +193,7 @@ begin
     begin
       ShowMessage('Erro ao Salvar os dados ' + E.Message);
       dm.fd.Rollback;
+      Exit;
     end;
   end;
 
@@ -194,7 +201,30 @@ end;
 
 procedure TfrmEntradaProdutos.buscarData;
 begin
-
+  dm.queryEntradaProdutos.Close;
+  dm.queryEntradaProdutos.SQL.Clear;
+  dm.queryEntradaProdutos.SQL.Add('select '+
+                                  '   ep.id_entrada, '+
+                                  '   ep.id_produto, '+
+                                  '   p.nm_produto, '+
+                                  '   ep.qtdade, '+
+                                  '   ep.id_fornecedor, '+
+                                  '   ep.valor, '+
+                                  '   ep.total, '+
+                                  '   ep.data_entrada, '+
+                                  '   ep.un_compra, '+
+                                  '   f.nm_fornecedor, '+
+                                  '   f.telefone '+
+                                  'from '+
+                                  '   entrada_produtos ep '+
+                                  'inner join fornecedor f on '+
+                                  '   ep.id_fornecedor = f.id_fornecedor '+
+                                  'join produtos p on '+
+                                  '   ep.id_produto = p.id_produto '+
+                                  'where data_entrada = :data '+
+                                  '   order by data_entrada desc');
+  dm.queryEntradaProdutos.ParamByName('data').AsDate := edtDataBuscar.Date;
+  dm.queryEntradaProdutos.Open();
 end;
 
 procedure TfrmEntradaProdutos.DBGrid1CellClick(Column: TColumn);
@@ -226,6 +256,11 @@ begin
   btnBuscarFornecedor.Enabled := false;
 end;
 
+procedure TfrmEntradaProdutos.edtDataBuscarChange(Sender: TObject);
+begin
+  buscarData;
+end;
+
 procedure TfrmEntradaProdutos.edtQuantidadeChange(Sender: TObject);
 begin
   if edtQuantidade.Text <> '' then
@@ -253,9 +288,31 @@ end;
 
 procedure TfrmEntradaProdutos.FormCreate(Sender: TObject);
 begin
-  desabilitarCampos;
-  dm.tbEntradaProdutos.Active := True;
-  listar;
+  if chamada = 'Ent' then
+  begin
+    habilitarCampos;
+    dm.tbEntradaProdutos.Active := True;
+    dm.tbEntradaProdutos.Insert;
+    btnSalvar.Enabled := True;
+  end
+  else
+  begin
+   desabilitarCampos;
+   dm.tbEntradaProdutos.Active := True;
+  end;
+
+  //listar;
+  edtDataBuscar.Date := Date;
+  buscarData;
+end;
+
+procedure TfrmEntradaProdutos.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+    begin
+      Key := #0;
+      Perform(WM_NEXTDLGCTL, 0, 0);
+    end;
 end;
 
 procedure TfrmEntradaProdutos.habilitarCampos;
@@ -279,13 +336,34 @@ begin
   lblTotal.Caption := '';
   total := 0;
   qt_estoque := 0;
+  idproduto := '';
+  idFornecedor := '';
+  nomeProduto := '';
 end;
 
 procedure TfrmEntradaProdutos.listar;
 begin
   dm.queryEntradaProdutos.Close;
   dm.queryEntradaProdutos.SQL.Clear;
-  dm.queryEntradaProdutos.SQL.Add('select * from entrada_produtos order by data_entrada desc');
+  dm.queryEntradaProdutos.SQL.Add('select '+
+                                  '   ep.id_entrada, '+
+                                  '   ep.id_produto, '+
+                                  '   p.nm_produto, '+
+                                  '   ep.qtdade, '+
+                                  '   ep.id_fornecedor, '+
+                                  '   ep.valor, '+
+                                  '   ep.total, '+
+                                  '   ep.data_entrada, '+
+                                  '   ep.un_compra, '+
+                                  '   f.nm_fornecedor, '+
+                                  '   f.telefone '+
+                                  'from '+
+                                  '   entrada_produtos ep '+
+                                  'inner join fornecedor f on '+
+                                  '   ep.id_fornecedor = f.id_fornecedor '+
+                                  'join produtos p on '+
+                                  '   ep.id_produto = p.id_produto '+
+                                  'order by data_entrada desc');
   dm.queryEntradaProdutos.Open();
 end;
 

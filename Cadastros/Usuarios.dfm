@@ -15,6 +15,7 @@ object FrmUsuarios: TFrmUsuarios
   OldCreateOrder = False
   Position = poScreenCenter
   OnActivate = FormActivate
+  OnKeyPress = FormKeyPress
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13

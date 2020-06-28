@@ -361,10 +361,10 @@ object dm: Tdm
     object queryProdutoscodigo_barras: TStringField
       AutoGenerateValue = arDefault
       DisplayLabel = 'Codigo Barras'
-      DisplayWidth = 25
+      DisplayWidth = 15
       FieldName = 'codigo_barras'
       Origin = 'codigo_barras'
-      Size = 50
+      Size = 15
     end
     object queryProdutosnm_produto: TStringField
       AutoGenerateValue = arDefault
@@ -388,6 +388,7 @@ object dm: Tdm
       DisplayWidth = 10
       FieldName = 'valor'
       Origin = 'valor'
+      currency = True
       Precision = 15
     end
     object queryProdutosqtd_estoque: TBCDField
@@ -422,6 +423,13 @@ object dm: Tdm
       AutoGenerateValue = arDefault
       FieldName = 'imagem'
       Origin = 'imagem'
+      Visible = False
+    end
+    object queryProdutosdata_ult_compra: TDateField
+      AutoGenerateValue = arDefault
+      DisplayLabel = #218'ltima Compra'
+      FieldName = 'data_ult_compra'
+      Origin = 'data_ult_compra'
     end
   end
   object dsProdutos: TDataSource
@@ -452,13 +460,16 @@ object dm: Tdm
       FieldName = 'id_entrada'
       Origin = 'id_entrada'
       ProviderFlags = [pfInWhere, pfInKey]
-      ReadOnly = True
     end
     object queryEntradaProdutosid_produto: TIntegerField
       DisplayLabel = 'ID Produto'
       FieldName = 'id_produto'
       Origin = 'id_produto'
       Required = True
+    end
+    object queryEntradaProdutosnm_produto: TStringField
+      DisplayLabel = 'Produto'
+      FieldName = 'nm_produto'
     end
     object queryEntradaProdutosqtdade: TBCDField
       AutoGenerateValue = arDefault
@@ -476,15 +487,19 @@ object dm: Tdm
     object queryEntradaProdutosvalor: TBCDField
       AutoGenerateValue = arDefault
       DisplayLabel = 'Valor'
+      DisplayWidth = 10
       FieldName = 'valor'
       Origin = 'valor'
+      currency = True
       Precision = 12
     end
     object queryEntradaProdutostotal: TBCDField
       AutoGenerateValue = arDefault
       DisplayLabel = 'Total'
+      DisplayWidth = 10
       FieldName = 'total'
       Origin = 'total'
+      currency = True
       Precision = 12
     end
     object queryEntradaProdutosdata_entrada: TDateField
@@ -500,10 +515,78 @@ object dm: Tdm
       Origin = 'un_compra'
       Size = 5
     end
+    object queryEntradaProdutosnm_fornecedor: TStringField
+      DisplayLabel = 'Fornecedor'
+      FieldName = 'nm_fornecedor'
+      Size = 30
+    end
+    object queryEntradaProdutostelefone: TStringField
+      DisplayLabel = 'Telefone'
+      FieldName = 'telefone'
+      Size = 15
+    end
   end
   object dsEntradaProdutos: TDataSource
     DataSet = queryEntradaProdutos
     Left = 296
+    Top = 272
+  end
+  object tbSaidaProdutos: TFDTable
+    Connection = fd
+    UpdateOptions.UpdateTableName = 'pdv.saidas_produtos'
+    TableName = 'pdv.saidas_produtos'
+    Left = 448
+    Top = 112
+  end
+  object querySaidaProdutos: TFDQuery
+    Connection = fd
+    SQL.Strings = (
+      'select * from saidas_produtos')
+    Left = 416
+    Top = 272
+    object querySaidaProdutosid_saida: TFDAutoIncField
+      FieldName = 'id_saida'
+      Origin = 'id_saida'
+      ProviderFlags = [pfInWhere, pfInKey]
+    end
+    object querySaidaProdutosid_produto: TIntegerField
+      DisplayLabel = 'Produto'
+      DisplayWidth = 15
+      FieldName = 'id_produto'
+      Origin = 'id_produto'
+      Required = True
+    end
+    object querySaidaProdutosqtdade: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Qtdade'
+      FieldName = 'qtdade'
+      Origin = 'qtdade'
+      Precision = 12
+    end
+    object querySaidaProdutosmotivo: TStringField
+      DisplayLabel = 'Motivo'
+      FieldName = 'motivo'
+      Origin = 'motivo'
+      Required = True
+      Size = 50
+    end
+    object querySaidaProdutosdata_saida: TDateField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Data Saida'
+      FieldName = 'data_saida'
+      Origin = 'data_saida'
+    end
+    object querySaidaProdutosun_saida: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'UN Saida'
+      FieldName = 'un_saida'
+      Origin = 'un_saida'
+      Size = 5
+    end
+  end
+  object dsSaidaProdutos: TDataSource
+    DataSet = querySaidaProdutos
+    Left = 504
     Top = 272
   end
 end

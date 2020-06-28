@@ -31,6 +31,8 @@ type
     procedure Sair2Click(Sender: TObject);
     procedure Produtos1Click(Sender: TObject);
     procedure EntradasProdutos1Click(Sender: TObject);
+    procedure SadasProdutos1Click(Sender: TObject);
+    procedure Nvel1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -45,7 +47,7 @@ implementation
 {$R *.dfm}
 
 uses Usuarios, Funcionarios, Cargos, Modulo, Fornecedores, Produtos,
-  EntradasProdutos;
+  EntradasProdutos, SaidaProdutos, EstoqueBaixo;
 
 procedure TFrmMenu.Cargos1Click(Sender: TObject);
 begin
@@ -80,10 +82,22 @@ begin
   FrmFuncionarios.ShowModal;
 end;
 
+procedure TFrmMenu.Nvel1Click(Sender: TObject);
+begin
+  frmEstoqueBaixo := TfrmEstoqueBaixo.Create(Self);
+  frmEstoqueBaixo.ShowModal;
+end;
+
 procedure TFrmMenu.Produtos1Click(Sender: TObject);
 begin
   frmProdutos := TfrmProdutos.Create(Self);
   frmProdutos.ShowModal;
+end;
+
+procedure TFrmMenu.SadasProdutos1Click(Sender: TObject);
+begin
+  frmSaidaProdutos := TfrmSaidaProdutos.Create(Self);
+  frmSaidaProdutos.ShowModal;
 end;
 
 procedure TFrmMenu.Sair2Click(Sender: TObject);

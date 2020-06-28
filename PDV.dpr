@@ -12,7 +12,9 @@ uses
   uValidaDcto in 'uValidaDcto.pas',
   Produtos in 'Cadastros\Produtos.pas' {frmProdutos},
   ImprimirBarras in 'Cadastros\ImprimirBarras.pas' {frmImprimirBarras},
-  EntradasProdutos in 'Estoque\EntradasProdutos.pas' {frmEntradaProdutos};
+  EntradasProdutos in 'Estoque\EntradasProdutos.pas' {frmEntradaProdutos},
+  SaidaProdutos in 'Estoque\SaidaProdutos.pas' {frmSaidaProdutos},
+  EstoqueBaixo in 'Estoque\EstoqueBaixo.pas' {frmEstoqueBaixo};
 
 {$R *.res}
 
@@ -21,6 +23,5 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(Tdm, dm);
-  Application.CreateForm(TfrmEntradaProdutos, frmEntradaProdutos);
   Application.Run;
 end.

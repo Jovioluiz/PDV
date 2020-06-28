@@ -909,9 +909,11 @@ object FrmMenu: TFrmMenu
       end
       object SadasProdutos1: TMenuItem
         Caption = 'Sa'#237'das Produtos'
+        OnClick = SadasProdutos1Click
       end
       object Nvel1: TMenuItem
         Caption = 'N'#237'vel Baixo'
+        OnClick = Nvel1Click
       end
     end
     object Movimentaes1: TMenuItem
