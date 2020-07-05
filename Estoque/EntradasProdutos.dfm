@@ -570,4 +570,13 @@ object frmEntradaProdutos: TfrmEntradaProdutos
     Enabled = False
     TabOrder = 7
   end
+  object cbListaTodasEntradas: TCheckBox
+    Left = 664
+    Top = 72
+    Width = 121
+    Height = 17
+    Caption = 'Listas Todas Entradas'
+    TabOrder = 8
+    OnClick = cbListaTodasEntradasClick
+  end
 end

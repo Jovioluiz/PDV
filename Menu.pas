@@ -23,6 +23,10 @@ type
     EntradasProdutos1: TMenuItem;
     SadasProdutos1: TMenuItem;
     Nvel1: TMenuItem;
+    Vendas1: TMenuItem;
+    Movimentaes2: TMenuItem;
+    Gastos1: TMenuItem;
+    Pagamentos1: TMenuItem;
     procedure Usurios1Click(Sender: TObject);
     procedure Funcionrios1Click(Sender: TObject);
     procedure Cargos1Click(Sender: TObject);
@@ -33,6 +37,7 @@ type
     procedure EntradasProdutos1Click(Sender: TObject);
     procedure SadasProdutos1Click(Sender: TObject);
     procedure Nvel1Click(Sender: TObject);
+    procedure Vendas1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -47,7 +52,7 @@ implementation
 {$R *.dfm}
 
 uses Usuarios, Funcionarios, Cargos, Modulo, Fornecedores, Produtos,
-  EntradasProdutos, SaidaProdutos, EstoqueBaixo;
+  EntradasProdutos, SaidaProdutos, EstoqueBaixo, Vendas;
 
 procedure TFrmMenu.Cargos1Click(Sender: TObject);
 begin
@@ -109,6 +114,12 @@ procedure TFrmMenu.Usurios1Click(Sender: TObject);
 begin
   FrmUsuarios := TFrmUsuarios.Create(Self);
   FrmUsuarios.ShowModal;
+end;
+
+procedure TFrmMenu.Vendas1Click(Sender: TObject);
+begin
+  frmVendas := TfrmVendas.Create(Self);
+  frmVendas.ShowModal;
 end;
 
 end.

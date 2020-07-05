@@ -26,6 +26,7 @@ type
     btnExcluir: TSpeedButton;
     Label4: TLabel;
     cbMotivoSaida: TComboBox;
+    cbListaTodasSaidas: TCheckBox;
     procedure btnNovoClick(Sender: TObject);
     procedure btnBuscarProdutoClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
@@ -35,6 +36,7 @@ type
     procedure btnExcluirClick(Sender: TObject);
     procedure DBGrid1CellClick(Column: TColumn);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure cbListaTodasSaidasClick(Sender: TObject);
   private
     { Private declarations }
     procedure limpar;
@@ -181,16 +183,31 @@ end;
 
 procedure TfrmSaidaProdutos.buscarData;
 begin
-  dm.querySaidaProdutos.Close;
-  dm.querySaidaProdutos.SQL.Clear;
-  dm.querySaidaProdutos.SQL.Add('select '+
-                                  '   * '+
-                                  'from '+
-                                  '   saidas_produtos '+
-                                  'where data_saida = :data_saida '+
-                                  '   order by data_saida desc');
-  dm.querySaidaProdutos.ParamByName('data_saida').AsDate := edtDataBuscar.Date;
-  dm.querySaidaProdutos.Open();
+  if cbListaTodasSaidas.Checked then
+  begin
+    dm.querySaidaProdutos.Close;
+    dm.querySaidaProdutos.SQL.Clear;
+    dm.querySaidaProdutos.SQL.Add('select * from saidas_produtos');
+    dm.querySaidaProdutos.Open();
+  end
+  else
+  begin
+    dm.querySaidaProdutos.Close;
+    dm.querySaidaProdutos.SQL.Clear;
+    dm.querySaidaProdutos.SQL.Add('select '+
+                                    '   * '+
+                                    'from '+
+                                    '   saidas_produtos '+
+                                    'where data_saida = :data_saida '+
+                                    '   order by data_saida desc');
+    dm.querySaidaProdutos.ParamByName('data_saida').AsDate := edtDataBuscar.Date;
+    dm.querySaidaProdutos.Open();
+  end;
+end;
+
+procedure TfrmSaidaProdutos.cbListaTodasSaidasClick(Sender: TObject);
+begin
+  buscarData;
 end;
 
 procedure TfrmSaidaProdutos.DBGrid1CellClick(Column: TColumn);

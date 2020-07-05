@@ -14,7 +14,8 @@ uses
   ImprimirBarras in 'Cadastros\ImprimirBarras.pas' {frmImprimirBarras},
   EntradasProdutos in 'Estoque\EntradasProdutos.pas' {frmEntradaProdutos},
   SaidaProdutos in 'Estoque\SaidaProdutos.pas' {frmSaidaProdutos},
-  EstoqueBaixo in 'Estoque\EstoqueBaixo.pas' {frmEstoqueBaixo};
+  EstoqueBaixo in 'Estoque\EstoqueBaixo.pas' {frmEstoqueBaixo},
+  Vendas in 'Financeiro\Vendas.pas' {frmVendas};
 
 {$R *.res}
 
@@ -23,5 +24,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(Tdm, dm);
+  Application.CreateForm(TfrmVendas, frmVendas);
   Application.Run;
 end.

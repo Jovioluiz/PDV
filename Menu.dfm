@@ -2969,6 +2969,19 @@ object FrmMenu: TFrmMenu
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
       Caption = 'Movimenta'#231#245'es'
+      object Vendas1: TMenuItem
+        Caption = 'Vendas'
+        OnClick = Vendas1Click
+      end
+      object Movimentaes2: TMenuItem
+        Caption = 'Movimenta'#231#245'es'
+      end
+      object Gastos1: TMenuItem
+        Caption = 'Gastos'
+      end
+      object Pagamentos1: TMenuItem
+        Caption = 'Pagamentos'
+      end
     end
     object Relatrios1: TMenuItem
       Bitmap.Data = {

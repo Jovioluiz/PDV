@@ -27,7 +27,7 @@ object frmSaidaProdutos: TfrmSaidaProdutos
   end
   object Label1: TLabel
     Left = 631
-    Top = 35
+    Top = 24
     Width = 32
     Height = 13
     Caption = 'Buscar'
@@ -420,7 +420,7 @@ object frmSaidaProdutos: TfrmSaidaProdutos
   end
   object edtDataBuscar: TDateTimePicker
     Left = 685
-    Top = 35
+    Top = 21
     Width = 100
     Height = 21
     Date = 43989.000000000000000000
@@ -479,5 +479,14 @@ object frmSaidaProdutos: TfrmSaidaProdutos
       'Quebra'
       'Furto'
       'Desperdicio')
+  end
+  object cbListaTodasSaidas: TCheckBox
+    Left = 674
+    Top = 64
+    Width = 111
+    Height = 17
+    Caption = 'Listar Todas Sa'#237'das'
+    TabOrder = 7
+    OnClick = cbListaTodasSaidasClick
   end
 end

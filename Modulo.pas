@@ -99,6 +99,15 @@ type
     querySaidaProdutosdata_saida: TDateField;
     querySaidaProdutosun_saida: TStringField;
     queryEntradaProdutosnm_produto: TStringField;
+    tbVendas: TFDTable;
+    queryVendas: TFDQuery;
+    queryVendasid_venda: TFDAutoIncField;
+    queryVendasvalor_bruto: TBCDField;
+    queryVendasid_funcionario: TIntegerField;
+    queryVendasdata_venda: TDateTimeField;
+    queryVendasvalor_troco: TBCDField;
+    queryVendasvalor_total: TBCDField;
+    dsVendas: TDataSource;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }

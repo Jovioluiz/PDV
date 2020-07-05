@@ -30,6 +30,7 @@ type
     lblTotal: TLabel;
     Label7: TLabel;
     edtIdEntrada: TEdit;
+    cbListaTodasEntradas: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure btnNovoClick(Sender: TObject);
     procedure btnBuscarProdutoClick(Sender: TObject);
@@ -42,6 +43,7 @@ type
     procedure btnExcluirClick(Sender: TObject);
     procedure edtDataBuscarChange(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure cbListaTodasEntradasClick(Sender: TObject);
   private
     { Private declarations }
     procedure limpar;
@@ -200,31 +202,83 @@ begin
 end;
 
 procedure TfrmEntradaProdutos.buscarData;
+{const sql = 'select '+
+            '   ep.id_entrada, '+
+            '   ep.id_produto, '+
+            '   p.nm_produto, '+
+            '   ep.qtdade, '+
+            '   ep.id_fornecedor, '+
+            '   ep.valor, '+
+            '   ep.total, '+
+            '   ep.data_entrada, '+
+            '   ep.un_compra, '+
+            '   f.nm_fornecedor, '+
+            '   f.telefone '+
+            'from '+
+            '   entrada_produtos ep '+
+            'inner join fornecedor f on '+
+            '   ep.id_fornecedor = f.id_fornecedor '+
+            'join produtos p on '+
+            '   ep.id_produto = p.id_produto '+
+            'order by data_entrada desc'; }
 begin
-  dm.queryEntradaProdutos.Close;
-  dm.queryEntradaProdutos.SQL.Clear;
-  dm.queryEntradaProdutos.SQL.Add('select '+
-                                  '   ep.id_entrada, '+
-                                  '   ep.id_produto, '+
-                                  '   p.nm_produto, '+
-                                  '   ep.qtdade, '+
-                                  '   ep.id_fornecedor, '+
-                                  '   ep.valor, '+
-                                  '   ep.total, '+
-                                  '   ep.data_entrada, '+
-                                  '   ep.un_compra, '+
-                                  '   f.nm_fornecedor, '+
-                                  '   f.telefone '+
-                                  'from '+
-                                  '   entrada_produtos ep '+
-                                  'inner join fornecedor f on '+
-                                  '   ep.id_fornecedor = f.id_fornecedor '+
-                                  'join produtos p on '+
-                                  '   ep.id_produto = p.id_produto '+
-                                  'where data_entrada = :data '+
-                                  '   order by data_entrada desc');
-  dm.queryEntradaProdutos.ParamByName('data').AsDate := edtDataBuscar.Date;
-  dm.queryEntradaProdutos.Open();
+  if cbListaTodasEntradas.Checked then
+  begin
+    dm.queryEntradaProdutos.Close;
+    dm.queryEntradaProdutos.SQL.Clear;
+    dm.queryEntradaProdutos.SQL.Add('select '+
+                                '   ep.id_entrada, '+
+                                '   ep.id_produto, '+
+                                '   p.nm_produto, '+
+                                '   ep.qtdade, '+
+                                '   ep.id_fornecedor, '+
+                                '   ep.valor, '+
+                                '   ep.total, '+
+                                '   ep.data_entrada, '+
+                                '   ep.un_compra, '+
+                                '   f.nm_fornecedor, '+
+                                '   f.telefone '+
+                                'from '+
+                                '   entrada_produtos ep '+
+                                'inner join fornecedor f on '+
+                                '   ep.id_fornecedor = f.id_fornecedor '+
+                                'join produtos p on '+
+                                '   ep.id_produto = p.id_produto '+
+                                'order by data_entrada desc');
+    dm.queryEntradaProdutos.Open();
+  end
+  else
+  begin
+    dm.queryEntradaProdutos.Close;
+    dm.queryEntradaProdutos.SQL.Clear;
+    dm.queryEntradaProdutos.SQL.Add('select '+
+                                    '   ep.id_entrada, '+
+                                    '   ep.id_produto, '+
+                                    '   p.nm_produto, '+
+                                    '   ep.qtdade, '+
+                                    '   ep.id_fornecedor, '+
+                                    '   ep.valor, '+
+                                    '   ep.total, '+
+                                    '   ep.data_entrada, '+
+                                    '   ep.un_compra, '+
+                                    '   f.nm_fornecedor, '+
+                                    '   f.telefone '+
+                                    'from '+
+                                    '   entrada_produtos ep '+
+                                    'inner join fornecedor f on '+
+                                    '   ep.id_fornecedor = f.id_fornecedor '+
+                                    'join produtos p on '+
+                                    '   ep.id_produto = p.id_produto '+
+                                    'where data_entrada = :data '+
+                                    '   order by data_entrada desc');
+    dm.queryEntradaProdutos.ParamByName('data').AsDate := edtDataBuscar.Date;
+    dm.queryEntradaProdutos.Open();
+  end;
+end;
+
+procedure TfrmEntradaProdutos.cbListaTodasEntradasClick(Sender: TObject);
+begin
+  buscarData;
 end;
 
 procedure TfrmEntradaProdutos.DBGrid1CellClick(Column: TColumn);

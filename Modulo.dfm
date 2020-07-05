@@ -1,8 +1,8 @@
 object dm: Tdm
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Height = 408
-  Width = 679
+  Height = 516
+  Width = 713
   object fd: TFDConnection
     Params.Strings = (
       'Server=localhost'
@@ -13,7 +13,7 @@ object dm: Tdm
     Connected = True
     LoginPrompt = False
     Left = 24
-    Top = 56
+    Top = 16
   end
   object tbCargos: TFDTable
     IndexFieldNames = 'id_cargo'
@@ -460,6 +460,7 @@ object dm: Tdm
       FieldName = 'id_entrada'
       Origin = 'id_entrada'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object queryEntradaProdutosid_produto: TIntegerField
       DisplayLabel = 'ID Produto'
@@ -548,6 +549,7 @@ object dm: Tdm
       FieldName = 'id_saida'
       Origin = 'id_saida'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object querySaidaProdutosid_produto: TIntegerField
       DisplayLabel = 'Produto'
@@ -586,7 +588,68 @@ object dm: Tdm
   end
   object dsSaidaProdutos: TDataSource
     DataSet = querySaidaProdutos
-    Left = 504
+    Left = 528
     Top = 272
+  end
+  object tbVendas: TFDTable
+    Connection = fd
+    UpdateOptions.UpdateTableName = 'pdv.vendas'
+    TableName = 'pdv.vendas'
+    Left = 24
+    Top = 344
+  end
+  object queryVendas: TFDQuery
+    Connection = fd
+    SQL.Strings = (
+      'select *from vendas')
+    Left = 96
+    Top = 344
+    object queryVendasid_venda: TFDAutoIncField
+      DisplayLabel = 'ID'
+      FieldName = 'id_venda'
+      Origin = 'id_venda'
+      ProviderFlags = [pfInWhere, pfInKey]
+    end
+    object queryVendasvalor_bruto: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Valor Bruto'
+      FieldName = 'valor_bruto'
+      Origin = 'valor_bruto'
+      currency = True
+      Precision = 12
+    end
+    object queryVendasid_funcionario: TIntegerField
+      DisplayLabel = 'ID Funcionario'
+      FieldName = 'id_funcionario'
+      Origin = 'id_funcionario'
+      Required = True
+    end
+    object queryVendasdata_venda: TDateTimeField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Data'
+      FieldName = 'data_venda'
+      Origin = 'data_venda'
+    end
+    object queryVendasvalor_troco: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Valor Troco'
+      FieldName = 'valor_troco'
+      Origin = 'valor_troco'
+      currency = True
+      Precision = 12
+    end
+    object queryVendasvalor_total: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Valor Total'
+      FieldName = 'valor_total'
+      Origin = 'valor_total'
+      currency = True
+      Precision = 12
+    end
+  end
+  object dsVendas: TDataSource
+    DataSet = queryVendas
+    Left = 176
+    Top = 352
   end
 end
