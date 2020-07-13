@@ -27,6 +27,7 @@ type
     Movimentaes2: TMenuItem;
     Gastos1: TMenuItem;
     Pagamentos1: TMenuItem;
+    ConsultarVendas1: TMenuItem;
     procedure Usurios1Click(Sender: TObject);
     procedure Funcionrios1Click(Sender: TObject);
     procedure Cargos1Click(Sender: TObject);

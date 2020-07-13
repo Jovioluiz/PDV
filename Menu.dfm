@@ -2982,6 +2982,9 @@ object FrmMenu: TFrmMenu
       object Pagamentos1: TMenuItem
         Caption = 'Pagamentos'
       end
+      object ConsultarVendas1: TMenuItem
+        Caption = 'Consultar Vendas'
+      end
     end
     object Relatrios1: TMenuItem
       Bitmap.Data = {

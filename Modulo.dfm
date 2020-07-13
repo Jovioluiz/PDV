@@ -46,8 +46,8 @@ object dm: Tdm
     VendorLib = 
       'C:\Users\jovio\Desktop\codigos_fontes\Delphi\PDV\trunk\lib\libmy' +
       'sql.dll'
-    Left = 568
-    Top = 48
+    Left = 544
+    Top = 16
   end
   object dsCargos: TDataSource
     DataSet = queryCargos
@@ -609,6 +609,7 @@ object dm: Tdm
       FieldName = 'id_venda'
       Origin = 'id_venda'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object queryVendasvalor_bruto: TBCDField
       AutoGenerateValue = arDefault
@@ -649,7 +650,78 @@ object dm: Tdm
   end
   object dsVendas: TDataSource
     DataSet = queryVendas
-    Left = 176
-    Top = 352
+    Left = 168
+    Top = 344
+  end
+  object tbDetalhesVendas: TFDTable
+    Connection = fd
+    UpdateOptions.UpdateTableName = 'detalhes_vendas'
+    TableName = 'detalhes_vendas'
+    Left = 536
+    Top = 112
+  end
+  object queryDetalhesVendas: TFDQuery
+    Connection = fd
+    SQL.Strings = (
+      'select * from detalhes_vendas'
+      'join produtos on '
+      'detalhes_vendas.id_produto = produtos.id_produto')
+    Left = 248
+    Top = 344
+    object queryDetalhesVendasid_detalhe_venda: TFDAutoIncField
+      DisplayLabel = 'ID Detalhe Venda'
+      FieldName = 'id_detalhe_venda'
+      Origin = 'id_detalhe_venda'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object queryDetalhesVendasid_venda: TIntegerField
+      FieldName = 'id_venda'
+      Origin = 'id_venda'
+      Required = True
+      Visible = False
+    end
+    object queryDetalhesVendasid_produto: TIntegerField
+      FieldName = 'id_produto'
+      Origin = 'id_produto'
+      Required = True
+      Visible = False
+    end
+    object queryDetalhesVendasvalor_unitario: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Valor Unitario'
+      FieldName = 'valor_unitario'
+      Origin = 'valor_unitario'
+      currency = True
+      Precision = 12
+    end
+    object queryDetalhesVendasqtdade: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Quantidade'
+      FieldName = 'qtdade'
+      Origin = 'qtdade'
+      Precision = 10
+      Size = 2
+    end
+    object queryDetalhesVendasvalor_total: TBCDField
+      DisplayLabel = 'Valor Total'
+      FieldName = 'valor_total'
+      Origin = 'valor_total'
+      Required = True
+      currency = True
+      Precision = 12
+    end
+    object queryDetalhesVendasfuncionario: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'funcionario'
+      Origin = 'funcionario'
+      Visible = False
+      Size = 25
+    end
+  end
+  object dsDetalhesVendas: TDataSource
+    DataSet = queryDetalhesVendas
+    Left = 352
+    Top = 344
   end
 end

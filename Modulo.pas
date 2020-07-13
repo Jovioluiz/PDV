@@ -108,6 +108,16 @@ type
     queryVendasvalor_troco: TBCDField;
     queryVendasvalor_total: TBCDField;
     dsVendas: TDataSource;
+    tbDetalhesVendas: TFDTable;
+    queryDetalhesVendas: TFDQuery;
+    queryDetalhesVendasid_detalhe_venda: TFDAutoIncField;
+    queryDetalhesVendasid_venda: TIntegerField;
+    queryDetalhesVendasid_produto: TIntegerField;
+    queryDetalhesVendasvalor_unitario: TBCDField;
+    queryDetalhesVendasqtdade: TBCDField;
+    queryDetalhesVendasvalor_total: TBCDField;
+    queryDetalhesVendasfuncionario: TStringField;
+    dsDetalhesVendas: TDataSource;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -138,6 +148,8 @@ var
   estoqueProduto : Double;
   idproduto : String;
   unMedida : String;
+
+  totalProdutos : Double;
 
 implementation
 

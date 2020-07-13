@@ -2,17 +2,20 @@ object frmVendas: TfrmVendas
   Left = 0
   Top = 0
   Caption = 'Vendas'
-  ClientHeight = 761
+  ClientHeight = 772
   ClientWidth = 1218
   Color = clMoneyGreen
-  Enabled = False
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
-  WindowState = wsMaximized
+  Position = poScreenCenter
+  OnActivate = FormActivate
+  OnKeyDown = FormKeyDown
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object painelTopo: TPanel
@@ -22,6 +25,7 @@ object frmVendas: TfrmVendas
     Height = 41
     Align = alTop
     Color = clSkyBlue
+    Enabled = False
     ParentBackground = False
     TabOrder = 0
   end
@@ -29,19 +33,20 @@ object frmVendas: TfrmVendas
     Left = 0
     Top = 41
     Width = 354
-    Height = 720
+    Height = 655
     Align = alClient
     Color = clSkyBlue
     ParentBackground = False
     TabOrder = 1
-    ExplicitHeight = 729
+    ExplicitHeight = 720
     object DBGrid1: TDBGrid
       Left = 1
       Top = 42
       Width = 352
-      Height = 677
+      Height = 612
       Align = alClient
-      DataSource = dm.dsProdutos
+      DataSource = dm.dsDetalhesVendas
+      Enabled = False
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
@@ -66,12 +71,90 @@ object frmVendas: TfrmVendas
     Left = 835
     Top = 41
     Width = 383
-    Height = 720
+    Height = 655
     Align = alRight
     Color = clSkyBlue
     ParentBackground = False
     TabOrder = 2
-    ExplicitHeight = 729
+    ExplicitHeight = 720
+    object Label6: TLabel
+      Left = 16
+      Top = 48
+      Width = 126
+      Height = 25
+      Caption = 'Total Produto'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -21
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label7: TLabel
+      Left = 16
+      Top = 156
+      Width = 90
+      Height = 25
+      Caption = 'Sub-Total'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -21
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label8: TLabel
+      Left = 16
+      Top = 244
+      Width = 85
+      Height = 25
+      Caption = 'Desconto'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -21
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label9: TLabel
+      Left = 16
+      Top = 332
+      Width = 101
+      Height = 25
+      Caption = 'Valor Total'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -21
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label10: TLabel
+      Left = 16
+      Top = 417
+      Width = 140
+      Height = 25
+      Caption = 'Valor Recebido'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -21
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label11: TLabel
+      Left = 16
+      Top = 505
+      Width = 52
+      Height = 25
+      Caption = 'Troco'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -21
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
     object Panel2: TPanel
       Left = 1
       Top = 1
@@ -85,7 +168,7 @@ object frmVendas: TfrmVendas
     end
     object edtTotal: TEdit
       Left = 18
-      Top = 72
+      Top = 88
       Width = 247
       Height = 48
       Enabled = False
@@ -96,10 +179,11 @@ object frmVendas: TfrmVendas
       Font.Style = []
       ParentFont = False
       TabOrder = 1
+      Text = '0'
     end
     object edtSubTotal: TEdit
       Left = 18
-      Top = 171
+      Top = 187
       Width = 247
       Height = 48
       Enabled = False
@@ -110,10 +194,11 @@ object frmVendas: TfrmVendas
       Font.Style = []
       ParentFont = False
       TabOrder = 2
+      Text = '0'
     end
     object edtDesconto: TEdit
       Left = 18
-      Top = 259
+      Top = 275
       Width = 247
       Height = 48
       Font.Charset = DEFAULT_CHARSET
@@ -123,10 +208,11 @@ object frmVendas: TfrmVendas
       Font.Style = []
       ParentFont = False
       TabOrder = 3
+      Text = '0'
     end
     object edtTotalCompra: TEdit
       Left = 18
-      Top = 347
+      Top = 363
       Width = 247
       Height = 48
       Enabled = False
@@ -137,10 +223,11 @@ object frmVendas: TfrmVendas
       Font.Style = []
       ParentFont = False
       TabOrder = 4
+      Text = '0'
     end
     object edtValorRecebido: TEdit
       Left = 18
-      Top = 435
+      Top = 451
       Width = 247
       Height = 48
       Font.Charset = DEFAULT_CHARSET
@@ -150,10 +237,11 @@ object frmVendas: TfrmVendas
       Font.Style = []
       ParentFont = False
       TabOrder = 5
+      Text = '0'
     end
     object edtTroco: TEdit
       Left = 18
-      Top = 520
+      Top = 536
       Width = 247
       Height = 48
       Enabled = False
@@ -164,16 +252,17 @@ object frmVendas: TfrmVendas
       Font.Style = []
       ParentFont = False
       TabOrder = 6
+      Text = '0'
     end
   end
   object painelCentral: TPanel
     Left = 354
     Top = 41
     Width = 481
-    Height = 720
+    Height = 655
     Align = alRight
     TabOrder = 3
-    ExplicitHeight = 729
+    ExplicitHeight = 720
     object Label1: TLabel
       Left = 16
       Top = 152
@@ -228,6 +317,7 @@ object frmVendas: TfrmVendas
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      OnChange = edtCodBarrasChange
     end
     object Panel1: TPanel
       Left = 1
@@ -239,7 +329,7 @@ object frmVendas: TfrmVendas
       Caption = 'C'#211'DIGO DE BARRAS'
       Color = clGreen
       ParentBackground = False
-      TabOrder = 1
+      TabOrder = 6
     end
     object edtCdProduto: TEdit
       Left = 16
@@ -247,7 +337,7 @@ object frmVendas: TfrmVendas
       Width = 356
       Height = 21
       Enabled = False
-      TabOrder = 2
+      TabOrder = 1
     end
     object edtDescricao: TEdit
       Left = 16
@@ -255,14 +345,14 @@ object frmVendas: TfrmVendas
       Width = 356
       Height = 21
       Enabled = False
-      TabOrder = 3
+      TabOrder = 2
     end
     object edtQtdade: TEdit
       Left = 16
       Top = 347
       Width = 230
       Height = 21
-      TabOrder = 4
+      TabOrder = 3
     end
     object edtPrecoUnitario: TEdit
       Left = 16
@@ -270,7 +360,7 @@ object frmVendas: TfrmVendas
       Width = 230
       Height = 21
       Enabled = False
-      TabOrder = 5
+      TabOrder = 4
     end
     object edtQtdadeEstoque: TEdit
       Left = 16
@@ -278,7 +368,39 @@ object frmVendas: TfrmVendas
       Width = 230
       Height = 21
       Enabled = False
-      TabOrder = 6
+      TabOrder = 5
+    end
+    object MediaPlayer1: TMediaPlayer
+      Left = 160
+      Top = 608
+      Width = 253
+      Height = 30
+      DoubleBuffered = True
+      Visible = False
+      ParentDoubleBuffered = False
+      TabOrder = 7
+    end
+  end
+  object Panel3: TPanel
+    Left = 0
+    Top = 696
+    Width = 1218
+    Height = 76
+    Align = alBottom
+    TabOrder = 4
+    object Label12: TLabel
+      Left = 8
+      Top = 16
+      Width = 111
+      Height = 13
+      Caption = 'Cancelar Item: Ctrl + X'
+    end
+    object Label13: TLabel
+      Left = 8
+      Top = 35
+      Width = 122
+      Height = 13
+      Caption = 'Cancelar Cupom: Ctrl + Z'
     end
   end
 end
