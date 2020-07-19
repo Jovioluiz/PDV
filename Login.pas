@@ -83,6 +83,7 @@ if not dm.queryUsuarios.IsEmpty then
   begin
     nomeUsuario := dm.queryUsuarios['usuario'];
     cargoUsuario := dm.queryUsuarios['cargo'];
+    idUsuario := dm.queryUsuarios['id_funcionario'];
     edtSenha.Clear;
     FrmMenu := TFrmMenu.Create(Self);
     FrmMenu.ShowModal;

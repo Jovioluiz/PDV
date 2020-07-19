@@ -116,8 +116,13 @@ type
     queryDetalhesVendasvalor_unitario: TBCDField;
     queryDetalhesVendasqtdade: TBCDField;
     queryDetalhesVendasvalor_total: TBCDField;
-    queryDetalhesVendasfuncionario: TStringField;
     dsDetalhesVendas: TDataSource;
+    queryDetalhesVendasid_funcionario: TIntegerField;
+    queryVendasvalor_desconto: TBCDField;
+    tbMovimentacoes: TFDTable;
+    queryMovimentacoes: TFDQuery;
+    dsMovimentacoes: TDataSource;
+    queryVendasvalor_recebido: TBCDField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -138,6 +143,7 @@ var
 
   nomeUsuario : String;
   cargoUsuario : String;
+  idUsuario : Integer;
 
   codigoProduto : String;
 

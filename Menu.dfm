@@ -2975,6 +2975,7 @@ object FrmMenu: TFrmMenu
       end
       object Movimentaes2: TMenuItem
         Caption = 'Movimenta'#231#245'es'
+        OnClick = Movimentaes2Click
       end
       object Gastos1: TMenuItem
         Caption = 'Gastos'

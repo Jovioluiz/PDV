@@ -44,6 +44,7 @@ type
     Panel7: TPanel;
     Panel8: TPanel;
     Panel9: TPanel;
+    Label6: TLabel;
     procedure edtCodBarrasChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -51,6 +52,7 @@ type
     procedure edtDescontoChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure edtValorRecebidoChange(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     procedure limpar;
@@ -79,12 +81,13 @@ var
   qt_estoque : Double;
   totalComDesconto : Double;
   totalTroco : Double;
+  idVenda : String;
 
 implementation
 
 {$R *.dfm}
 
-uses Modulo, CancelarItem;
+uses Modulo, CancelarItem, Usuarios;
 
 { TfrmVendas }
 
@@ -142,17 +145,20 @@ begin
   dm.tbDetalhesVendas.FieldByName('valor_unitario').Text := edtPrecoUnitario.Text;
   dm.tbDetalhesVendas.FieldByName('qtdade').Text := edtQtdade.Text;
   dm.tbDetalhesVendas.FieldByName('valor_total').Text := edtTotal.Text;
-  dm.tbDetalhesVendas.FieldByName('funcionario').Text := nomeFuncionario;
-  //dm.tbDetalhesVendas.FieldByName('nm_produto').Text := edtDescricao.Text;
+  dm.tbDetalhesVendas.FieldByName('id_funcionario').AsInteger := idUsuario;
 end;
 
 procedure TfrmVendas.associarCamposVendas;
+//var usuario : TFrmUsuarios;
 begin
+  //usuario := TFrmUsuarios.Create(Self);
   dm.tbVendas.FieldByName('valor_bruto').Value := totalVenda;
   dm.tbVendas.FieldByName('valor_total').Value := totalComDesconto;
-  dm.tbVendas.FieldByName('data_venda').Value := DateToStr(Date);
-  dm.tbVendas.FieldByName('id_funcionario').Value := nomeFuncionario;
+  dm.tbVendas.FieldByName('data_venda').Value := now;
+  dm.tbVendas.FieldByName('id_funcionario').Value := idUsuario;
   dm.tbVendas.FieldByName('valor_troco').Value := totalTroco;
+  dm.tbVendas.FieldByName('valor_desconto').Value := edtDesconto.Text;
+  dm.tbVendas.FieldByName('valor_recebido').Value := edtValorRecebido.Text;
 end;
 
 //atualiza o campo edtQtdadeEstoque com a quantidade em estoque do produto
@@ -206,6 +212,7 @@ begin
     edtSubTotal.Text := FloatToStr(totalVenda);
 
     edtTotalVenda.Text := FormatFloat('R$ #,,,,0.00', totalVenda);
+    totalComDesconto := totalVenda;
 
     dm.tbDetalhesVendas.Insert;
     salvarItens;
@@ -233,6 +240,11 @@ begin
   edtTotalVenda.Text := '0';
   edtValorRecebido.Text := '0';
   edtTroco.Text := '0';
+  totalItem := 0;
+  totalVenda := 0;
+  totalComDesconto := 0;
+  totalTroco := 0;
+  totalProdutos := 0;
 end;
 
 procedure TfrmVendas.FormKeyDown(Sender: TObject; var Key: Word;
@@ -246,31 +258,41 @@ begin
       frmCancelarItem.Show;
     end;
 
-  //F4
+  //F4 - finaliza cupom
   if key = 115 then
   begin
+    dm.tbVendas.Insert;
   if MessageDlg('Deseja Fechar a Venda?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-    associarCamposVendas;
-    dm.tbVendas.Post;
-    limpar;
-    edtQtdade.Text := '1';
-    totalItem := 0;
-    totalVenda := 0;
-    qt_estoque := 0;
-    totalComDesconto := 0;
-    totalTroco := 0;
-  end;
 
+    salvarVenda;
+
+  end;
+end;
+
+procedure TfrmVendas.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+    begin
+      Key := #0;
+      Perform(WM_NEXTDLGCTL,0,0)
+    end;
 end;
 
 procedure TfrmVendas.FormShow(Sender: TObject);
 begin
   limparFoto;
+  limpar;
   dm.tbVendas.Active := True;
   dm.tbDetalhesVendas.Active := True;
   edtQtdade.Text := '1';
 
   edtCodBarras.SetFocus;
+
+  totalItem := 0;
+  totalVenda := 0;
+  estoqueProduto := 0;
+  totalComDesconto := 0;
+  totalTroco := 0;
 end;
 
 procedure TfrmVendas.limpar;
@@ -281,6 +303,10 @@ begin
   edtTotalVenda.Text := '0';
   edtValorRecebido.Text := '0';
   edtTroco.Text := '0';
+  edtCdProduto.Clear;
+  edtDescricao.Clear;
+  edtPrecoUnitario.Clear;
+  edtQtdadeEstoque.Clear;
   edtCodBarras.SetFocus;
 end;
 
@@ -305,8 +331,16 @@ procedure TfrmVendas.listar;
 begin
   dm.queryDetalhesVendas.Close;
   dm.queryDetalhesVendas.SQL.Clear;
-  dm.queryDetalhesVendas.SQL.Add('select * from detalhes_vendas where id_venda = 0 and funcionario = :funcionario order by id_detalhe_venda asc');
-  dm.queryDetalhesVendas.ParamByName('funcionario').AsString := nomeFuncionario;
+  dm.queryDetalhesVendas.SQL.Add('select '+
+                                 '    * '+
+                                 'from '+
+                                 '  detalhes_vendas '+
+                                 'where '+
+                                 '  id_venda = 0 and '+
+                                 '  id_funcionario = :id_funcionario '+
+                                 'order by '+
+                                 '  id_detalhe_venda asc');
+  dm.queryDetalhesVendas.ParamByName('id_funcionario').AsInteger := idUsuario;
   dm.queryDetalhesVendas.Open();
 
   //alinhamneto do grid
@@ -350,7 +384,65 @@ end;
 
 procedure TfrmVendas.salvarVenda;
 begin
+  associarCamposVendas;
+  dm.tbVendas.Post;
 
+  //relacionar o id da venda com os id_venda dos itens
+  dm.queryVendas.Close;
+  dm.queryVendas.SQL.Clear;
+  dm.queryVendas.SQL.Add('select * from vendas order by id_venda desc');
+  dm.queryVendas.Open();
+
+  if not dm.queryVendas.IsEmpty then
+  begin
+    idVenda := dm.queryVendas['id_venda'];
+  end;
+
+  dm.queryDetalhesVendas.Close;
+  dm.queryDetalhesVendas.SQL.Clear;
+  dm.queryDetalhesVendas.SQL.Add('update '+
+                                 '  detalhes_vendas '+
+                                 'set '+
+                                 '  id_venda = :id_venda '+
+                                 'where id_venda = 0 and '+
+                                 '  id_funcionario = :id_funcionario');
+  dm.queryDetalhesVendas.ParamByName('id_venda').AsString := idVenda;
+  dm.queryDetalhesVendas.ParamByName('id_funcionario').AsInteger := idUsuario;
+  dm.queryDetalhesVendas.ExecSQL;
+
+
+  //lançar o valor da venda nas movimentações
+  dm.queryMovimentacoes.Close;
+  dm.queryMovimentacoes.SQL.Clear;
+  dm.queryMovimentacoes.SQL.Add('insert '+
+                                '   into '+
+                                'movimentacoes '+
+                                '   (tipo, movimento, valor, id_funcionario, data, id_movimento) '+
+                                'values '+
+                                '   (:tipo, :movimento, :valor, :id_funcionario, curDate(), :id_movimento)');
+  dm.queryMovimentacoes.ParamByName('tipo').AsString := 'E';
+  dm.queryMovimentacoes.ParamByName('movimento').AsString := 'V';
+  dm.queryMovimentacoes.ParamByName('valor').Value := totalComDesconto;
+  dm.queryMovimentacoes.ParamByName('id_funcionario').Value := idUsuario;
+  dm.queryMovimentacoes.ParamByName('id_movimento').Value := idVenda;
+  dm.queryMovimentacoes.ExecSQL;
+
+
+  //imprimir cupom fiscal
+
+
+  //imprimir cupom não fiscal
+
+
+  limpar;
+  limparFoto;
+  edtQtdade.Text := '1';
+  totalItem := 0;
+  totalVenda := 0;
+  qt_estoque := 0;
+  totalComDesconto := 0;
+  totalTroco := 0;
+  listar;
 end;
 
 function TfrmVendas.validaCampo : Boolean;
@@ -362,6 +454,7 @@ begin
   if qtdEstoque < qtdVenda then
   begin
     MessageDlg('Quantidade Indisponível em estoque!', mtInformation, mbOKCancel, 0);
+    edtQtdade.Enabled := True;
     Result := True;
   end
   else

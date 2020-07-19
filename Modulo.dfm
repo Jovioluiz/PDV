@@ -1,8 +1,8 @@
 object dm: Tdm
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Height = 516
-  Width = 713
+  Height = 585
+  Width = 941
   object fd: TFDConnection
     Params.Strings = (
       'Server=localhost'
@@ -647,6 +647,19 @@ object dm: Tdm
       currency = True
       Precision = 12
     end
+    object queryVendasvalor_desconto: TBCDField
+      AutoGenerateValue = arDefault
+      FieldName = 'valor_desconto'
+      Origin = 'valor_desconto'
+      Precision = 12
+    end
+    object queryVendasvalor_recebido: TBCDField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Valor Recebido'
+      FieldName = 'valor_recebido'
+      Origin = 'valor_recebido'
+      Precision = 12
+    end
   end
   object dsVendas: TDataSource
     DataSet = queryVendas
@@ -663,9 +676,7 @@ object dm: Tdm
   object queryDetalhesVendas: TFDQuery
     Connection = fd
     SQL.Strings = (
-      'select * from detalhes_vendas'
-      'join produtos on '
-      'detalhes_vendas.id_produto = produtos.id_produto')
+      'select * from detalhes_vendas')
     Left = 248
     Top = 344
     object queryDetalhesVendasid_detalhe_venda: TFDAutoIncField
@@ -714,17 +725,32 @@ object dm: Tdm
       currency = True
       Precision = 12
     end
-    object queryDetalhesVendasfuncionario: TStringField
+    object queryDetalhesVendasid_funcionario: TIntegerField
       AutoGenerateValue = arDefault
-      FieldName = 'funcionario'
-      Origin = 'funcionario'
-      Visible = False
-      Size = 25
+      FieldName = 'id_funcionario'
+      Origin = 'id_funcionario'
     end
   end
   object dsDetalhesVendas: TDataSource
     DataSet = queryDetalhesVendas
     Left = 352
+    Top = 344
+  end
+  object tbMovimentacoes: TFDTable
+    Connection = fd
+    UpdateOptions.UpdateTableName = 'pdv.movimentacoes'
+    TableName = 'pdv.movimentacoes'
+    Left = 624
+    Top = 112
+  end
+  object queryMovimentacoes: TFDQuery
+    Connection = fd
+    Left = 456
+    Top = 344
+  end
+  object dsMovimentacoes: TDataSource
+    DataSet = queryMovimentacoes
+    Left = 544
     Top = 344
   end
 end

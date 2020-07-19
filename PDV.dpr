@@ -16,7 +16,8 @@ uses
   SaidaProdutos in 'Estoque\SaidaProdutos.pas' {frmSaidaProdutos},
   EstoqueBaixo in 'Estoque\EstoqueBaixo.pas' {frmEstoqueBaixo},
   Vendas in 'Financeiro\Vendas.pas' {frmVendas},
-  CancelarItem in 'Financeiro\CancelarItem.pas' {frmCancelarItem};
+  CancelarItem in 'Financeiro\CancelarItem.pas' {frmCancelarItem},
+  Movimentacoes in 'Financeiro\Movimentacoes.pas' {frmMovimentacoes};
 
 {$R *.res}
 
@@ -26,5 +27,6 @@ begin
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(Tdm, dm);
   Application.CreateForm(TfrmCancelarItem, frmCancelarItem);
+  Application.CreateForm(TfrmMovimentacoes, frmMovimentacoes);
   Application.Run;
 end.

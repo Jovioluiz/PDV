@@ -17,6 +17,7 @@ object frmVendas: TfrmVendas
   OnActivate = FormActivate
   OnClose = FormClose
   OnKeyDown = FormKeyDown
+  OnKeyPress = FormKeyPress
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -468,6 +469,13 @@ object frmVendas: TfrmVendas
     object Label13: TLabel
       Left = 8
       Top = 35
+      Width = 88
+      Height = 13
+      Caption = 'Fechar Cupom: F4'
+    end
+    object Label6: TLabel
+      Left = 8
+      Top = 54
       Width = 122
       Height = 13
       Caption = 'Cancelar Cupom: Ctrl + Z'
