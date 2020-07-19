@@ -1,6 +1,7 @@
 object frmVendas: TfrmVendas
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Vendas'
   ClientHeight = 772
   ClientWidth = 1218
@@ -14,255 +15,288 @@ object frmVendas: TfrmVendas
   OldCreateOrder = False
   Position = poScreenCenter
   OnActivate = FormActivate
+  OnClose = FormClose
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object painelTopo: TPanel
-    Left = 0
-    Top = 0
-    Width = 1218
-    Height = 41
-    Align = alTop
-    Color = clSkyBlue
-    Enabled = False
-    ParentBackground = False
-    TabOrder = 0
-  end
   object painelDetalhes: TPanel
     Left = 0
-    Top = 41
-    Width = 354
-    Height = 655
-    Align = alClient
+    Top = 0
+    Width = 350
+    Height = 688
+    Align = alLeft
     Color = clSkyBlue
     ParentBackground = False
-    TabOrder = 1
-    ExplicitHeight = 720
+    TabOrder = 0
     object DBGrid1: TDBGrid
       Left = 1
-      Top = 42
-      Width = 352
-      Height = 612
+      Top = 36
+      Width = 348
+      Height = 651
       Align = alClient
       DataSource = dm.dsDetalhesVendas
       Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Tahoma'
+      Font.Style = []
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      ParentFont = False
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
-      TitleFont.Height = -11
+      TitleFont.Height = -16
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
     end
     object painelTituloDetalhes: TPanel
       Left = 1
       Top = 1
-      Width = 352
-      Height = 41
+      Width = 348
+      Height = 35
       Align = alTop
-      Caption = 'ITENS ADICIONADOS'
+      Alignment = taLeftJustify
+      Caption = ' ITENS ADICIONADOS'
       Color = clGreen
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clHighlightText
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
       ParentBackground = False
+      ParentFont = False
       TabOrder = 1
     end
   end
   object painelDireita: TPanel
-    Left = 835
-    Top = 41
-    Width = 383
-    Height = 655
+    Left = 948
+    Top = 0
+    Width = 270
+    Height = 688
     Align = alRight
     Color = clSkyBlue
     ParentBackground = False
-    TabOrder = 2
-    ExplicitHeight = 720
-    object Label6: TLabel
-      Left = 16
-      Top = 48
-      Width = 126
-      Height = 25
-      Caption = 'Total Produto'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -21
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object Label7: TLabel
-      Left = 16
-      Top = 156
-      Width = 90
-      Height = 25
-      Caption = 'Sub-Total'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -21
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object Label8: TLabel
-      Left = 16
-      Top = 244
-      Width = 85
-      Height = 25
-      Caption = 'Desconto'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -21
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object Label9: TLabel
-      Left = 16
-      Top = 332
-      Width = 101
-      Height = 25
-      Caption = 'Valor Total'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -21
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object Label10: TLabel
-      Left = 16
-      Top = 417
-      Width = 140
-      Height = 25
-      Caption = 'Valor Recebido'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -21
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object Label11: TLabel
-      Left = 16
-      Top = 505
-      Width = 52
-      Height = 25
-      Caption = 'Troco'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -21
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object Panel2: TPanel
-      Left = 1
-      Top = 1
-      Width = 381
-      Height = 41
-      Align = alTop
-      Caption = 'ITENS ADICIONADOS'
-      Color = clGreen
-      ParentBackground = False
-      TabOrder = 0
-    end
+    TabOrder = 1
     object edtTotal: TEdit
-      Left = 18
-      Top = 88
-      Width = 247
-      Height = 48
+      Left = 6
+      Top = 67
+      Width = 259
+      Height = 56
       Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -33
+      Font.Height = -40
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      Text = '0'
+    end
+    object edtSubTotal: TEdit
+      Left = 6
+      Top = 169
+      Width = 259
+      Height = 56
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -40
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
       TabOrder = 1
       Text = '0'
     end
-    object edtSubTotal: TEdit
-      Left = 18
-      Top = 187
-      Width = 247
-      Height = 48
-      Enabled = False
+    object edtDesconto: TEdit
+      Left = 6
+      Top = 267
+      Width = 259
+      Height = 56
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -33
+      Font.Height = -40
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
       TabOrder = 2
       Text = '0'
+      OnChange = edtDescontoChange
     end
-    object edtDesconto: TEdit
-      Left = 18
-      Top = 275
-      Width = 247
-      Height = 48
+    object edtTotalVenda: TEdit
+      Left = 6
+      Top = 367
+      Width = 259
+      Height = 56
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -33
+      Font.Height = -40
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
       TabOrder = 3
       Text = '0'
     end
-    object edtTotalCompra: TEdit
-      Left = 18
-      Top = 363
-      Width = 247
-      Height = 48
-      Enabled = False
+    object edtValorRecebido: TEdit
+      Left = 6
+      Top = 473
+      Width = 259
+      Height = 56
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -33
+      Font.Height = -40
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
       TabOrder = 4
       Text = '0'
+      OnChange = edtValorRecebidoChange
     end
-    object edtValorRecebido: TEdit
-      Left = 18
-      Top = 451
-      Width = 247
-      Height = 48
+    object edtTroco: TEdit
+      Left = 6
+      Top = 575
+      Width = 259
+      Height = 56
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -33
+      Font.Height = -40
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
       TabOrder = 5
       Text = '0'
     end
-    object edtTroco: TEdit
-      Left = 18
-      Top = 536
-      Width = 247
-      Height = 48
-      Enabled = False
+    object Panel4: TPanel
+      Left = 1
+      Top = 1
+      Width = 268
+      Height = 35
+      Align = alTop
+      Alignment = taLeftJustify
+      Caption = ' ITENS ADICIONADOS'
+      Color = clGreen
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -33
+      Font.Color = clInactiveBorder
+      Font.Height = -15
       Font.Name = 'Tahoma'
       Font.Style = []
+      ParentBackground = False
       ParentFont = False
       TabOrder = 6
-      Text = '0'
+    end
+    object Panel2: TPanel
+      Left = 4
+      Top = 40
+      Width = 261
+      Height = 29
+      Alignment = taLeftJustify
+      Caption = 'Total do Item'
+      Color = clGreen
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clInactiveBorder
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 7
+    end
+    object Panel5: TPanel
+      Left = 6
+      Top = 142
+      Width = 259
+      Height = 29
+      Alignment = taLeftJustify
+      Caption = 'Sub-Total'
+      Color = clGreen
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clInactiveBorder
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 8
+    end
+    object Panel6: TPanel
+      Left = 6
+      Top = 241
+      Width = 259
+      Height = 29
+      Alignment = taLeftJustify
+      Caption = 'Desconto'
+      Color = clGreen
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clInactiveBorder
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 9
+    end
+    object Panel7: TPanel
+      Left = 6
+      Top = 340
+      Width = 259
+      Height = 29
+      Alignment = taLeftJustify
+      Caption = 'Valor Total'
+      Color = clGreen
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clInactiveBorder
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 10
+    end
+    object Panel8: TPanel
+      Left = 6
+      Top = 445
+      Width = 259
+      Height = 29
+      Alignment = taLeftJustify
+      Caption = 'Valor Recebido'
+      Color = clGreen
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clInactiveBorder
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 11
+    end
+    object Panel9: TPanel
+      Left = 6
+      Top = 552
+      Width = 259
+      Height = 29
+      Alignment = taLeftJustify
+      Caption = 'Troco'
+      Color = clGreen
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clInactiveBorder
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 12
     end
   end
   object painelCentral: TPanel
-    Left = 354
-    Top = 41
-    Width = 481
-    Height = 655
-    Align = alRight
-    TabOrder = 3
-    ExplicitHeight = 720
+    Left = 350
+    Top = 0
+    Width = 598
+    Height = 688
+    Align = alClient
+    TabOrder = 2
     object Label1: TLabel
       Left = 16
       Top = 152
@@ -299,20 +333,20 @@ object frmVendas: TfrmVendas
       Caption = 'ESTOQUE'
     end
     object imgProduto: TImage
-      Left = 268
-      Top = 347
-      Width = 197
+      Left = 332
+      Top = 340
+      Width = 237
       Height = 213
       Stretch = True
     end
     object edtCodBarras: TEdit
       Left = 6
-      Top = 72
-      Width = 438
-      Height = 48
+      Top = 77
+      Width = 563
+      Height = 56
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -33
+      Font.Height = -40
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
@@ -322,52 +356,88 @@ object frmVendas: TfrmVendas
     object Panel1: TPanel
       Left = 1
       Top = 1
-      Width = 479
-      Height = 41
+      Width = 596
+      Height = 35
       Align = alTop
       Alignment = taLeftJustify
-      Caption = 'C'#211'DIGO DE BARRAS'
+      Caption = ' C'#211'DIGO DE BARRAS'
       Color = clGreen
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clInactiveBorder
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
       ParentBackground = False
+      ParentFont = False
       TabOrder = 6
     end
     object edtCdProduto: TEdit
       Left = 16
       Top = 171
-      Width = 356
-      Height = 21
+      Width = 553
+      Height = 32
       Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -20
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 1
     end
     object edtDescricao: TEdit
       Left = 16
       Top = 259
-      Width = 356
-      Height = 21
+      Width = 553
+      Height = 32
       Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -20
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 2
     end
     object edtQtdade: TEdit
       Left = 16
       Top = 347
       Width = 230
-      Height = 21
+      Height = 32
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -20
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 3
     end
     object edtPrecoUnitario: TEdit
       Left = 16
       Top = 435
       Width = 230
-      Height = 21
+      Height = 32
       Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -20
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 4
     end
     object edtQtdadeEstoque: TEdit
       Left = 16
       Top = 539
       Width = 230
-      Height = 21
+      Height = 32
       Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -20
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 5
     end
     object MediaPlayer1: TMediaPlayer
@@ -383,11 +453,11 @@ object frmVendas: TfrmVendas
   end
   object Panel3: TPanel
     Left = 0
-    Top = 696
+    Top = 688
     Width = 1218
-    Height = 76
+    Height = 84
     Align = alBottom
-    TabOrder = 4
+    TabOrder = 3
     object Label12: TLabel
       Left = 8
       Top = 16

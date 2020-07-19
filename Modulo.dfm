@@ -692,12 +692,14 @@ object dm: Tdm
       DisplayLabel = 'Valor Unitario'
       FieldName = 'valor_unitario'
       Origin = 'valor_unitario'
+      Visible = False
       currency = True
       Precision = 12
     end
     object queryDetalhesVendasqtdade: TBCDField
       AutoGenerateValue = arDefault
       DisplayLabel = 'Quantidade'
+      DisplayWidth = 8
       FieldName = 'qtdade'
       Origin = 'qtdade'
       Precision = 10
@@ -705,6 +707,7 @@ object dm: Tdm
     end
     object queryDetalhesVendasvalor_total: TBCDField
       DisplayLabel = 'Valor Total'
+      DisplayWidth = 10
       FieldName = 'valor_total'
       Origin = 'valor_total'
       Required = True
