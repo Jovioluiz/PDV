@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, System.UITypes;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, System.UITypes, ACBrUtil;
 
 type
   TFrmMenu = class(TForm)
@@ -28,6 +28,7 @@ type
     Gastos1: TMenuItem;
     Pagamentos1: TMenuItem;
     ConsultarVendas1: TMenuItem;
+    CertificadoDigital1: TMenuItem;
     procedure Usurios1Click(Sender: TObject);
     procedure Funcionrios1Click(Sender: TObject);
     procedure Cargos1Click(Sender: TObject);
@@ -43,6 +44,7 @@ type
     procedure Gastos1Click(Sender: TObject);
     procedure Pagamentos1Click(Sender: TObject);
     procedure ConsultarVendas1Click(Sender: TObject);
+    procedure CertificadoDigital1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -58,12 +60,92 @@ implementation
 
 uses Usuarios, Funcionarios, Cargos, Modulo, Fornecedores, Produtos,
   EntradasProdutos, SaidaProdutos, EstoqueBaixo, Vendas, Movimentacoes, Gastos,
-  ListaVendas;
+  ListaVendas, CertificadoDigital;
 
 procedure TFrmMenu.Cargos1Click(Sender: TObject);
 begin
   FrmCargos := TFrmCargos.Create(Self);
   FrmCargos.ShowModal;
+end;
+
+procedure TFrmMenu.CertificadoDigital1Click(Sender: TObject);
+var
+  addLinha: boolean;
+  i: integer;
+  serie: string;
+  certificadoDig: string;
+  caminhoNFCE: string;
+begin
+
+  frmCertificado := TFrmCertificado.Create(self);
+  frmVendas := TfrmVendas.Create(Self);
+
+  try
+
+    //APONTANDO PARA A PASTA ONDE ESTAO OS COMPONENTES NFCE
+    caminhoNFCE := ExtractFilePath(Application.ExeName) + 'nfe\';
+    frmVendas.nfce.Configuracoes.Arquivos.PathSchemas := caminhoNFCE;
+
+    frmVendas.nfce.SSL.LerCertificadosStore;
+
+    addLinha := true;
+
+    with frmCertificado.stringrid do
+    begin
+      ColWidths[0] := 220;
+      ColWidths[1] := 250;
+      ColWidths[2] := 120;
+      ColWidths[3] := 80;
+      ColWidths[4] := 150;
+
+      Cells[0,0] := 'Num Série';
+      Cells[1,0] := 'Razão Social';
+      Cells[2,0] := 'CNPJ';
+      Cells[3,0] := 'Validade';
+      Cells[4,0] := 'Certificadora';
+
+    end;
+
+    for i := 0 to frmVendas.nfce.SSL.ListaCertificados.Count -1 do
+    begin
+      with frmVendas.nfce.SSL.ListaCertificados[i] do
+        begin
+          serie := NumeroSerie;
+
+          with frmCertificado.stringrid do
+          begin
+
+            if addLinha then
+            begin
+              RowCount := RowCount + 1;
+
+              Cells[0, RowCount - 1] := NumeroSerie;
+              Cells[1, RowCount - 1] := RazaoSocial;
+              Cells[2, RowCount - 1] := CNPJ;
+              Cells[3, RowCount - 1] := FormatDateBr(DataVenc);
+              Cells[4, RowCount - 1] := Certificadora;
+              addLinha := true;
+            end;
+          end;
+        end;
+    end;
+
+    frmCertificado.ShowModal;
+
+    if frmCertificado.ModalResult = mrOk then
+    begin
+      certificadoDig := frmCertificado.stringrid.Cells[0, frmCertificado.stringrid.Row];
+    end;
+
+    frmVendas.nfce.Configuracoes.Certificados.NumeroSerie := certificadoDig;
+
+    frmVendas.nfce.WebServices.StatusServico.Executar;
+    ShowMessage(certificadoDig);
+    ShowMessage(frmVendas.nfce.WebServices.StatusServico.Msg);
+
+  finally
+    FrmCertificado.Free;
+  end;
 end;
 
 procedure TFrmMenu.ConsultarVendas1Click(Sender: TObject);

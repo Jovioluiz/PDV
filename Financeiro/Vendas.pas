@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, Vcl.Grids,
-  Vcl.DBGrids, Vcl.StdCtrls, Vcl.MPlayer, System.UITypes, FireDAC.Stan.Param;
+  Vcl.DBGrids, Vcl.StdCtrls, Vcl.MPlayer, System.UITypes, FireDAC.Stan.Param,
+  ACBrBase, ACBrDFe, ACBrNFe;
 
 type
   TfrmVendas = class(TForm)
@@ -45,6 +46,7 @@ type
     Panel8: TPanel;
     Panel9: TPanel;
     Label6: TLabel;
+    nfce: TACBrNFe;
     procedure edtCodBarrasChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -67,6 +69,7 @@ type
     procedure associarCamposVendas;
     procedure listar;
     procedure atualizaQtdadeEstoque;
+    procedure iniciarNfce;
 
     function validaCampo : Boolean;
   public
@@ -276,10 +279,10 @@ end;
 procedure TfrmVendas.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = #13 then
-    begin
-      Key := #0;
-      Perform(WM_NEXTDLGCTL,0,0)
-    end;
+  begin
+    Key := #0;
+    Perform(WM_NEXTDLGCTL,0,0)
+  end;
 end;
 
 procedure TfrmVendas.FormShow(Sender: TObject);
@@ -297,6 +300,14 @@ begin
   estoqueProduto := 0;
   totalComDesconto := 0;
   totalTroco := 0;
+end;
+
+procedure TfrmVendas.iniciarNfce;
+var
+  caminhoNFCE: string;
+begin
+  caminhoNFCE := ExtractFilePath(Application.ExeName) + 'nfe\';
+  nfce.Configuracoes.Arquivos.PathSchemas := caminhoNFCE;
 end;
 
 procedure TfrmVendas.limpar;
@@ -433,7 +444,7 @@ begin
 
 
   //imprimir cupom fiscal
-
+  iniciarNfce;
 
   //imprimir cupom não fiscal
 

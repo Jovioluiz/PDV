@@ -2989,6 +2989,10 @@ object FrmMenu: TFrmMenu
         Caption = 'Consultar Vendas'
         OnClick = ConsultarVendas1Click
       end
+      object CertificadoDigital1: TMenuItem
+        Caption = 'Certificado Digital'
+        OnClick = CertificadoDigital1Click
+      end
     end
     object Relatrios1: TMenuItem
       Bitmap.Data = {

@@ -19,7 +19,8 @@ uses
   CancelarItem in 'Financeiro\CancelarItem.pas' {frmCancelarItem},
   Movimentacoes in 'Financeiro\Movimentacoes.pas' {frmMovimentacoes},
   Gastos in 'Financeiro\Gastos.pas' {frmGastos},
-  ListaVendas in 'Financeiro\ListaVendas.pas' {frmListaVendas};
+  ListaVendas in 'Financeiro\ListaVendas.pas' {frmListaVendas},
+  CertificadoDigital in 'Financeiro\CertificadoDigital.pas' {frmCertificado};
 
 {$R *.res}
 
@@ -28,5 +29,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(Tdm, dm);
+  Application.CreateForm(TfrmCertificado, frmCertificado);
   Application.Run;
 end.

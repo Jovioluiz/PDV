@@ -10,7 +10,6 @@ object dm: Tdm
       'User_Name=jovio'
       'Password=MaverickV8'
       'DriverID=MySQL')
-    Connected = True
     LoginPrompt = False
     Left = 24
     Top = 16

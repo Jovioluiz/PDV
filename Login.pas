@@ -19,7 +19,7 @@ type
     procedure FormCanResize(Sender: TObject; var NewWidth, NewHeight: Integer;
       var Resize: Boolean);
     procedure btnLoginClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     procedure centralizarPainel;
@@ -60,14 +60,14 @@ begin
   centralizarPainel;
 end;
 
-procedure TFrmLogin.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if key = 13 then
-  begin
-    Login;
-  end;
 
+procedure TFrmLogin.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+    Key := #0;
+    Perform(WM_NEXTDLGCTL,0,0)
+  end;
 end;
 
 procedure TFrmLogin.Login;

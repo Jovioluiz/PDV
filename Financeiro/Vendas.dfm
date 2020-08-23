@@ -481,4 +481,19 @@ object frmVendas: TfrmVendas
       Caption = 'Cancelar Cupom: Ctrl + Z'
     end
   end
+  object nfce: TACBrNFe
+    Configuracoes.Geral.SSLLib = libCustom
+    Configuracoes.Geral.SSLCryptLib = cryWinCrypt
+    Configuracoes.Geral.SSLHttpLib = httpWinHttp
+    Configuracoes.Geral.SSLXmlSignLib = xsMsXml
+    Configuracoes.Geral.FormatoAlerta = 'TAG:%TAGNIVEL% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.'
+    Configuracoes.Geral.ModeloDF = moNFCe
+    Configuracoes.Arquivos.OrdenacaoPath = <>
+    Configuracoes.WebServices.UF = 'SC'
+    Configuracoes.WebServices.AguardarConsultaRet = 0
+    Configuracoes.WebServices.QuebradeLinha = '|'
+    Configuracoes.RespTec.IdCSRT = 0
+    Left = 390
+    Top = 616
+  end
 end

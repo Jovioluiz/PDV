@@ -15,7 +15,7 @@ object FrmLogin: TFrmLogin
   Position = poScreenCenter
   WindowState = wsMaximized
   OnCanResize = FormCanResize
-  OnKeyDown = FormKeyDown
+  OnKeyPress = FormKeyPress
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
