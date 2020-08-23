@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, System.UITypes;
 
 type
   TFrmMenu = class(TForm)
@@ -40,6 +40,9 @@ type
     procedure Nvel1Click(Sender: TObject);
     procedure Vendas1Click(Sender: TObject);
     procedure Movimentaes2Click(Sender: TObject);
+    procedure Gastos1Click(Sender: TObject);
+    procedure Pagamentos1Click(Sender: TObject);
+    procedure ConsultarVendas1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -54,12 +57,19 @@ implementation
 {$R *.dfm}
 
 uses Usuarios, Funcionarios, Cargos, Modulo, Fornecedores, Produtos,
-  EntradasProdutos, SaidaProdutos, EstoqueBaixo, Vendas, Movimentacoes;
+  EntradasProdutos, SaidaProdutos, EstoqueBaixo, Vendas, Movimentacoes, Gastos,
+  ListaVendas;
 
 procedure TFrmMenu.Cargos1Click(Sender: TObject);
 begin
   FrmCargos := TFrmCargos.Create(Self);
   FrmCargos.ShowModal;
+end;
+
+procedure TFrmMenu.ConsultarVendas1Click(Sender: TObject);
+begin
+  frmListaVendas := TfrmListaVendas.Create(Self);
+  frmListaVendas.ShowModal;
 end;
 
 procedure TFrmMenu.EntradasProdutos1Click(Sender: TObject);
@@ -89,6 +99,12 @@ begin
   FrmFuncionarios.ShowModal;
 end;
 
+procedure TFrmMenu.Gastos1Click(Sender: TObject);
+begin
+  frmGastos := TfrmGastos.Create(Self);
+  frmGastos.ShowModal;
+end;
+
 procedure TFrmMenu.Movimentaes2Click(Sender: TObject);
 begin
   frmMovimentacoes := TfrmMovimentacoes.Create(Self);
@@ -99,6 +115,12 @@ procedure TFrmMenu.Nvel1Click(Sender: TObject);
 begin
   frmEstoqueBaixo := TfrmEstoqueBaixo.Create(Self);
   frmEstoqueBaixo.ShowModal;
+end;
+
+procedure TFrmMenu.Pagamentos1Click(Sender: TObject);
+begin
+//implementar conforme a tela gastos, com o nome do funcionário, valor pago, data do pagamento
+  MessageDlg('Falta implementar!!', mtInformation, mbOKCancel, 0);
 end;
 
 procedure TFrmMenu.Produtos1Click(Sender: TObject);

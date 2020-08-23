@@ -149,9 +149,7 @@ begin
 end;
 
 procedure TfrmVendas.associarCamposVendas;
-//var usuario : TFrmUsuarios;
 begin
-  //usuario := TFrmUsuarios.Create(Self);
   dm.tbVendas.FieldByName('valor_bruto').Value := totalVenda;
   dm.tbVendas.FieldByName('valor_total').Value := totalComDesconto;
   dm.tbVendas.FieldByName('data_venda').Value := now;
@@ -159,6 +157,7 @@ begin
   dm.tbVendas.FieldByName('valor_troco').Value := totalTroco;
   dm.tbVendas.FieldByName('valor_desconto').Value := edtDesconto.Text;
   dm.tbVendas.FieldByName('valor_recebido').Value := edtValorRecebido.Text;
+  dm.tbVendas.FieldByName('status').Value := 'C';
 end;
 
 //atualiza o campo edtQtdadeEstoque com a quantidade em estoque do produto
@@ -262,10 +261,15 @@ begin
   if key = 115 then
   begin
     dm.tbVendas.Insert;
+  if edtValorRecebido.Text <= '0' then
+    begin
+      MessageDlg('Valor recebido deve ser maior que 0', mtWarning, mbOKCancel, 0);
+      edtValorRecebido.SetFocus;
+      Exit;
+    end;
+
   if MessageDlg('Deseja Fechar a Venda?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-
     salvarVenda;
-
   end;
 end;
 

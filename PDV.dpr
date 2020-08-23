@@ -17,7 +17,9 @@ uses
   EstoqueBaixo in 'Estoque\EstoqueBaixo.pas' {frmEstoqueBaixo},
   Vendas in 'Financeiro\Vendas.pas' {frmVendas},
   CancelarItem in 'Financeiro\CancelarItem.pas' {frmCancelarItem},
-  Movimentacoes in 'Financeiro\Movimentacoes.pas' {frmMovimentacoes};
+  Movimentacoes in 'Financeiro\Movimentacoes.pas' {frmMovimentacoes},
+  Gastos in 'Financeiro\Gastos.pas' {frmGastos},
+  ListaVendas in 'Financeiro\ListaVendas.pas' {frmListaVendas};
 
 {$R *.res}
 
@@ -26,7 +28,5 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(Tdm, dm);
-  Application.CreateForm(TfrmCancelarItem, frmCancelarItem);
-  Application.CreateForm(TfrmMovimentacoes, frmMovimentacoes);
   Application.Run;
 end.

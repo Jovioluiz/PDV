@@ -363,10 +363,10 @@ end;
 procedure TfrmEntradaProdutos.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = #13 then
-    begin
-      Key := #0;
-      Perform(WM_NEXTDLGCTL, 0, 0);
-    end;
+  begin
+    Key := #0;
+    Perform(WM_NEXTDLGCTL, 0, 0);
+  end;
 end;
 
 procedure TfrmEntradaProdutos.habilitarCampos;

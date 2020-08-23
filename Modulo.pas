@@ -123,6 +123,15 @@ type
     queryMovimentacoes: TFDQuery;
     dsMovimentacoes: TDataSource;
     queryVendasvalor_recebido: TBCDField;
+    tbGastos: TFDTable;
+    queryGastos: TFDQuery;
+    queryGastosid_gasto: TFDAutoIncField;
+    queryGastosmotivo: TStringField;
+    queryGastosvalor: TBCDField;
+    queryGastosid_funcionario: TIntegerField;
+    queryGastosdata: TDateField;
+    dsGastos: TDataSource;
+    queryVendasstatus: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }

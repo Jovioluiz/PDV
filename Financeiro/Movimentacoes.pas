@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Buttons, Vcl.ComCtrls,
-  Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids;
+  Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, FireDAC.Stan.Param;
 
 type
   TfrmMovimentacoes = class(TForm)
@@ -59,21 +59,51 @@ begin
   dm.queryMovimentacoes.Close;
   dm.queryMovimentacoes.SQL.Clear;
 
-  if cbEntradaSaida.Text = 'Tudo' then
+  if cbEntradaSaida.ItemIndex = 0 then
   begin
     dm.queryMovimentacoes.SQL.Add('select '+
-                                  '   * '+
-                                  'from '+
-                                  '   movimentacoes '+
-                                  'where '+
-                                  '   data >= :datainicial and '+
-                                  '   data <= :datafinal '+
+                                  '    id_movimentacoes,                  '+
+                                  '  case when tipo = ''E'' then          '+
+                                  '      ''Entrada''                      '+
+                                  '  when tipo = ''S'' then               '+
+                                  '      ''Saida''                        '+
+                                  '  end as tipo,                         '+
+                                  '      case when movimento = ''V'' then '+
+                                  '      ''Venda''                        '+
+                                  '  when movimento = ''D'' then          '+
+                                  '      ''Despesa''                      '+
+                                  '  end as movimento,                    '+
+                                  '  valor,                               '+
+                                  '  id_funcionario,                      '+
+                                  '  data,                                '+
+                                  '  id_movimento,                        '+
+                                  '  id_movimento_gasto                   '+
+                                  'from                                   '+
+                                  '   movimentacoes                       '+
+                                  'where                                  '+
+                                  '   data >= :datainicial and            '+
+                                  '   data <= :datafinal                  '+
                                   'order by id_movimentacoes desc');
   end
   else
   begin
     dm.queryMovimentacoes.SQL.Add('select '+
-                                  '   * '+
+                                  '    id_movimentacoes,                  '+
+                                  '  case when tipo = ''E'' then          '+
+                                  '      ''Entrada''                      '+
+                                  '  when tipo = ''S'' then               '+
+                                  '      ''Saida''                        '+
+                                  '  end as tipo,                         '+
+                                  '  case when movimento = ''V'' then '+
+                                  '      ''Venda''                        '+
+                                  '  when movimento = ''D'' then          '+
+                                  '      ''Despesa''                      '+
+                                  '  end as movimento,                    '+
+                                  '  valor,                               '+
+                                  '  id_funcionario,                      '+
+                                  '  data,                                '+
+                                  '  id_movimento,                        '+
+                                  '  id_movimento_gasto                   '+
                                   'from '+
                                   '   movimentacoes '+
                                   'where '+
@@ -81,7 +111,14 @@ begin
                                   '   data <= :datafinal and '+
                                   '   tipo = :tipo '+
                                   'order by id_movimentacoes desc');
-    dm.queryMovimentacoes.ParamByName('tipo').Value := cbEntradaSaida.Text;
+    if cbEntradaSaida.ItemIndex = 1 then
+    begin
+      dm.queryMovimentacoes.ParamByName('tipo').Value := 'E';
+    end
+    else
+    begin
+      dm.queryMovimentacoes.ParamByName('tipo').Value := 'S';
+    end;
   end;
 
   dm.queryMovimentacoes.ParamByName('datainicial').Value := FormatDateTime('yyyy/mm/dd', dtInicial.Date);
@@ -99,11 +136,26 @@ begin
   dm.queryMovimentacoes.Close;
   dm.queryMovimentacoes.SQL.Clear;
   dm.queryMovimentacoes.SQL.Add('select '+
-                              '   * '+
-                              'from '+
-                              '   movimentacoes '+
-                              'where '+
-                              '   data = curDate() '+
+                                  '    id_movimentacoes,                  '+
+                                  '  case when tipo = ''E'' then          '+
+                                  '      ''Entrada''                      '+
+                                  '  when tipo = ''S'' then               '+
+                                  '      ''Saida''                        '+
+                                  '  end as tipo,                         '+
+                                  '  case when movimento = ''V'' then '+
+                                  '      ''Venda''                        '+
+                                  '  when movimento = ''D'' then          '+
+                                  '      ''Despesa''                      '+
+                                  '  end as movimento,                    '+
+                                  '  valor,                               '+
+                                  '  id_funcionario,                      '+
+                                  '  data,                                '+
+                                  '  id_movimento,                        '+
+                                  '  id_movimento_gasto                   '+
+                              'from                                       '+
+                              '   movimentacoes                           '+
+                              'where                                      '+
+                              '   data = curDate()                        '+
                               'order by id_movimentacoes desc');
   dm.queryMovimentacoes.Open();
   TFloatField(dm.queryMovimentacoes.FieldByName('valor')).DisplayFormat := 'R$ #,,,,0.00';
@@ -146,7 +198,8 @@ begin
   dbGridVendas.Columns.Items[5].FieldName := 'data';
   dbGridVendas.Columns.Items[5].Title.Caption := 'Data';
 
-  dbGridVendas.Columns.Items[6].Visible := false;
+ dbGridVendas.Columns.Items[6].Visible := false;
+ dbGridVendas.Columns.Items[7].Visible := false;
 end;
 
 procedure TfrmMovimentacoes.FormShow(Sender: TObject);
@@ -170,8 +223,20 @@ begin
 end;
 
 procedure TfrmMovimentacoes.totalizar;
+var
+  tot : Real;
 begin
+  tot := totalEntrada - totalSaida;
+  if tot >= 0 then
+  begin
+    lblVlTotal.Font.Color := clGreen;
+  end
+  else
+  begin
+    lblVlTotal.Font.Color := clRed;
+  end;
 
+  lblVlTotal.Caption := FormatFloat('R$ #,,,,0.00', tot);
 end;
 
 procedure TfrmMovimentacoes.totalizarEntrada;
@@ -198,8 +263,26 @@ begin
 end;
 
 procedure TfrmMovimentacoes.totalizarSaidas;
+var
+  tot : Real;
 begin
-
+  dm.queryMovimentacoes.Close;
+  dm.queryMovimentacoes.SQL.Clear;
+  dm.queryMovimentacoes.SQL.Add('select '+
+                                '   sum(valor) as total '+
+                                'from '+
+                                '   movimentacoes '+
+                                'where '+
+                                '   data >= :datainicial and '+
+                                '   data <= :datafinal and '+
+                                '   tipo = "S" ');
+  dm.queryMovimentacoes.ParamByName('datainicial').Value := FormatDateTime('yyyy/mm/dd', dtInicial.Date);
+  dm.queryMovimentacoes.ParamByName('datafinal').Value := FormatDateTime('yyyy/mm/dd', dtFinal.Date);
+  dm.queryMovimentacoes.Prepare;
+  dm.queryMovimentacoes.Open;
+  tot := dm.queryMovimentacoes.FieldByName('total').AsFloat;
+  totalSaida := tot;
+  lblVlSaida.Caption := FormatFloat('R$ #,,,,0.00', tot);
 end;
 
 end.

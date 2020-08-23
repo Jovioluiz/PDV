@@ -2979,12 +2979,15 @@ object FrmMenu: TFrmMenu
       end
       object Gastos1: TMenuItem
         Caption = 'Gastos'
+        OnClick = Gastos1Click
       end
       object Pagamentos1: TMenuItem
         Caption = 'Pagamentos'
+        OnClick = Pagamentos1Click
       end
       object ConsultarVendas1: TMenuItem
         Caption = 'Consultar Vendas'
+        OnClick = ConsultarVendas1Click
       end
     end
     object Relatrios1: TMenuItem

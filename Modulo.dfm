@@ -21,7 +21,7 @@ object dm: Tdm
     UpdateOptions.UpdateTableName = 'cargos'
     TableName = 'cargos'
     Left = 16
-    Top = 112
+    Top = 88
   end
   object queryCargos: TFDQuery
     Connection = fd
@@ -60,7 +60,7 @@ object dm: Tdm
     UpdateOptions.UpdateTableName = 'funcionarios'
     TableName = 'funcionarios'
     Left = 72
-    Top = 112
+    Top = 88
   end
   object queryFuncionario: TFDQuery
     Connection = fd
@@ -166,7 +166,7 @@ object dm: Tdm
     UpdateOptions.UpdateTableName = 'pdv.usuarios'
     TableName = 'pdv.usuarios'
     Left = 136
-    Top = 112
+    Top = 88
   end
   object queryUsuarios: TFDQuery
     Connection = fd
@@ -228,7 +228,7 @@ object dm: Tdm
     UpdateOptions.UpdateTableName = 'pdv.fornecedor'
     TableName = 'pdv.fornecedor'
     Left = 208
-    Top = 112
+    Top = 88
   end
   object queryFornecedor: TFDQuery
     Connection = fd
@@ -342,7 +342,7 @@ object dm: Tdm
     UpdateOptions.UpdateTableName = 'pdv.produtos'
     TableName = 'pdv.produtos'
     Left = 264
-    Top = 112
+    Top = 88
   end
   object queryProdutos: TFDQuery
     Connection = fd
@@ -439,15 +439,15 @@ object dm: Tdm
   end
   object queryCoringa: TFDQuery
     Connection = fd
-    Left = 432
-    Top = 8
+    Left = 424
+    Top = 16
   end
   object tbEntradaProdutos: TFDTable
     Connection = fd
     UpdateOptions.UpdateTableName = 'pdv.entrada_produtos'
     TableName = 'pdv.entrada_produtos'
     Left = 352
-    Top = 112
+    Top = 88
   end
   object queryEntradaProdutos: TFDQuery
     Connection = fd
@@ -537,7 +537,7 @@ object dm: Tdm
     UpdateOptions.UpdateTableName = 'pdv.saidas_produtos'
     TableName = 'pdv.saidas_produtos'
     Left = 448
-    Top = 112
+    Top = 88
   end
   object querySaidaProdutos: TFDQuery
     Connection = fd
@@ -592,6 +592,7 @@ object dm: Tdm
     Top = 272
   end
   object tbVendas: TFDTable
+    IndexFieldNames = 'id_venda'
     Connection = fd
     UpdateOptions.UpdateTableName = 'pdv.vendas'
     TableName = 'pdv.vendas'
@@ -616,6 +617,7 @@ object dm: Tdm
       DisplayLabel = 'Valor Bruto'
       FieldName = 'valor_bruto'
       Origin = 'valor_bruto'
+      ReadOnly = True
       currency = True
       Precision = 12
     end
@@ -623,6 +625,7 @@ object dm: Tdm
       DisplayLabel = 'ID Funcionario'
       FieldName = 'id_funcionario'
       Origin = 'id_funcionario'
+      ReadOnly = True
       Required = True
     end
     object queryVendasdata_venda: TDateTimeField
@@ -630,12 +633,14 @@ object dm: Tdm
       DisplayLabel = 'Data'
       FieldName = 'data_venda'
       Origin = 'data_venda'
+      ReadOnly = True
     end
     object queryVendasvalor_troco: TBCDField
       AutoGenerateValue = arDefault
       DisplayLabel = 'Valor Troco'
       FieldName = 'valor_troco'
       Origin = 'valor_troco'
+      ReadOnly = True
       currency = True
       Precision = 12
     end
@@ -644,13 +649,17 @@ object dm: Tdm
       DisplayLabel = 'Valor Total'
       FieldName = 'valor_total'
       Origin = 'valor_total'
+      ReadOnly = True
       currency = True
       Precision = 12
     end
     object queryVendasvalor_desconto: TBCDField
       AutoGenerateValue = arDefault
+      DisplayLabel = 'Desconto'
       FieldName = 'valor_desconto'
       Origin = 'valor_desconto'
+      ReadOnly = True
+      currency = True
       Precision = 12
     end
     object queryVendasvalor_recebido: TBCDField
@@ -658,7 +667,17 @@ object dm: Tdm
       DisplayLabel = 'Valor Recebido'
       FieldName = 'valor_recebido'
       Origin = 'valor_recebido'
+      ReadOnly = True
+      currency = True
       Precision = 12
+    end
+    object queryVendasstatus: TStringField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Status'
+      FieldName = 'status'
+      Origin = '`status`'
+      ReadOnly = True
+      Size = 5
     end
   end
   object dsVendas: TDataSource
@@ -671,7 +690,7 @@ object dm: Tdm
     UpdateOptions.UpdateTableName = 'detalhes_vendas'
     TableName = 'detalhes_vendas'
     Left = 536
-    Top = 112
+    Top = 88
   end
   object queryDetalhesVendas: TFDQuery
     Connection = fd
@@ -729,6 +748,7 @@ object dm: Tdm
       AutoGenerateValue = arDefault
       FieldName = 'id_funcionario'
       Origin = 'id_funcionario'
+      Visible = False
     end
   end
   object dsDetalhesVendas: TDataSource
@@ -741,16 +761,70 @@ object dm: Tdm
     UpdateOptions.UpdateTableName = 'pdv.movimentacoes'
     TableName = 'pdv.movimentacoes'
     Left = 624
-    Top = 112
+    Top = 88
   end
   object queryMovimentacoes: TFDQuery
     Connection = fd
-    Left = 456
+    Left = 464
     Top = 344
   end
   object dsMovimentacoes: TDataSource
     DataSet = queryMovimentacoes
-    Left = 544
+    Left = 560
+    Top = 344
+  end
+  object tbGastos: TFDTable
+    Connection = fd
+    UpdateOptions.UpdateTableName = 'pdv.gastos'
+    TableName = 'pdv.gastos'
+    Left = 696
+    Top = 88
+  end
+  object queryGastos: TFDQuery
+    Connection = fd
+    SQL.Strings = (
+      'select *from gastos')
+    Left = 632
+    Top = 344
+    object queryGastosid_gasto: TFDAutoIncField
+      DisplayLabel = 'ID'
+      FieldName = 'id_gasto'
+      Origin = 'id_gasto'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+      Visible = False
+    end
+    object queryGastosmotivo: TStringField
+      DisplayLabel = 'Motivo'
+      FieldName = 'motivo'
+      Origin = 'motivo'
+      Required = True
+      Size = 25
+    end
+    object queryGastosvalor: TBCDField
+      DisplayLabel = 'Valor'
+      FieldName = 'valor'
+      Origin = 'valor'
+      Required = True
+      currency = True
+      Precision = 12
+    end
+    object queryGastosid_funcionario: TIntegerField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Funcionario'
+      FieldName = 'id_funcionario'
+      Origin = 'id_funcionario'
+    end
+    object queryGastosdata: TDateField
+      AutoGenerateValue = arDefault
+      DisplayLabel = 'Data'
+      FieldName = 'data'
+      Origin = '`data`'
+    end
+  end
+  object dsGastos: TDataSource
+    DataSet = queryGastos
+    Left = 688
     Top = 344
   end
 end
