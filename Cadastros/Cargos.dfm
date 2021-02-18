@@ -398,7 +398,7 @@ object FrmCargos: TFrmCargos
   object edtNomeCargo: TEdit
     Left = 61
     Top = 61
-    Width = 217
+    Width = 252
     Height = 21
     Enabled = False
     TabOrder = 0

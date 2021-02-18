@@ -15,14 +15,13 @@ type
     imgLogin: TImage;
     edtUsuario: TEdit;
     edtSenha: TEdit;
-    btnLogin: TSpeedButton;
     procedure FormCanResize(Sender: TObject; var NewWidth, NewHeight: Integer;
       var Resize: Boolean);
-    procedure btnLoginClick(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure edtSenhaExit(Sender: TObject);
   private
     { Private declarations }
-    procedure centralizarPainel;
+    procedure CentralizarPainel;
     procedure Login;
   public
     { Public declarations }
@@ -37,29 +36,29 @@ implementation
 
 uses Menu;
 
-procedure TFrmLogin.btnLoginClick(Sender: TObject);
-begin
-  if (Trim(edtUsuario.Text) = '') or (Trim(edtSenha.Text) = '') then    //Trim ignora os espaços
-    begin
-      MessageDlg('Usuário e Senha não podem ser vazios', mtInformation, mbOKCancel, 0);
-      edtUsuario.SetFocus;
-      Exit;
-    end;
-  Login;
-end;
-
-procedure TFrmLogin.centralizarPainel;
+procedure TFrmLogin.CentralizarPainel;
 begin
   pnlLogin.Top := (Self.Height div 2) - (pnlLogin.Height div 2);
   pnlLogin.Left := (Self.Width div 2) - (pnlLogin.Width div 2);
 end;
 
+procedure TFrmLogin.edtSenhaExit(Sender: TObject);
+begin
+  if (Trim(edtUsuario.Text) = '') or (Trim(edtSenha.Text) = '') then
+  begin
+    MessageDlg('Usuário e Senha não podem ser vazios', mtInformation, mbOKCancel, 0);
+    edtUsuario.SetFocus;
+    Exit;
+  end;
+
+  Login;
+end;
+
 procedure TFrmLogin.FormCanResize(Sender: TObject; var NewWidth,
   NewHeight: Integer; var Resize: Boolean);
 begin
-  centralizarPainel;
+  CentralizarPainel;
 end;
-
 
 procedure TFrmLogin.FormKeyPress(Sender: TObject; var Key: Char);
 begin
@@ -79,7 +78,7 @@ begin
   dm.queryUsuarios.ParamByName('senha').AsString := edtSenha.Text;
   dm.queryUsuarios.Open();
 
-if not dm.queryUsuarios.IsEmpty then
+  if not dm.queryUsuarios.IsEmpty then
   begin
     nomeUsuario := dm.queryUsuarios['usuario'];
     cargoUsuario := dm.queryUsuarios['cargo'];
@@ -88,13 +87,13 @@ if not dm.queryUsuarios.IsEmpty then
     FrmMenu := TFrmMenu.Create(Self);
     FrmMenu.ShowModal;
   end
-else
+  else
   begin
-   MessageDlg('Os dados estão incorretos!', mtInformation, mbOKCancel, 0);
-   edtUsuario.Clear;
-   edtSenha.Clear;
-   edtUsuario.SetFocus;
+    ShowMessage('Os dados estão incorretos!');
+    edtUsuario.Clear;
+    edtSenha.Clear;
+    edtUsuario.SetFocus;
   end;
-  end;
+end;
 
 end.

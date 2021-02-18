@@ -543,7 +543,7 @@ object FrmUsuarios: TFrmUsuarios
   object edtIdUsuario: TEdit
     Left = 33
     Top = 13
-    Width = 28
+    Width = 40
     Height = 21
     Enabled = False
     TabOrder = 5

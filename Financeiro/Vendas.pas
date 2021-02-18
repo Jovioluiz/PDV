@@ -5,8 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, Vcl.Grids,
-  Vcl.DBGrids, Vcl.StdCtrls, Vcl.MPlayer, System.UITypes, FireDAC.Stan.Param,
-  ACBrBase, ACBrDFe, ACBrNFe;
+  Vcl.DBGrids, Vcl.StdCtrls, Vcl.MPlayer, System.UITypes, FireDAC.Stan.Param;
 
 type
   TfrmVendas = class(TForm)
@@ -46,7 +45,6 @@ type
     Panel8: TPanel;
     Panel9: TPanel;
     Label6: TLabel;
-    nfce: TACBrNFe;
     procedure edtCodBarrasChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -114,15 +112,13 @@ begin
 end;
 
 {PROCEDIMENTO PADRÃO PARA RECUPERAR FOTO DO BANCO}
-procedure TfrmVendas.ExibeFoto(DataSet : TDataSet; BlobFieldName : String; ImageExibicao :
-TImage);
+procedure TfrmVendas.ExibeFoto(DataSet: TDataSet; BlobFieldName: String; ImageExibicao: TImage);
  var MemoryStream:TMemoryStream; jpg : TPicture;
  const
   OffsetMemoryStream : Int64 = 0;
-
 begin
   if not(DataSet.IsEmpty) and
-  not((DataSet.FieldByName(BlobFieldName) as TBlobField).IsNull) then
+     not((DataSet.FieldByName(BlobFieldName) as TBlobField).IsNull) then
     try
       MemoryStream := TMemoryStream.Create;
       Jpg := TPicture.Create;
@@ -220,9 +216,7 @@ begin
     salvarItens;
   end
   else
-  begin
     limparProdutos;
-  end;
 end;
 
 procedure TfrmVendas.FormActivate(Sender: TObject);
@@ -254,25 +248,25 @@ procedure TfrmVendas.FormKeyDown(Sender: TObject; var Key: Word;
 begin
   //ao pressionar Ctrl + x, abre a tela para cancelar o item
   if (ssCtrl in Shift) then
-    if key = 88 then
-    begin
-      frmCancelarItem := TfrmCancelarItem.Create(Self);
-      frmCancelarItem.Show;
-    end;
+  if key = 88 then
+  begin
+    frmCancelarItem := TfrmCancelarItem.Create(Self);
+    frmCancelarItem.Show;
+  end;
 
   //F4 - finaliza cupom
   if key = 115 then
   begin
     dm.tbVendas.Insert;
-  if edtValorRecebido.Text <= '0' then
+    if edtValorRecebido.Text <= '0' then
     begin
       MessageDlg('Valor recebido deve ser maior que 0', mtWarning, mbOKCancel, 0);
       edtValorRecebido.SetFocus;
       Exit;
     end;
 
-  if MessageDlg('Deseja Fechar a Venda?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-    salvarVenda;
+    if MessageDlg('Deseja Fechar a Venda?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      salvarVenda;
   end;
 end;
 
@@ -307,7 +301,7 @@ var
   caminhoNFCE: string;
 begin
   caminhoNFCE := ExtractFilePath(Application.ExeName) + 'nfe\';
-  nfce.Configuracoes.Arquivos.PathSchemas := caminhoNFCE;
+  //nfce.Configuracoes.Arquivos.PathSchemas := caminhoNFCE;
 end;
 
 procedure TfrmVendas.limpar;
@@ -447,7 +441,6 @@ begin
   iniciarNfce;
 
   //imprimir cupom não fiscal
-
 
   limpar;
   limparFoto;

@@ -29,6 +29,5 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(Tdm, dm);
-  Application.CreateForm(TfrmCertificado, frmCertificado);
   Application.Run;
 end.
