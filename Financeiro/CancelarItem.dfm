@@ -32,9 +32,9 @@ object frmCancelarItem: TfrmCancelarItem
     ParentFont = False
   end
   object edtCodItem: TEdit
-    Left = 125
+    Left = 92
     Top = 32
-    Width = 121
+    Width = 154
     Height = 27
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText

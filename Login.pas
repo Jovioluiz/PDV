@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.jpeg, Data.DB,
-  Vcl.Imaging.pngimage, Vcl.StdCtrls, Vcl.Buttons, System.UITypes, Modulo, FireDAC.Stan.Param;
+  Vcl.Imaging.pngimage, Vcl.StdCtrls, Vcl.Buttons, System.UITypes, Modulo, FireDAC.Stan.Param,
+  uConexao, uPadrao;
 
 type
   TFrmLogin = class(TForm)

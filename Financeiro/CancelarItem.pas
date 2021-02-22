@@ -72,7 +72,7 @@ begin
         dm.queryCoringa.ExecSQL;
         Close;
       except
-        MessageDlg('Código do Produto Inválido', mtInformation, mbYesNoCancel, 0);
+        MessageDlg('Código do Produto Inválido', mtInformation, mbOKCancel, 0);
         edtCodItem.Clear;
         edtCodItem.SetFocus;
         Exit;
@@ -91,10 +91,7 @@ begin
     dm.queryProdutos.Open();
 
     if not dm.queryProdutos.IsEmpty then
-    begin
       qt_estoque := dm.queryProdutos['qtd_estoque'];
-    end;
-
 
     //devolver quantidade para o estoque
     qt_estoque := qt_estoque + quantidade;

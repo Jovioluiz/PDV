@@ -177,6 +177,14 @@
             <Form>frmCertificado</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Financeiro\uclVendas.pas"/>
+        <DCCReference Include="Financeiro\dVendas.pas">
+            <Form>dmVendas</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Conexao\uConexao.pas"/>
+        <DCCReference Include="uPadrao.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

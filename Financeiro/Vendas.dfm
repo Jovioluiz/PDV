@@ -16,6 +16,7 @@ object frmVendas: TfrmVendas
   Position = poScreenCenter
   OnActivate = FormActivate
   OnClose = FormClose
+  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
   OnShow = FormShow
@@ -30,13 +31,12 @@ object frmVendas: TfrmVendas
     Color = clSkyBlue
     ParentBackground = False
     TabOrder = 0
-    object DBGrid1: TDBGrid
+    object dbGridItens: TDBGrid
       Left = 1
       Top = 36
       Width = 348
       Height = 651
       Align = alClient
-      DataSource = dm.dsDetalhesVendas
       Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -353,6 +353,7 @@ object frmVendas: TfrmVendas
       ParentFont = False
       TabOrder = 0
       OnChange = edtCodBarrasChange
+      OnClick = edtCodBarrasClick
     end
     object Panel1: TPanel
       Left = 1

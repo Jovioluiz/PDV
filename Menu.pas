@@ -88,7 +88,7 @@ begin
 
     //frmVendas.nfce.SSL.LerCertificadosStore;
 
-    addLinha := true;
+    //addLinha := true;
 
 //    with frmCertificado.stringrid do
 //    begin

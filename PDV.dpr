@@ -20,7 +20,11 @@ uses
   Movimentacoes in 'Financeiro\Movimentacoes.pas' {frmMovimentacoes},
   Gastos in 'Financeiro\Gastos.pas' {frmGastos},
   ListaVendas in 'Financeiro\ListaVendas.pas' {frmListaVendas},
-  CertificadoDigital in 'Financeiro\CertificadoDigital.pas' {frmCertificado};
+  CertificadoDigital in 'Financeiro\CertificadoDigital.pas' {frmCertificado},
+  uclVendas in 'Financeiro\uclVendas.pas',
+  dVendas in 'Financeiro\dVendas.pas' {dmVendas: TDataModule},
+  uConexao in 'Conexao\uConexao.pas',
+  uPadrao in 'uPadrao.pas';
 
 {$R *.res}
 
