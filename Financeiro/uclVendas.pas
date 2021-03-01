@@ -3,7 +3,7 @@ unit uclVendas;
 interface
 
 uses
-  dVendas, uPadrao, uConexao;
+  dVendas, uPadrao, uConexao, Data.DB, uUtil, FireDAC.Stan.Param;
 
 type TVenda = class(TPadrao)
   private
@@ -15,6 +15,8 @@ type TVenda = class(TPadrao)
 
   public
     function BuscarProdutos(CodBarras: string): Boolean;
+    function RetornaValorTotal(dataset: TDataset): Currency;
+    function SalvarVenda(): Boolean;
 
   constructor Create;
 
@@ -76,6 +78,35 @@ constructor TVenda.Create;
 begin
   FDados := TdmVendas.Create(nil);
   FConexao := TConexao.Create;
+end;
+
+function TVenda.RetornaValorTotal(dataset: TDataset): Currency;
+var
+  valorTotal: Currency;
+begin
+  if dataset.IsEmpty then
+    Exit(0);
+
+  valorTotal := 0;
+  dataset.DisableControls;
+
+  try
+    dataset.First;
+    while not dataset.Eof do
+    begin
+      valorTotal := valorTotal + dataset.FieldByName('valor_total').AsCurrency;
+      dataset.Next;
+    end;
+
+    Result := valorTotal;
+  finally
+    dataset.EnableControls;
+  end;
+end;
+
+function TVenda.SalvarVenda: Boolean;
+begin
+
 end;
 
 procedure TVenda.SetConexao(const Value: TConexao);

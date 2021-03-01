@@ -25,7 +25,7 @@ object frmVendas: TfrmVendas
   object painelDetalhes: TPanel
     Left = 0
     Top = 0
-    Width = 350
+    Width = 376
     Height = 688
     Align = alLeft
     Color = clSkyBlue
@@ -34,10 +34,9 @@ object frmVendas: TfrmVendas
     object dbGridItens: TDBGrid
       Left = 1
       Top = 36
-      Width = 348
+      Width = 374
       Height = 651
       Align = alClient
-      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -19
@@ -55,7 +54,7 @@ object frmVendas: TfrmVendas
     object painelTituloDetalhes: TPanel
       Left = 1
       Top = 1
-      Width = 348
+      Width = 374
       Height = 35
       Align = alTop
       Alignment = taLeftJustify
@@ -80,7 +79,7 @@ object frmVendas: TfrmVendas
     Color = clSkyBlue
     ParentBackground = False
     TabOrder = 1
-    object edtTotal: TEdit
+    object edtTotalItem: TEdit
       Left = 6
       Top = 67
       Width = 259
@@ -292,12 +291,13 @@ object frmVendas: TfrmVendas
     end
   end
   object painelCentral: TPanel
-    Left = 350
+    Left = 376
     Top = 0
-    Width = 598
+    Width = 572
     Height = 688
     Align = alClient
     TabOrder = 2
+    ExplicitWidth = 570
     object Label1: TLabel
       Left = 16
       Top = 152
@@ -353,12 +353,12 @@ object frmVendas: TfrmVendas
       ParentFont = False
       TabOrder = 0
       OnChange = edtCodBarrasChange
-      OnClick = edtCodBarrasClick
+      OnExit = edtCodBarrasExit
     end
     object Panel1: TPanel
       Left = 1
       Top = 1
-      Width = 596
+      Width = 570
       Height = 35
       Align = alTop
       Alignment = taLeftJustify
@@ -413,6 +413,9 @@ object frmVendas: TfrmVendas
       Font.Style = []
       ParentFont = False
       TabOrder = 3
+      Text = '1'
+      OnChange = edtQtdadeChange
+      OnExit = edtQtdadeExit
     end
     object edtPrecoUnitario: TEdit
       Left = 16
@@ -465,7 +468,7 @@ object frmVendas: TfrmVendas
       Top = 16
       Width = 111
       Height = 13
-      Caption = 'Cancelar Item: Ctrl + X'
+      Caption = 'Cancelar Item: Ctrl + Z'
     end
     object Label13: TLabel
       Left = 8

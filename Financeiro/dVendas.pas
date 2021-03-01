@@ -29,6 +29,17 @@ type
     cdsDetalhesVendasqtdade: TFloatField;
     cdsDetalhesVendasvalor_total: TCurrencyField;
     cdsDetalhesVendasid_funcionario: TIntegerField;
+    dsVendas: TDataSource;
+    cdsVendas: TClientDataSet;
+    cdsVendasid_venda: TIntegerField;
+    cdsVendasvalor_bruto: TCurrencyField;
+    cdsVendasid_funcionario: TIntegerField;
+    cdsVendasdata_venda: TDateTimeField;
+    cdsVendasvalor_troco: TCurrencyField;
+    cdsVendasvalor_total: TCurrencyField;
+    cdsVendasvalor_desconto: TCurrencyField;
+    cdsVendasvalor_recebido: TCurrencyField;
+    cdsVendasstatus: TStringField;
   private
     { Private declarations }
   public

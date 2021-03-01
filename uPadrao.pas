@@ -3,17 +3,19 @@ unit uPadrao;
 interface
 
 uses
-  dConexaoBanco;
+  dConexaoBanco, uConexao;
 
-type TPadrao = class(TdmConexaoBanco)
+type TPadrao = class(TConexao)
   private
-    FConexao: TdmConexaoBanco;
-    procedure SetConexao(const Value: TdmConexaoBanco);
+    FConexao: TConexao;
+    procedure SetConexao(const Value: TConexao);
+
 
   public
-    property Conexao: TdmConexaoBanco read FConexao write SetConexao;
+    property Conexao: TConexao read FConexao write SetConexao;
 
   constructor Create;
+  destructor Destroy; override;
 
 
 end;
@@ -24,10 +26,16 @@ implementation
 
 constructor TPadrao.Create;
 begin
-  FConexao.Create(nil);
+  FConexao.Create;
 end;
 
-procedure TPadrao.SetConexao(const Value: TdmConexaoBanco);
+destructor TPadrao.Destroy;
+begin
+  FConexao.Free;
+  inherited;
+end;
+
+procedure TPadrao.SetConexao(const Value: TConexao);
 begin
   FConexao := Value;
 end;

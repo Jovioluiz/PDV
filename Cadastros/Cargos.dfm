@@ -19,7 +19,7 @@ object FrmCargos: TFrmCargos
   TextHeight = 13
   object Label2: TLabel
     Left = 24
-    Top = 64
+    Top = 80
     Width = 31
     Height = 13
     Caption = 'Nome:'
@@ -395,11 +395,19 @@ object FrmCargos: TFrmCargos
     Transparent = False
     OnClick = btnExcluirClick
   end
+  object Label1: TLabel
+    Left = 22
+    Top = 53
+    Width = 33
+    Height = 13
+    Caption = 'Cargo:'
+  end
   object edtNomeCargo: TEdit
     Left = 61
-    Top = 61
+    Top = 77
     Width = 252
     Height = 21
+    CharCase = ecUpperCase
     Enabled = False
     TabOrder = 0
   end
@@ -408,7 +416,8 @@ object FrmCargos: TFrmCargos
     Top = 112
     Width = 289
     Height = 273
-    DataSource = dm.dsCargos
+    DataSource = dsCargos
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
     ReadOnly = True
     TabOrder = 1
     TitleFont.Charset = DEFAULT_CHARSET
@@ -417,5 +426,51 @@ object FrmCargos: TFrmCargos
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
     OnCellClick = gridCargosCellClick
+  end
+  object edtCdCargo: TEdit
+    Left = 61
+    Top = 50
+    Width = 76
+    Height = 21
+    Enabled = False
+    TabOrder = 2
+  end
+  object dsCargos: TDataSource
+    DataSet = cdsCargos
+    Left = 120
+    Top = 224
+  end
+  object cdsCargos: TClientDataSet
+    PersistDataPacket.Data = {
+      480000009619E0BD01000000180000000200000000000300000048000863645F
+      636172676F0400010000000000086E6D5F636172676F01004900000001000557
+      494454480200020014000000}
+    Active = True
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'cd_cargo'
+        DataType = ftInteger
+      end
+      item
+        Name = 'nm_cargo'
+        DataType = ftString
+        Size = 20
+      end>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 184
+    Top = 224
+    object cdsCargoscd_cargo: TIntegerField
+      DisplayLabel = 'C'#243'd Cargo'
+      DisplayWidth = 14
+      FieldName = 'cd_cargo'
+    end
+    object cdsCargosnm_cargo: TStringField
+      DisplayLabel = 'Cargo'
+      DisplayWidth = 24
+      FieldName = 'nm_cargo'
+    end
   end
 end

@@ -24,7 +24,9 @@ uses
   uclVendas in 'Financeiro\uclVendas.pas',
   dVendas in 'Financeiro\dVendas.pas' {dmVendas: TDataModule},
   uConexao in 'Conexao\uConexao.pas',
-  uPadrao in 'uPadrao.pas';
+  uPadrao in 'uPadrao.pas',
+  uUtil in 'Uteis\uUtil.pas',
+  uclCargo in 'Cadastros\Persistencia\uclCargo.pas';
 
 {$R *.res}
 
