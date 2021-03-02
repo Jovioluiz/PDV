@@ -88,7 +88,6 @@ begin
 
   try
     try
-//      Result := False;
       qry.SQL.Add(SQL);
       qry.ParamByName('cd_cargo').AsInteger := Fcd_cargo;
       qry.ExecSQL;

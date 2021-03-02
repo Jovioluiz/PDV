@@ -26,14 +26,20 @@ uses
   uConexao in 'Conexao\uConexao.pas',
   uPadrao in 'uPadrao.pas',
   uUtil in 'Uteis\uUtil.pas',
-  uclCargo in 'Cadastros\Persistencia\uclCargo.pas';
+  uclCargo in 'Cadastros\Persistencia\uclCargo.pas',
+  System.UITypes,
+  System.SysUtils;
 
 {$R *.res}
 
 begin
-  Application.Initialize;
-  Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TFrmLogin, FrmLogin);
-  Application.CreateForm(Tdm, dm);
-  Application.Run;
+  FrmLogin := TFrmLogin.Create(nil);
+  if FrmLogin.ShowModal = mrOK then
+  begin
+    FreeAndNil(frmLogin);
+    Application.Initialize;
+    Application.MainFormOnTaskbar := True;
+    Application.CreateForm(TFrmMenu, FrmMenu);
+    Application.Run;
+  end;
 end.

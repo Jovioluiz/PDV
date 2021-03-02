@@ -48,7 +48,7 @@ procedure TfrmGastos.associarCampos;
 begin
   dm.tbGastos.FieldByName('motivo').Text := edtMotivo.Text;
   dm.tbGastos.FieldByName('valor').AsCurrency := StrToCurr(edtValor.Text);
-  dm.tbGastos.FieldByName('id_funcionario').Text := IntToStr(idUsuario);
+  dm.tbGastos.FieldByName('id_funcionario').Text := IntToStr(FCdUsuario);
   dm.tbGastos.FieldByName('data').Text := DateToStr(Date);
 end;
 
@@ -134,7 +134,7 @@ if (Trim(edtMotivo.Text) = '') or (Trim(edtValor.Text) = '') then
     dm.queryMovimentacoes.ParamByName('tipo').AsString := 'S';
     dm.queryMovimentacoes.ParamByName('movimento').AsString := 'D';
     dm.queryMovimentacoes.ParamByName('valor').AsCurrency := StrToCurr(edtValor.Text);
-    dm.queryMovimentacoes.ParamByName('id_funcionario').Value := idUsuario;
+    dm.queryMovimentacoes.ParamByName('id_funcionario').Value := FCdUsuario;
     dm.queryMovimentacoes.ParamByName('id_movimento_gasto').Value := idGasto;
     dm.queryMovimentacoes.ExecSQL;
 

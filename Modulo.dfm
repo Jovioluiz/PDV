@@ -10,7 +10,6 @@ object dm: Tdm
       'User_Name=jovio'
       'Password=MaverickV8'
       'DriverID=MySQL')
-    Connected = True
     LoginPrompt = False
     Left = 24
     Top = 16
@@ -43,9 +42,7 @@ object dm: Tdm
     end
   end
   object FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink
-    VendorLib = 
-      'C:\Users\jovio\Desktop\codigos_fontes\Delphi\PDV\trunk\lib\libmy' +
-      'sql.dll'
+    VendorLib = 'C:\Users\jovio\OneDrive\Documentos\PDV\trunk\lib\libmySQL.dll'
     Left = 544
     Top = 16
   end

@@ -34,7 +34,6 @@ type
     FConex: TConexao;
     FCdCargo: Integer;
     { Private declarations }
-    procedure associarCampos;
     procedure listar;
     procedure SetConex(const Value: TConexao);
   public
@@ -52,53 +51,38 @@ uses
 
 {$R *.dfm}
 
-procedure TFrmCargos.associarCampos;
-begin
-  dm.tbCargos.FieldByName('nm_cargo').Text := edtNomeCargo.Text;
-end;
-
 procedure TFrmCargos.btnEditarClick(Sender: TObject);
 var
-  cargo: String;
+  persistencia: TCargo;
 begin
-  if Trim(edtNomeCargo.Text) = '' then
+  if (Trim(edtNomeCargo.Text) = '') or (Trim(edtCdCargo.Text) = '') then
   begin
     MessageDlg('Preencha o Cargo!', mtInformation, mbOKCancel, 0);
-    edtNomeCargo.SetFocus;
+    edtCdCargo.SetFocus;
     exit;
   end;
 
-  // verifica se o cargo já está cadastrado
-  dm.queryCargos.Close;
-  dm.queryCargos.SQL.Clear;
-  dm.queryCargos.SQL.Add('select * from cargos where nm_cargo = ' +
-    QuotedStr(Trim(edtNomeCargo.Text)));
-  dm.queryCargos.Open();
+  persistencia := TCargo.Create;
 
-  if not dm.queryCargos.IsEmpty then
-  begin
-    cargo := dm.queryCargos['nm_cargo'];
-    MessageDlg('O Cargo ' + cargo + ' já está cadastrado!', mtInformation,
-      mbOKCancel, 0);
+  try
+    if persistencia.Pesquisar(StrToInt(edtCdCargo.Text)) then
+      raise Exception.Create('Cargo não encontrado');
+
+    persistencia.cd_cargo := StrToInt(edtCdCargo.Text);
+    persistencia.nm_cargo := edtNomeCargo.Text;
+
+    persistencia.Persistir(False);
+
+    listar;
+    MessageDlg('Editado com Sucesso', mtInformation, mbOKCancel, 0);
+
+    btnEditar.Enabled := false;
+    btnExcluir.Enabled := false;
     edtNomeCargo.Clear;
-    edtNomeCargo.SetFocus;
-    exit;
+    edtCdCargo.Clear;
+  finally
+    persistencia.Free;
   end;
-
-  associarCampos;
-  dm.queryCargos.Close;
-  dm.queryCargos.SQL.Clear;
-  dm.queryCargos.SQL.Add('update cargos set nm_cargo = :nm_cargo where id_cargo = :id_cargo');
-  dm.queryCargos.ParamByName('nm_cargo').Text := edtNomeCargo.Text;
-  dm.queryCargos.ParamByName('cd_cargo').AsInteger := FCdCargo;
-  dm.queryCargos.ExecSQL;
-
-  listar;
-  MessageDlg('Editado com Sucesso', mtInformation, mbOKCancel, 0);
-
-  btnEditar.Enabled := false;
-  btnExcluir.Enabled := false;
-  edtNomeCargo.Clear;
 end;
 
 procedure TFrmCargos.btnExcluirClick(Sender: TObject);

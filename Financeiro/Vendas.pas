@@ -210,7 +210,7 @@ begin
   FRegras.Dados.cdsDetalhesVendas.FieldByName('valor_unitario').AsCurrency := StrToCurr(edtPrecoUnitario.Text);
   FRegras.Dados.cdsDetalhesVendas.FieldByName('qtdade').AsFloat := StrToFloat(edtQtdade.Text);
   FRegras.Dados.cdsDetalhesVendas.FieldByName('valor_total').AsCurrency := FTotalItem;
-  FRegras.Dados.cdsDetalhesVendas.FieldByName('id_funcionario').AsInteger := idUsuario;
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('id_funcionario').AsInteger := FCdUsuario;
   FRegras.Dados.cdsDetalhesVendas.Post;
 end;
 
@@ -220,7 +220,7 @@ begin
   FRegras.Dados.cdsVendas.FieldByName('valor_bruto').AsCurrency := FTotalVenda;
   FRegras.Dados.cdsVendas.FieldByName('valor_total').AsCurrency := FTotalComDesconto;
   FRegras.Dados.cdsVendas.FieldByName('data_venda').AsDateTime := now;
-  FRegras.Dados.cdsVendas.FieldByName('id_funcionario').AsInteger := idUsuario;
+  FRegras.Dados.cdsVendas.FieldByName('id_funcionario').AsInteger := FCdUsuario;
   FRegras.Dados.cdsVendas.FieldByName('valor_troco').AsCurrency := FTotalTroco;
   FRegras.Dados.cdsVendas.FieldByName('valor_desconto').AsCurrency := StrToCurr(edtDesconto.Text);
   FRegras.Dados.cdsVendas.FieldByName('valor_recebido').AsCurrency := StrToCurr(edtValorRecebido.Text);
@@ -413,7 +413,7 @@ begin
                                  '  id_funcionario = :id_funcionario '+
                                  'order by '+
                                  '  id_detalhe_venda asc');
-  dm.queryDetalhesVendas.ParamByName('id_funcionario').AsInteger := idUsuario;
+  dm.queryDetalhesVendas.ParamByName('id_funcionario').AsInteger := FCdUsuario;
   dm.queryDetalhesVendas.Open();
 
   //alinhamneto do grid
@@ -476,7 +476,7 @@ begin
                                  'where id_venda = 0 and '+
                                  '  id_funcionario = :id_funcionario');
   dm.queryDetalhesVendas.ParamByName('id_venda').AsString := idVenda;
-  dm.queryDetalhesVendas.ParamByName('id_funcionario').AsInteger := idUsuario;
+  dm.queryDetalhesVendas.ParamByName('id_funcionario').AsInteger := FCdUsuario;
   dm.queryDetalhesVendas.ExecSQL;
 
   //lançar o valor da venda nas movimentações
@@ -491,7 +491,7 @@ begin
   dm.queryMovimentacoes.ParamByName('tipo').AsString := 'E';
   dm.queryMovimentacoes.ParamByName('movimento').AsString := 'V';
   dm.queryMovimentacoes.ParamByName('valor').Value := FTotalComDesconto;
-  dm.queryMovimentacoes.ParamByName('id_funcionario').Value := idUsuario;
+  dm.queryMovimentacoes.ParamByName('id_funcionario').Value := FCdUsuario;
   dm.queryMovimentacoes.ParamByName('id_movimento').Value := idVenda;
   dm.queryMovimentacoes.ExecSQL;
 

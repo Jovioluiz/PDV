@@ -152,7 +152,7 @@ var
 
   nomeUsuario : String;
   cargoUsuario : String;
-  idUsuario : Integer;
+  FCdUsuario : Integer;
 
   codigoProduto : String;
 
