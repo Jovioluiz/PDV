@@ -21,7 +21,7 @@ object frmFornecedor: TfrmFornecedor
   TextHeight = 13
   object Label1: TLabel
     Left = 71
-    Top = 43
+    Top = 70
     Width = 32
     Height = 13
     Caption = 'Buscar'
@@ -475,15 +475,15 @@ object frmFornecedor: TfrmFornecedor
     Caption = 'Tipo Produto:'
   end
   object Label4: TLabel
-    Left = 72
-    Top = 8
-    Width = 15
+    Left = 66
+    Top = 24
+    Width = 37
     Height = 13
-    Caption = 'ID:'
+    Caption = 'C'#243'digo:'
   end
   object edtBuscarNome: TEdit
     Left = 109
-    Top = 40
+    Top = 62
     Width = 116
     Height = 21
     CharCase = ecUpperCase
@@ -606,10 +606,10 @@ object frmFornecedor: TfrmFornecedor
     TabOrder = 1
     OnClick = rgTpPessoaClick
   end
-  object edtIdFornecedor: TEdit
+  object edtCodFornecedor: TEdit
     Left = 109
-    Top = 5
-    Width = 36
+    Top = 21
+    Width = 84
     Height = 21
     Enabled = False
     TabOrder = 14

@@ -8,7 +8,7 @@ uses
   Vcl.StdCtrls, Vcl.Mask, Vcl.Buttons, Vcl.ExtCtrls, System.UITypes, FireDAC.Stan.Param,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, System.StrUtils;
 
 type
   TfrmFornecedor = class(TForm)
@@ -44,7 +44,7 @@ type
     rgTpPessoa: TRadioGroup;
     sqlendereco: TFDQuery;
     Label4: TLabel;
-    edtIdFornecedor: TEdit;
+    edtCodFornecedor: TEdit;
     procedure btnNovoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure rgTpPessoaClick(Sender: TObject);
@@ -66,7 +66,7 @@ type
     procedure listar;
     procedure buscarNome;
 
-    procedure validaCampos;
+    function ValidaCampos: Boolean;
     procedure pFormataCampos;
   public
     { Public declarations }
@@ -80,7 +80,7 @@ implementation
 
 {$R *.dfm}
 
-uses Modulo, uValidaDcto;
+uses Modulo, uValidaDcto, uclFornecedor;
 
 { TfrmFornecedor }
 
@@ -166,7 +166,7 @@ begin
   begin
     dm.queryCoringa.Close;
     dm.queryCoringa.SQL.Text := 'delete from fornecedor where id_fornecedor = :id_fornecedor';
-    dm.queryCoringa.ParamByName('id_fornecedor').AsInteger := StrToInt(edtIdFornecedor.Text);
+    //dm.queryCoringa.ParamByName('id_fornecedor').AsInteger := StrToInt(edtIdFornecedor.Text);
     dm.queryCoringa.ExecSQL;
     MessageDlg('Excluido com Sucesso', mtInformation, mbOKCancel, 0);
 
@@ -182,22 +182,55 @@ begin
   habilitarCampos;
   rgTpPessoa.ItemIndex := 0;
   pFormataCampos;
-  dm.tbFornecedor.Insert;
+//  dm.tbFornecedor.Insert;
   btnSalvar.Enabled := True;
   edtNome.SetFocus;
 end;
 
 procedure TfrmFornecedor.btnSalvarClick(Sender: TObject);
+var
+  persistencia: TFornecedor;
+  novo: Boolean;
 begin
-  validaCampos;
+  if not validaCampos then
+  begin
+    ShowMessage('Os campos não podem ser vazios');
+    edtNome.SetFocus;
+    Exit;
+  end;
 
-  associarCampos;
-  dm.tbFornecedor.Post;
-  MessageDlg('Salvo com Sucesso', mtInformation, mbOKCancel, 0);
-  limpar;
-  desabilitarCampos;
-  btnSalvar.Enabled := false;
-  listar;
+  persistencia := TFornecedor.Create;
+
+  try
+
+    novo := persistencia.Pesquisar(StrToInt(edtCodFornecedor.Text));
+
+    persistencia.cd_fornecedor := StrToInt(edtCodFornecedor.Text);
+    persistencia.tp_pessoa := ifthen(rgTpPessoa.ItemIndex = 0, 'F', 'J');
+    persistencia.nm_fornecedor := edtNome.Text;
+    persistencia.cpf_cnpj := edtCpfCnpj.Text;
+    persistencia.rg_ie := edtRgIe.Text;
+    persistencia.telefone := edtTelefone.Text;
+    persistencia.logradouro := edtLogradouro.Text;
+    persistencia.numero := edtNum.Text;
+    persistencia.bairro := edtBairro.Text;
+    persistencia.cidade := edtCidade.Text;
+    persistencia.uf := edtUf.Text;
+    persistencia.cep := edtCEP.Text;
+    persistencia.tipo_produto := edttipoProduto.Text;
+    persistencia.data_cadastro := Now;
+
+    persistencia.Persistir(novo);
+
+    MessageDlg('Salvo com Sucesso', mtInformation, mbOKCancel, 0);
+    limpar;
+    desabilitarCampos;
+    btnSalvar.Enabled := false;
+    listar;
+
+  finally
+    persistencia.Destroy;
+  end;
 end;
 
 
@@ -249,7 +282,7 @@ begin
     edtCEP.Text := dm.queryFornecedor.FieldByName('cep').AsString;
 
   edttipoProduto.Text := dm.queryFornecedor.FieldByName('tipo_produto').AsString;
-  edtIdFornecedor.Text := dm.queryFornecedor.FieldByName('id_fornecedor').Text;
+  //edtIdFornecedor.Text := dm.queryFornecedor.FieldByName('id_fornecedor').Text;
   id := dm.queryFornecedor.FieldByName('id_fornecedor').AsString;
 end;
 
@@ -322,7 +355,7 @@ end;
 procedure TfrmFornecedor.FormCreate(Sender: TObject);
 begin
   desabilitarCampos;
-  dm.tbFornecedor.Active := True;
+  //dm.tbFornecedor.Active := True;
   listar;
 end;
 
@@ -348,6 +381,7 @@ begin
   edtCEP.Enabled := True;
   edtRgIe.Enabled := True;
   edttipoProduto.Enabled := True;
+  edtCodFornecedor.Enabled := True;
 end;
 
 procedure TfrmFornecedor.limpar;
@@ -368,10 +402,10 @@ end;
 
 procedure TfrmFornecedor.listar;
 begin
-  dm.queryFornecedor.Close;
-  dm.queryFornecedor.SQL.Clear;
-  dm.queryFornecedor.SQL.Add('select * from fornecedor order by nm_fornecedor asc');
-  dm.queryFornecedor.Open();
+//  dm.queryFornecedor.Close;
+//  dm.queryFornecedor.SQL.Clear;
+//  dm.queryFornecedor.SQL.Add('select * from fornecedor order by nm_fornecedor asc');
+//  dm.queryFornecedor.Open();
 end;
 
 procedure TfrmFornecedor.pFormataCampos;
@@ -397,16 +431,15 @@ begin
   pFormataCampos;
 end;
 
-procedure TfrmFornecedor.validaCampos;
+function TfrmFornecedor.ValidaCampos: Boolean;
 begin
-  if (Trim(edtNome.Text) = '') and (Trim(edtCpfCnpj.Text) = '') and (Trim(edtRgIe.Text) = '') and
-  (Trim(edtLogradouro.Text) = '') and (Trim(edtNum.Text) = '') and (Trim(edtBairro.Text) = '') and
-  (Trim(edtCidade.Text) = '') and (Trim(edtUf.Text) = '') then
-  begin
-    MessageDlg('Os campos não podem ser vazios', mtInformation, mbOKCancel, 0);
-    edtNome.SetFocus;
-    Abort;
-  end;
+  Result := True;
+
+  if (Trim(edtNome.Text) = '') then
+    Exit(False);
+
+  if (Trim(edtCpfCnpj.Text) = '') then
+    Exit(False);
 end;
 
 end.

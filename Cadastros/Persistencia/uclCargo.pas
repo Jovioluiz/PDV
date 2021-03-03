@@ -70,7 +70,6 @@ begin
   Conexao := TConexao.Create
 end;
 
-
 destructor TCargo.Destroy;
 begin
   Conexao.Free;

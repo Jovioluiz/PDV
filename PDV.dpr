@@ -28,7 +28,8 @@ uses
   uUtil in 'Uteis\uUtil.pas',
   uclCargo in 'Cadastros\Persistencia\uclCargo.pas',
   System.UITypes,
-  System.SysUtils;
+  System.SysUtils,
+  uclFornecedor in 'Cadastros\Persistencia\uclFornecedor.pas';
 
 {$R *.res}
 
@@ -40,6 +41,6 @@ begin
     Application.Initialize;
     Application.MainFormOnTaskbar := True;
     Application.CreateForm(TFrmMenu, FrmMenu);
-    Application.Run;
+  Application.Run;
   end;
 end.
