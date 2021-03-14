@@ -3,14 +3,12 @@ unit uclVendas;
 interface
 
 uses
-  dVendas, uPadrao, uConexao, Data.DB, uUtil, FireDAC.Stan.Param;
+  dVendas, uPadrao, Data.DB, uUtil, FireDAC.Stan.Param;
 
 type TVenda = class(TPadrao)
   private
     FDados: TdmVendas;
-    FConexao: TConexao;
     procedure SetFDados(const Value: TdmVendas);
-    procedure SetConexao(const Value: TConexao);
 
 
   public
@@ -21,13 +19,12 @@ type TVenda = class(TPadrao)
   constructor Create;
 
   property Dados: TdmVendas read FDados write SetFDados;
-  property Conexao: TConexao read FConexao write SetConexao;
 end;
 
 implementation
 
 uses
-  FireDAC.Comp.Client;
+  FireDAC.Comp.Client, dmConexao;
 
 { TVenda }
 
@@ -42,7 +39,7 @@ var
   qry: TFDquery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := Conexao.getConexao;
+  qry.Connection := dConexao.conexaoBanco;
   Result := True;
 
   try
@@ -77,7 +74,6 @@ end;
 constructor TVenda.Create;
 begin
   FDados := TdmVendas.Create(nil);
-  FConexao := TConexao.Create;
 end;
 
 function TVenda.RetornaValorTotal(dataset: TDataset): Currency;
@@ -107,11 +103,6 @@ end;
 function TVenda.SalvarVenda: Boolean;
 begin
 
-end;
-
-procedure TVenda.SetConexao(const Value: TConexao);
-begin
-  FConexao := Value;
 end;
 
 procedure TVenda.SetFDados(const Value: TdmVendas);

@@ -7,7 +7,7 @@ uses
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Buttons, Vcl.Grids,
   Vcl.DBGrids, Vcl.StdCtrls, System.UITypes, Modulo, FireDAC.Stan.Param,
-  Datasnap.DBClient, uConexao;
+  Datasnap.DBClient;
 
 type
   TFrmCargos = class(TForm)
@@ -31,14 +31,11 @@ type
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
   private
-    FConex: TConexao;
     FCdCargo: Integer;
     { Private declarations }
     procedure listar;
-    procedure SetConex(const Value: TConexao);
   public
     { Public declarations }
-    property Conex: TConexao read FConex write SetConex;
   end;
 
 var
@@ -47,7 +44,7 @@ var
 implementation
 
 uses
-  uclCargo, FireDAC.Comp.Client, uUtil;
+  uclCargo, FireDAC.Comp.Client, uUtil, dConexaoBanco, dmConexao;
 
 {$R *.dfm}
 
@@ -157,7 +154,6 @@ end;
 
 procedure TFrmCargos.FormCreate(Sender: TObject);
 begin
-  Conex := TConexao.Create;
   listar;
 end;
 
@@ -184,7 +180,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := Conex.getConexao;
+  qry.Connection := dConexao.conexaoBanco;
 
   try
     cdsCargos.EmptyDataSet;
@@ -206,11 +202,6 @@ begin
   finally
     qry.Free;
   end;
-end;
-
-procedure TFrmCargos.SetConex(const Value: TConexao);
-begin
-  FConex := Value;
 end;
 
 end.

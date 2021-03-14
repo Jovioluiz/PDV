@@ -361,7 +361,7 @@ procedure TfrmProdutos.FormCreate(Sender: TObject);
 begin
   CarregarImagemPadrao;
   desabilitarCampos;
-  dm.tbProdutos.Active := True;
+//  dm.tbProdutos.Active := True;
   listar;
 
   rbNome.Checked := True;

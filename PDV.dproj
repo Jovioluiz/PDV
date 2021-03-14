@@ -175,11 +175,20 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="Conexao\uConexao.pas"/>
         <DCCReference Include="uPadrao.pas"/>
         <DCCReference Include="Uteis\uUtil.pas"/>
         <DCCReference Include="Cadastros\Persistencia\uclCargo.pas"/>
         <DCCReference Include="Cadastros\Persistencia\uclFornecedor.pas"/>
+        <DCCReference Include="Cadastros\Data Modulos\dFornecedor.pas">
+            <Form>dmFornecedor</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Conexao\dmConexao.pas">
+            <Form>dConexao</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

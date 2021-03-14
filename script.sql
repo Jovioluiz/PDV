@@ -130,7 +130,7 @@ CREATE TABLE fornecedor (
   rg_ie varchar(20) NOT NULL,
   telefone varchar(15) DEFAULT NULL,
   logradouro varchar(50) NOT NULL,
-  numero int DEFAULT NULL,
+  numero varchar (10) DEFAULT NULL,
   bairro varchar(50) NOT NULL,
   cidade varchar(50) NOT NULL,
   uf varchar(2) NOT NULL,
@@ -297,6 +297,7 @@ CREATE TABLE usuarios (
   nm_usuario varchar(100) not null,
   senha varchar(25) NOT NULL,
   cd_funcionario int NOT NULL,
+  dt_atz timestamp,
   constraint pk_usuarios PRIMARY KEY (cd_usuario),
   constraint fk_usuarios_funcionarios foreign KEY (cd_funcionario) REFERENCES funcionarios(cd_funcionario)
 ); 

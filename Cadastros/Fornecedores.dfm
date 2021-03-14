@@ -15,6 +15,7 @@ object frmFornecedor: TfrmFornecedor
   KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
   PixelsPerInch = 96
@@ -476,7 +477,7 @@ object frmFornecedor: TfrmFornecedor
   end
   object Label4: TLabel
     Left = 66
-    Top = 24
+    Top = 29
     Width = 37
     Height = 13
     Caption = 'C'#243'digo:'
@@ -524,20 +525,19 @@ object frmFornecedor: TfrmFornecedor
     TabOrder = 11
     Text = ''
   end
-  object DBGrid1: TDBGrid
+  object dbGridProduto: TDBGrid
     Left = 54
     Top = 320
     Width = 785
     Height = 201
-    DataSource = dm.dsFonecedor
     TabOrder = 13
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
-    OnCellClick = DBGrid1CellClick
-    OnDblClick = DBGrid1DblClick
+    OnCellClick = dbGridProdutoCellClick
+    OnDblClick = dbGridProdutoDblClick
   end
   object edtNum: TEdit
     Left = 383

@@ -8,7 +8,8 @@ uses
   Vcl.StdCtrls, Vcl.Mask, Vcl.Buttons, Vcl.ExtCtrls, System.UITypes, FireDAC.Stan.Param,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client, System.StrUtils;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, System.StrUtils, Datasnap.DBClient,
+  uclFornecedor;
 
 type
   TfrmFornecedor = class(TForm)
@@ -32,7 +33,7 @@ type
     edtLogradouro: TEdit;
     edtCpfCnpj: TMaskEdit;
     edtTelefone: TMaskEdit;
-    DBGrid1: TDBGrid;
+    dbGridProduto: TDBGrid;
     edtNum: TEdit;
     edtBairro: TEdit;
     edtCidade: TEdit;
@@ -50,19 +51,20 @@ type
     procedure rgTpPessoaClick(Sender: TObject);
     procedure btnSalvarClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
-    procedure DBGrid1CellClick(Column: TColumn);
+    procedure dbGridProdutoCellClick(Column: TColumn);
     procedure btnExcluirClick(Sender: TObject);
     procedure edtBuscarNomeChange(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure edtCEPExit(Sender: TObject);
-    procedure DBGrid1DblClick(Sender: TObject);
+    procedure dbGridProdutoDblClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
+    FRegras: TFornecedor;
     { Private declarations }
 
     procedure limpar;
     procedure habilitarCampos;
     procedure desabilitarCampos;
-    procedure associarCampos;
     procedure listar;
     procedure buscarNome;
 
@@ -70,6 +72,7 @@ type
     procedure pFormataCampos;
   public
     { Public declarations }
+    property Regras: TFornecedor read FRegras;
   end;
 
 var
@@ -80,84 +83,20 @@ implementation
 
 {$R *.dfm}
 
-uses Modulo, uValidaDcto, uclFornecedor;
+uses Modulo, uValidaDcto;
 
 { TfrmFornecedor }
 
-procedure TfrmFornecedor.associarCampos;
-begin
-  case rgTpPessoa.ItemIndex of
-  0:
-  begin
-    dm.tbFornecedor.FieldByName('tp_pessoa').AsString := 'F';
-  end;
-  1:
-  dm.tbFornecedor.FieldByName('tp_pessoa').AsString := 'J';
-  end;
-  dm.tbFornecedor.FieldByName('nm_fornecedor').AsString := edtNome.Text;
-  dm.tbFornecedor.FieldByName('cpf_cnpj').AsString := edtCpfCnpj.Text;
-  dm.tbFornecedor.FieldByName('rg_ie').AsString := edtRgIe.Text;
-  dm.tbFornecedor.FieldByName('telefone').AsString := edtTelefone.Text;
-  dm.tbFornecedor.FieldByName('logradouro').AsString := edtLogradouro.Text;
-  dm.tbFornecedor.FieldByName('numero').AsInteger := StrToInt(edtNum.Text);
-  dm.tbFornecedor.FieldByName('bairro').AsString := edtBairro.Text;
-  dm.tbFornecedor.FieldByName('cidade').AsString := edtCidade.Text;
-  dm.tbFornecedor.FieldByName('uf').AsString := edtUf.Text;
-  dm.tbFornecedor.FieldByName('cep').AsString := edtCEP.Text;
-  dm.tbFornecedor.FieldByName('tipo_produto').AsString := edttipoProduto.Text;
-  dm.tbFornecedor.FieldByName('data_cadastro').AsString := DateToStr(Date);
-end;
-
 procedure TfrmFornecedor.btnEditarClick(Sender: TObject);
 begin
-  validaCampos;
-  associarCampos;
-  dm.queryFornecedor.Close;
-  dm.queryFornecedor.SQL.Clear;
-  dm.queryFornecedor.SQL.Add('update '+
-                                    'fornecedor set '+
-                                    'nm_fornecedor = :nm_fornecedor, '+
-                                    'cpf_cnpj = :cpf_cnpj, '+
-                                    'rg_ie = :rg_ie, '+
-                                    'telefone = :telefone, '+
-                                    'logradouro = :logradouro, '+
-                                    'numero = :numero, '+
-                                    'bairro = :bairro,'+
-                                    'cidade = :cidade, '+
-                                    'uf = :uf, '+
-                                    'cep = :cep, '+
-                                    'tipo_produto = :tipo_produto, '+
-                                    'tp_pessoa = :tp_pessoa '+
-                              'where id_fornecedor = :id_fornecedor');
-  dm.queryFornecedor.ParamByName('nm_fornecedor').AsString := edtNome.Text;
-  dm.queryFornecedor.ParamByName('cpf_cnpj').AsString := edtCpfCnpj.Text;
-  dm.queryFornecedor.ParamByName('rg_ie').AsString := edtRgIe.Text;
-  dm.queryFornecedor.ParamByName('telefone').AsString := edtTelefone.Text;
-  dm.queryFornecedor.ParamByName('logradouro').AsString := edtLogradouro.Text;
-  dm.queryFornecedor.ParamByName('numero').AsInteger := StrToInt(edtNum.Text);
-  dm.queryFornecedor.ParamByName('bairro').AsString := edtBairro.Text;
-  dm.queryFornecedor.ParamByName('cidade').AsString := edtCidade.Text;
-  dm.queryFornecedor.ParamByName('uf').AsString := edtUf.Text;
-  dm.queryFornecedor.ParamByName('cep').AsString := edtCEP.Text;
-  dm.queryFornecedor.ParamByName('tipo_produto').AsString := edttipoProduto.Text;
-  case rgTpPessoa.ItemIndex of
-  0:
-  begin
-    dm.queryFornecedor.ParamByName('tp_pessoa').AsString := 'F';
-  end;
-  1:
-  dm.queryFornecedor.ParamByName('tp_pessoa').AsString := 'J';
-  end;
-  dm.queryFornecedor.ParamByName('id_fornecedor').Value := id;
-  dm.queryFornecedor.ExecSQL;
 
-  listar;
-  MessageDlg('Editado com Sucesso', mtInformation, mbOKCancel, 0);
+  btnSalvar.Click;
 
-  btnEditar.Enabled := false;
-  btnExcluir.Enabled := false;
+  btnEditar.Enabled := False;
+  btnExcluir.Enabled := False;
   limpar;
   desabilitarCampos;
+  listar;
 end;
 
 procedure TfrmFornecedor.btnExcluirClick(Sender: TObject);
@@ -182,14 +121,13 @@ begin
   habilitarCampos;
   rgTpPessoa.ItemIndex := 0;
   pFormataCampos;
-//  dm.tbFornecedor.Insert;
   btnSalvar.Enabled := True;
   edtNome.SetFocus;
+  edtCodFornecedor.Text := FRegras.GeraCodigoFornecedor.ToString;
 end;
 
 procedure TfrmFornecedor.btnSalvarClick(Sender: TObject);
 var
-  persistencia: TFornecedor;
   novo: Boolean;
 begin
   if not validaCampos then
@@ -199,94 +137,83 @@ begin
     Exit;
   end;
 
-  persistencia := TFornecedor.Create;
+  novo := FRegras.Pesquisar(StrToInt(edtCodFornecedor.Text));
 
-  try
+  FRegras.cd_fornecedor := StrToInt(edtCodFornecedor.Text);
+  FRegras.tp_pessoa := ifthen(rgTpPessoa.ItemIndex = 0, 'F', 'J');
+  FRegras.nm_fornecedor := edtNome.Text;
+  FRegras.cpf_cnpj := edtCpfCnpj.Text;
+  FRegras.rg_ie := edtRgIe.Text;
+  FRegras.telefone := edtTelefone.Text;
+  FRegras.logradouro := edtLogradouro.Text;
+  FRegras.numero := edtNum.Text;
+  FRegras.bairro := edtBairro.Text;
+  FRegras.cidade := edtCidade.Text;
+  FRegras.uf := edtUf.Text;
+  FRegras.cep := edtCEP.Text;
+  FRegras.tipo_produto := edttipoProduto.Text;
+  FRegras.data_cadastro := Now;
 
-    novo := persistencia.Pesquisar(StrToInt(edtCodFornecedor.Text));
+  FRegras.Persistir(novo);
 
-    persistencia.cd_fornecedor := StrToInt(edtCodFornecedor.Text);
-    persistencia.tp_pessoa := ifthen(rgTpPessoa.ItemIndex = 0, 'F', 'J');
-    persistencia.nm_fornecedor := edtNome.Text;
-    persistencia.cpf_cnpj := edtCpfCnpj.Text;
-    persistencia.rg_ie := edtRgIe.Text;
-    persistencia.telefone := edtTelefone.Text;
-    persistencia.logradouro := edtLogradouro.Text;
-    persistencia.numero := edtNum.Text;
-    persistencia.bairro := edtBairro.Text;
-    persistencia.cidade := edtCidade.Text;
-    persistencia.uf := edtUf.Text;
-    persistencia.cep := edtCEP.Text;
-    persistencia.tipo_produto := edttipoProduto.Text;
-    persistencia.data_cadastro := Now;
-
-    persistencia.Persistir(novo);
-
-    MessageDlg('Salvo com Sucesso', mtInformation, mbOKCancel, 0);
-    limpar;
-    desabilitarCampos;
-    btnSalvar.Enabled := false;
-    listar;
-
-  finally
-    persistencia.Destroy;
-  end;
+  ShowMessage('Salvo com Sucesso');
+  limpar;
+  desabilitarCampos;
+  btnSalvar.Enabled := False;
+  listar;
 end;
 
 
 procedure TfrmFornecedor.buscarNome;
 begin
-  dm.queryFornecedor.Close;
-  dm.queryFornecedor.SQL.Clear;
-  dm.queryFornecedor.SQL.Add('select * '+
-                                  'from '+
-                              'fornecedor '+
-                                  'where '+
-                              'nm_fornecedor like '+ QuotedStr('%'+edtBuscarNome.Text + '%'));
-  dm.queryFornecedor.Open();
+  FRegras.Dados.cdsFornecedor.DisableControls;
+
+  try
+    FRegras.Dados.cdsFornecedor.Filtered := False;
+    FRegras.Dados.cdsFornecedor.Filter := 'nm_fornecedor like ' + QuotedStr('%' + edtBuscarNome.Text + '%');
+    FRegras.Dados.cdsFornecedor.Filtered := True;
+
+  finally
+    FRegras.Dados.cdsFornecedor.EnableControls;
+  end;
 end;
 
-procedure TfrmFornecedor.DBGrid1CellClick(Column: TColumn);
+procedure TfrmFornecedor.dbGridProdutoCellClick(Column: TColumn);
 begin
   habilitarCampos;
   btnEditar.Enabled := True;
   btnExcluir.Enabled := True;
 
-  dm.tbFornecedor.Edit;
-
-  if dm.queryFornecedor.FieldByName('tp_pessoa').Text = 'F' then
-    begin
-      rgTpPessoa.ItemIndex := 0;
-    end
+  if FRegras.Dados.cdsFornecedor.FieldByName('tp_pessoa').AsString = 'F' then
+    rgTpPessoa.ItemIndex := 0
   else
-    begin
-      rgTpPessoa.ItemIndex := 1;
-    end;
+    rgTpPessoa.ItemIndex := 1;
 
-  if dm.queryFornecedor.FieldByName('nm_fornecedor').Text <> null then
-    edtNome.Text := dm.queryFornecedor.FieldByName('nm_fornecedor').AsString;
+  if FRegras.Dados.cdsFornecedor.FieldByName('nm_fornecedor').Text <> null then
+    edtNome.Text := FRegras.Dados.cdsFornecedor.FieldByName('nm_fornecedor').AsString;
 
-  edtCpfCnpj.Text := dm.queryFornecedor.FieldByName('cpf_cnpj').AsString;
-  edtRgIe.Text := dm.queryFornecedor.FieldByName('rg_ie').AsString;
+  edtCpfCnpj.Text := FRegras.Dados.cdsFornecedor.FieldByName('cpf_cnpj').AsString;
+  edtRgIe.Text := FRegras.Dados.cdsFornecedor.FieldByName('rg_ie').AsString;
 
-  if dm.queryFornecedor.FieldByName('telefone').AsString <> null then
-    edtTelefone.Text := dm.queryFornecedor.FieldByName('telefone').AsString;
+  if FRegras.Dados.cdsFornecedor.FieldByName('telefone').AsString <> null then
+    edtTelefone.Text := FRegras.Dados.cdsFornecedor.FieldByName('telefone').AsString;
 
-  edtLogradouro.Text := dm.queryFornecedor.FieldByName('logradouro').AsString;
-  edtNum.Text := dm.queryFornecedor.FieldByName('numero').Text;
-  edtBairro.Text := dm.queryFornecedor.FieldByName('bairro').AsString;
-  edtCidade.Text := dm.queryFornecedor.FieldByName('cidade').AsString;
-  edtUf.Text := dm.queryFornecedor.FieldByName('uf').AsString;
+  edtLogradouro.Text := FRegras.Dados.cdsFornecedor.FieldByName('logradouro').AsString;
+  edtNum.Text := FRegras.Dados.cdsFornecedor.FieldByName('numero').Text;
+  edtBairro.Text := FRegras.Dados.cdsFornecedor.FieldByName('bairro').AsString;
+  edtCidade.Text := FRegras.Dados.cdsFornecedor.FieldByName('cidade').AsString;
+  edtUf.Text := FRegras.Dados.cdsFornecedor.FieldByName('uf').AsString;
 
-  if dm.queryFornecedor.FieldByName('cep').AsString <> null then
-    edtCEP.Text := dm.queryFornecedor.FieldByName('cep').AsString;
+  if FRegras.Dados.cdsFornecedor.FieldByName('cep').AsString <> null then
+    edtCEP.Text := FRegras.Dados.cdsFornecedor.FieldByName('cep').AsString;
 
-  edttipoProduto.Text := dm.queryFornecedor.FieldByName('tipo_produto').AsString;
-  //edtIdFornecedor.Text := dm.queryFornecedor.FieldByName('id_fornecedor').Text;
-  id := dm.queryFornecedor.FieldByName('id_fornecedor').AsString;
+  edttipoProduto.Text := FRegras.Dados.cdsFornecedor.FieldByName('tipo_produto').AsString;
+  edtCodFornecedor.Text := IntToStr(FRegras.Dados.cdsFornecedor.FieldByName('cd_fornecedor').AsInteger);
+//  id := FRegras.Dados.cdsFornecedor.FieldByName('id_fornecedor').AsString;
+  edtNome.SetFocus;
 end;
 
-procedure TfrmFornecedor.DBGrid1DblClick(Sender: TObject);
+procedure TfrmFornecedor.dbGridProdutoDblClick(Sender: TObject);
 begin
 if chamada = 'Forn' then
 begin
@@ -299,17 +226,17 @@ end;
 
 procedure TfrmFornecedor.desabilitarCampos;
 begin
-  edtNome.Enabled := false;
-  edtLogradouro.Enabled := false;
-  edtCpfCnpj.Enabled := false;
-  edtTelefone.Enabled := false;
-  edtNum.Enabled := false;
-  edtBairro.Enabled := false;
-  edtCidade.Enabled := false;
-  edtUf.Enabled := false;
-  edtCEP.Enabled := false;
-  edtRgIe.Enabled := false;
-  edttipoProduto.Enabled := false;
+  edtNome.Enabled := False;
+  edtLogradouro.Enabled := False;
+  edtCpfCnpj.Enabled := False;
+  edtTelefone.Enabled := False;
+  edtNum.Enabled := False;
+  edtBairro.Enabled := False;
+  edtCidade.Enabled := False;
+  edtUf.Enabled := False;
+  edtCEP.Enabled := False;
+  edtRgIe.Enabled := False;
+  edttipoProduto.Enabled := False;
 end;
 
 procedure TfrmFornecedor.edtBuscarNomeChange(Sender: TObject);
@@ -319,53 +246,59 @@ end;
 
 procedure TfrmFornecedor.edtCEPExit(Sender: TObject);
 begin
-  sqlEndereco.Close;
-  sqlEndereco.SQL.Text := 'select distinct  '+
-                          '    e.endereco_logradouro, '+
-                          '    b.bairro_descricao, '+
-                          '    c.nm_cidade, '+
-                          '    es.uf '+
-                          'from '+
-                          '    endereco e '+
-                          'join bairro b on '+
-                          '    e.bairro_codigo = b.bairro_codigo '+
-                          'join cidade c on '+
-                          '    b.cidade_codigo = c.cd_cidade '+
-                          'join estado es on '+
-                          '    c.uf = es.uf '+
-                          'where '+
-                          '    e.endereco_cep = :cep';
-  sqlEndereco.ParamByName('cep').AsString := edtCEP.Text;
-  sqlEndereco.Open();
+//  sqlEndereco.Close;
+//  sqlEndereco.SQL.Text := 'select distinct  '+
+//                          '    e.endereco_logradouro, '+
+//                          '    b.bairro_descricao, '+
+//                          '    c.nm_cidade, '+
+//                          '    es.uf '+
+//                          'from '+
+//                          '    endereco e '+
+//                          'join bairro b on '+
+//                          '    e.bairro_codigo = b.bairro_codigo '+
+//                          'join cidade c on '+
+//                          '    b.cidade_codigo = c.cd_cidade '+
+//                          'join estado es on '+
+//                          '    c.uf = es.uf '+
+//                          'where '+
+//                          '    e.endereco_cep = :cep';
+//  sqlEndereco.ParamByName('cep').AsString := edtCEP.Text;
+//  sqlEndereco.Open();
+//
+//  if not sqlEndereco.IsEmpty then
+//  begin
+//    edtLogradouro.Text := sqlEndereco.FieldByName('endereco_logradouro').AsString;
+//    edtBairro.Text := sqlEndereco.FieldByName('bairro_descricao').AsString;
+//    edtCidade.Text := sqlEndereco.FieldByName('nm_cidade').AsString;
+//    edtUf.Text := sqlEndereco.FieldByName('uf').AsString;
+//  end
+//  else
+//  begin
+//    ShowMessage('CEP não encontrado!');  //só mostra aviso que não foi encontrado
+//    Exit;
+//  end;
+end;
 
-  if not sqlEndereco.IsEmpty then
-  begin
-    edtLogradouro.Text := sqlEndereco.FieldByName('endereco_logradouro').AsString;
-    edtBairro.Text := sqlEndereco.FieldByName('bairro_descricao').AsString;
-    edtCidade.Text := sqlEndereco.FieldByName('nm_cidade').AsString;
-    edtUf.Text := sqlEndereco.FieldByName('uf').AsString;
-  end
-  else
-  begin
-    ShowMessage('CEP não encontrado!');  //só mostra aviso que não foi encontrado
-    Exit;
-  end;
+procedure TfrmFornecedor.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  FRegras.Free;
 end;
 
 procedure TfrmFornecedor.FormCreate(Sender: TObject);
 begin
+  FRegras := TFornecedor.Create;
   desabilitarCampos;
-  //dm.tbFornecedor.Active := True;
+  dbGridProduto.DataSource := FRegras.Dados.dsFornecedor;
   listar;
 end;
 
 procedure TfrmFornecedor.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = #13 then
-    begin
-      Key := #0;
-      Perform(WM_NEXTDLGCTL, 0, 0);
-    end;
+  begin
+    Key := #0;
+    Perform(WM_NEXTDLGCTL, 0, 0);
+  end;
 end;
 
 procedure TfrmFornecedor.habilitarCampos;
@@ -381,7 +314,6 @@ begin
   edtCEP.Enabled := True;
   edtRgIe.Enabled := True;
   edttipoProduto.Enabled := True;
-  edtCodFornecedor.Enabled := True;
 end;
 
 procedure TfrmFornecedor.limpar;
@@ -398,14 +330,12 @@ begin
   edtRgIe.Clear;
   edttipoProduto.Clear;
   rgTpPessoa.ItemIndex := -1;
+  edtCodFornecedor.Clear;
 end;
 
 procedure TfrmFornecedor.listar;
 begin
-//  dm.queryFornecedor.Close;
-//  dm.queryFornecedor.SQL.Clear;
-//  dm.queryFornecedor.SQL.Add('select * from fornecedor order by nm_fornecedor asc');
-//  dm.queryFornecedor.Open();
+  FRegras.Listar;
 end;
 
 procedure TfrmFornecedor.pFormataCampos;
@@ -418,12 +348,12 @@ begin
       lblRGIE.Caption := 'RG';
     end
   else
-    begin
-      lblCPFCNPJ.Caption := 'CNPJ';
-      edtCpfCnpj.Width := 110;
-      edtCpfCnpj.EditMask := uValidaDcto.MASCARA_CNPJ;
-      lblRGIE.Caption := 'IE';
-    end;
+  begin
+    lblCPFCNPJ.Caption := 'CNPJ';
+    edtCpfCnpj.Width := 110;
+    edtCpfCnpj.EditMask := uValidaDcto.MASCARA_CNPJ;
+    lblRGIE.Caption := 'IE';
+  end;
 end;
 
 procedure TfrmFornecedor.rgTpPessoaClick(Sender: TObject);

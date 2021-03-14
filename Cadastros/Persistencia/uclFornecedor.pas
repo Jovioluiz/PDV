@@ -3,7 +3,7 @@ unit uclFornecedor;
 interface
 
 uses
-  uPadrao, uConexao;
+  uPadrao, dFornecedor, uUtil, FireDAC.Stan.Param, Data.DB;
 
 type TFornecedor = class
   private
@@ -21,7 +21,7 @@ type TFornecedor = class
     Fcidade: string;
     Ftelefone: string;
     Fcd_fornecedor: Integer;
-    FConexao: TConexao;
+    FDados: TdmFornecedor;
     procedure Setbairro(const Value: string);
     procedure Setcd_fornecedor(const Value: Integer);
     procedure Setcep(const Value: string);
@@ -38,12 +38,13 @@ type TFornecedor = class
     procedure Setuf(const Value: string);
     procedure Inserir;
     procedure Atualizar;
-    procedure SetConexao(const Value: TConexao);
 
   public
 
     function Pesquisar(CodFornecedor: Integer): Boolean;
     procedure Persistir(Novo: Boolean);
+    function GeraCodigoFornecedor: Integer;
+    procedure Listar;
     constructor Create;
     destructor Destroy; override;
 
@@ -62,7 +63,7 @@ type TFornecedor = class
     property tipo_produto: string read Ftipo_produto write Settipo_produto;
     property data_cadastro: TDate read Fdata_cadastro write Setdata_cadastro;
 
-    property Conexao: TConexao read FConexao write SetConexao;
+    property Dados: TdmFornecedor read FDados;
 
 
 end;
@@ -70,19 +71,40 @@ end;
 implementation
 
 uses
-  FireDAC.Comp.Client, System.SysUtils;
+  FireDAC.Comp.Client, System.SysUtils, dmConexao;
 
 { TFornecedor }
 
 constructor TFornecedor.Create;
 begin
-  Conexao := TConexao.Create
+  inherited;
+  FDados := TdmFornecedor.Create(nil);
 end;
 
 destructor TFornecedor.Destroy;
 begin
-  Conexao.Free;
+  FDados.Free;
   inherited;
+end;
+
+function TFornecedor.GeraCodigoFornecedor: Integer;
+const
+  SQL = 'select nextval(''cliente_seq'') as cod';
+var
+  qry: TFDQuery;
+begin
+  qry := TFDQuery.Create(nil);
+  qry.Connection := dConexao.conexaoBanco;
+  qry.SQL.Add(SQL);
+
+  try
+    qry.Open();
+
+    Result := qry.FieldByName('cod').AsInteger;
+
+  finally
+    qry.Free;
+  end;
 end;
 
 procedure TFornecedor.Atualizar;
@@ -110,8 +132,8 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := Conexao.getConexao;
-  Conexao.getConexao.StartTransaction;
+  qry.Connection := dConexao.conexaoBanco;
+  dConexao.conexaoBanco.StartTransaction;
 
   try
     try
@@ -131,16 +153,16 @@ begin
       qry.ParamByName('tipo_produto').AsString := Ftipo_produto;
       qry.ParamByName('data_cadastro').AsDate := Fdata_cadastro;
       qry.ExecSQL;
-      Conexao.getConexao.Commit;
+      dConexao.conexaoBanco.Commit;
     except
       on E:exception do
       begin
-        Conexao.getConexao.Rollback;
+        dConexao.conexaoBanco.Rollback;
         raise Exception.Create('Erro ao gravar os dados ' + E.Message);
       end;
     end;
   finally
-    Conexao.getConexao.Rollback;
+    dConexao.conexaoBanco.Rollback;
     qry.Free;
   end;
 end;
@@ -183,8 +205,8 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := Conexao.getConexao;
-  Conexao.getConexao.StartTransaction;
+  qry.Connection := dConexao.conexaoBanco;
+  dConexao.conexaoBanco.StartTransaction;
 
   try
     try
@@ -204,16 +226,74 @@ begin
       qry.ParamByName('tipo_produto').AsString := Ftipo_produto;
       qry.ParamByName('data_cadastro').AsDate := Fdata_cadastro;
       qry.ExecSQL;
-      Conexao.getConexao.Commit;
+      dConexao.conexaoBanco.Commit;
     except
       on E:exception do
       begin
-        Conexao.getConexao.Rollback;
+        dConexao.conexaoBanco.Rollback;
         raise Exception.Create('Erro ao gravar os dados ' + E.Message);
       end;
     end;
   finally
-    Conexao.getConexao.Rollback;
+    dConexao.conexaoBanco.Rollback;
+    qry.Free;
+  end;
+end;
+
+procedure TFornecedor.Listar;
+const
+  SQL = 'select ' +
+        '    cd_fornecedor, ' +
+        '    tp_pessoa, ' +
+        '    nm_fornecedor, ' +
+        '    cpf_cnpj, ' +
+        '    rg_ie, ' +
+        '    telefone, ' +
+        '    logradouro, ' +
+        '    numero, ' +
+        '    bairro, ' +
+        '    cidade, ' +
+        '    uf, ' +
+        '    cep, ' +
+        '    tipo_produto, ' +
+        '    data_cadastro ' +
+        'from ' +
+        '    fornecedor  ';
+var
+  qry: TFDQuery;
+begin
+  qry := TFDQuery.Create(nil);
+  qry.Connection := dConexao.conexaoBanco;
+
+  try
+    qry.SQL.Add(SQL);
+    qry.Open();
+
+    FDados.cdsFornecedor.EmptyDataSet;
+
+    qry.loopSimples(
+    procedure
+    begin
+      FDados.cdsFornecedor.Append;
+      FDados.cdsFornecedor.FieldByName('cd_fornecedor').AsInteger := qry.FieldByName('cd_fornecedor').AsInteger;
+      FDados.cdsFornecedor.FieldByName('tp_pessoa').AsString := qry.FieldByName('tp_pessoa').AsString;
+      FDados.cdsFornecedor.FieldByName('nm_fornecedor').AsString := qry.FieldByName('nm_fornecedor').AsString;
+      FDados.cdsFornecedor.FieldByName('cpf_cnpj').AsString := qry.FieldByName('cpf_cnpj').AsString;
+      FDados.cdsFornecedor.FieldByName('rg_ie').AsString := qry.FieldByName('rg_ie').AsString;
+      FDados.cdsFornecedor.FieldByName('telefone').AsString := qry.FieldByName('telefone').AsString;
+      FDados.cdsFornecedor.FieldByName('logradouro').AsString := qry.FieldByName('logradouro').AsString;
+      FDados.cdsFornecedor.FieldByName('numero').AsString := qry.FieldByName('numero').AsString;
+      FDados.cdsFornecedor.FieldByName('bairro').AsString := qry.FieldByName('bairro').AsString;
+      FDados.cdsFornecedor.FieldByName('cidade').AsString := qry.FieldByName('cidade').AsString;
+      FDados.cdsFornecedor.FieldByName('uf').AsString := qry.FieldByName('uf').AsString;
+      FDados.cdsFornecedor.FieldByName('cep').AsString := qry.FieldByName('cep').AsString;
+      FDados.cdsFornecedor.FieldByName('tipo_produto').AsString := qry.FieldByName('tipo_produto').AsString;
+      FDados.cdsFornecedor.FieldByName('data_cadastro').AsDateTime := qry.FieldByName('data_cadastro').AsDateTime;
+      FDados.cdsFornecedor.Post;
+    end
+    );
+
+  finally
     qry.Free;
   end;
 end;
@@ -233,7 +313,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := Conexao.getConexao;
+  qry.Connection := dConexao.conexaoBanco;
 
   try
     qry.SQL.Add(SQL);
@@ -265,11 +345,6 @@ end;
 procedure TFornecedor.Setcidade(const Value: string);
 begin
   Fcidade := Value;
-end;
-
-procedure TFornecedor.SetConexao(const Value: TConexao);
-begin
-  FConexao := Value;
 end;
 
 procedure TFornecedor.Setcpf_cnpj(const Value: string);

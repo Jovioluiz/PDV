@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.jpeg, Data.DB,
   Vcl.Imaging.pngimage, Vcl.StdCtrls, Vcl.Buttons, System.UITypes, Modulo, FireDAC.Stan.Param,
-  uConexao, uPadrao;
+  uPadrao, dmConexao;
 
 type
   TFrmLogin = class(TForm)
@@ -20,15 +20,12 @@ type
       var Resize: Boolean);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure edtSenhaExit(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
   private
-    FConex: TConexao;
     { Private declarations }
     procedure CentralizarPainel;
     procedure Login;
-    procedure SetConex(const Value: TConexao);
   public
-    property Conex: TConexao read FConex write SetConex;
+
   end;
 
 var
@@ -64,11 +61,6 @@ begin
   CentralizarPainel;
 end;
 
-procedure TFrmLogin.FormCreate(Sender: TObject);
-begin
-  Conex := TConexao.Create;
-end;
-
 procedure TFrmLogin.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = #13 then
@@ -92,7 +84,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(Self);
-  qry.Connection := FConex.getConexao;
+  qry.Connection := dConexao.conexaoBanco;
 
   try
     qry.SQL.Add(SQL);
@@ -116,11 +108,6 @@ begin
   finally
     qry.Free;
   end;
-end;
-
-procedure TFrmLogin.SetConex(const Value: TConexao);
-begin
-  FConex := Value;
 end;
 
 end.

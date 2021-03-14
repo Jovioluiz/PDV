@@ -23,17 +23,19 @@ uses
   CertificadoDigital in 'Financeiro\CertificadoDigital.pas' {frmCertificado},
   uclVendas in 'Financeiro\uclVendas.pas',
   dVendas in 'Financeiro\dVendas.pas' {dmVendas: TDataModule},
-  uConexao in 'Conexao\uConexao.pas',
   uPadrao in 'uPadrao.pas',
   uUtil in 'Uteis\uUtil.pas',
   uclCargo in 'Cadastros\Persistencia\uclCargo.pas',
   System.UITypes,
   System.SysUtils,
-  uclFornecedor in 'Cadastros\Persistencia\uclFornecedor.pas';
+  uclFornecedor in 'Cadastros\Persistencia\uclFornecedor.pas',
+  dFornecedor in 'Cadastros\Data Modulos\dFornecedor.pas' {dmFornecedor: TDataModule},
+  dmConexao in 'Conexao\dmConexao.pas' {dConexao: TDataModule};
 
 {$R *.res}
 
 begin
+  Application.CreateForm(TdConexao, dConexao);
   FrmLogin := TFrmLogin.Create(nil);
   if FrmLogin.ShowModal = mrOK then
   begin
@@ -41,6 +43,6 @@ begin
     Application.Initialize;
     Application.MainFormOnTaskbar := True;
     Application.CreateForm(TFrmMenu, FrmMenu);
-  Application.Run;
+    Application.Run;
   end;
 end.

@@ -3,7 +3,7 @@ unit dVendas;
 interface
 
 uses
-  System.SysUtils, System.Classes, Data.DB, Datasnap.DBClient, uConexao;
+  System.SysUtils, System.Classes, Data.DB, Datasnap.DBClient;
 
 type
   TdmVendas = class(TDataModule)
