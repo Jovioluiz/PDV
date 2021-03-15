@@ -15,6 +15,7 @@ object FrmFuncionarios: TFrmFuncionarios
   KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
   PixelsPerInch = 96
@@ -41,28 +42,28 @@ object FrmFuncionarios: TFrmFuncionarios
     Caption = 'Logradouro:'
   end
   object Label4: TLabel
-    Left = 354
+    Left = 381
     Top = 107
     Width = 23
     Height = 13
     Caption = 'CPF:'
   end
   object Label5: TLabel
-    Left = 552
+    Left = 525
     Top = 194
     Width = 46
     Height = 13
     Caption = 'Telefone:'
   end
   object Label6: TLabel
-    Left = 565
+    Left = 538
     Top = 234
     Width = 33
     Height = 13
     Caption = 'Cargo:'
   end
   object btnSalvar: TSpeedButton
-    Left = 352
+    Left = 344
     Top = 544
     Width = 73
     Height = 42
@@ -433,7 +434,7 @@ object FrmFuncionarios: TFrmFuncionarios
     OnClick = btnExcluirClick
   end
   object Label7: TLabel
-    Left = 557
+    Left = 530
     Top = 152
     Width = 41
     Height = 13
@@ -454,7 +455,7 @@ object FrmFuncionarios: TFrmFuncionarios
     Caption = 'Cidade:'
   end
   object Label10: TLabel
-    Left = 360
+    Left = 387
     Top = 234
     Width = 17
     Height = 13
@@ -468,18 +469,18 @@ object FrmFuncionarios: TFrmFuncionarios
     Caption = 'CEP:'
   end
   object Label12: TLabel
-    Left = 580
+    Left = 553
     Top = 107
     Width = 18
     Height = 13
     Caption = 'RG:'
   end
   object Label13: TLabel
-    Left = 72
-    Top = 11
-    Width = 15
+    Left = 66
+    Top = 32
+    Width = 37
     Height = 13
-    Caption = 'ID:'
+    Caption = 'C'#243'digo:'
   end
   object edtBuscarNome: TEdit
     Left = 720
@@ -520,7 +521,7 @@ object FrmFuncionarios: TFrmFuncionarios
   object edtNome: TEdit
     Left = 109
     Top = 104
-    Width = 220
+    Width = 266
     Height = 21
     CharCase = ecUpperCase
     TabOrder = 2
@@ -534,7 +535,7 @@ object FrmFuncionarios: TFrmFuncionarios
     TabOrder = 6
   end
   object edtCpf: TMaskEdit
-    Left = 383
+    Left = 410
     Top = 104
     Width = 102
     Height = 21
@@ -544,7 +545,7 @@ object FrmFuncionarios: TFrmFuncionarios
     Text = ''
   end
   object edtTelefone: TMaskEdit
-    Left = 604
+    Left = 577
     Top = 186
     Width = 93
     Height = 21
@@ -554,29 +555,29 @@ object FrmFuncionarios: TFrmFuncionarios
     Text = ''
   end
   object cbCargo: TComboBox
-    Left = 604
+    Left = 577
     Top = 226
     Width = 93
     Height = 21
     TabOrder = 12
   end
-  object DBGrid1: TDBGrid
+  object dbGridFuncionario: TDBGrid
     Left = 54
     Top = 272
     Width = 786
     Height = 249
-    DataSource = dm.dsFuncionario
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
     TabOrder = 13
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
-    OnCellClick = DBGrid1CellClick
-    OnDblClick = DBGrid1DblClick
+    OnCellClick = dbGridFuncionarioCellClick
+    OnDblClick = dbGridFuncionarioDblClick
   end
   object edtNum: TEdit
-    Left = 604
+    Left = 577
     Top = 144
     Width = 58
     Height = 21
@@ -585,7 +586,7 @@ object FrmFuncionarios: TFrmFuncionarios
   object edtBairro: TEdit
     Left = 109
     Top = 186
-    Width = 220
+    Width = 266
     Height = 21
     CharCase = ecUpperCase
     TabOrder = 8
@@ -593,13 +594,13 @@ object FrmFuncionarios: TFrmFuncionarios
   object edtCidade: TEdit
     Left = 109
     Top = 226
-    Width = 220
+    Width = 266
     Height = 21
     CharCase = ecUpperCase
     TabOrder = 9
   end
   object edtUf: TEdit
-    Left = 383
+    Left = 410
     Top = 226
     Width = 58
     Height = 21
@@ -616,16 +617,16 @@ object FrmFuncionarios: TFrmFuncionarios
     OnExit = edtCEPExit
   end
   object edtRg: TEdit
-    Left = 604
+    Left = 577
     Top = 104
     Width = 93
     Height = 21
     TabOrder = 4
   end
-  object edtIdFuncionario: TEdit
+  object edtCdFuncionario: TEdit
     Left = 109
-    Top = 8
-    Width = 36
+    Top = 29
+    Width = 52
     Height = 21
     CharCase = ecUpperCase
     Enabled = False

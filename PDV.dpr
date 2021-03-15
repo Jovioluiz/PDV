@@ -30,12 +30,16 @@ uses
   System.SysUtils,
   uclFornecedor in 'Cadastros\Persistencia\uclFornecedor.pas',
   dFornecedor in 'Cadastros\Data Modulos\dFornecedor.pas' {dmFornecedor: TDataModule},
-  dmConexao in 'Conexao\dmConexao.pas' {dConexao: TDataModule};
+  dmConexao in 'Conexao\dmConexao.pas' {dConexao: TDataModule},
+  uclFuncionario in 'Cadastros\Persistencia\uclFuncionario.pas',
+  dFuncionario in 'Cadastros\Data Modulos\dFuncionario.pas' {dmFuncionario: TDataModule},
+  uclProduto in 'Cadastros\Persistencia\uclProduto.pas';
 
 {$R *.res}
 
 begin
   Application.CreateForm(TdConexao, dConexao);
+  Application.CreateForm(TdmFuncionario, dmFuncionario);
   FrmLogin := TFrmLogin.Create(nil);
   if FrmLogin.ShowModal = mrOK then
   begin

@@ -482,3 +482,5 @@ delete
 update
     on
     public.pagamentos for each row execute procedure gera_log();
+
+ALTER TABLE public.usuarios ADD fl_ativo bool NULL;

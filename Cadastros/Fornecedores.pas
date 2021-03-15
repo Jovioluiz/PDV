@@ -62,11 +62,11 @@ type
     FRegras: TFornecedor;
     { Private declarations }
 
-    procedure limpar;
-    procedure habilitarCampos;
-    procedure desabilitarCampos;
-    procedure listar;
-    procedure buscarNome;
+    procedure Limpar;
+    procedure HabilitarCampos;
+    procedure DesabilitarCampos;
+    procedure Listar;
+    procedure BuscarNome;
 
     function ValidaCampos: Boolean;
     procedure pFormataCampos;
@@ -89,36 +89,32 @@ uses Modulo, uValidaDcto;
 
 procedure TfrmFornecedor.btnEditarClick(Sender: TObject);
 begin
-
   btnSalvar.Click;
-
   btnEditar.Enabled := False;
   btnExcluir.Enabled := False;
-  limpar;
-  desabilitarCampos;
-  listar;
+  Limpar;
+  DesabilitarCampos;
+  Listar;
 end;
 
 procedure TfrmFornecedor.btnExcluirClick(Sender: TObject);
 begin
   if MessageDlg('Deseja Excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
-    dm.queryCoringa.Close;
-    dm.queryCoringa.SQL.Text := 'delete from fornecedor where id_fornecedor = :id_fornecedor';
-    //dm.queryCoringa.ParamByName('id_fornecedor').AsInteger := StrToInt(edtIdFornecedor.Text);
-    dm.queryCoringa.ExecSQL;
-    MessageDlg('Excluido com Sucesso', mtInformation, mbOKCancel, 0);
+    FRegras.cd_fornecedor := StrToInt(edtCodFornecedor.Text);
+    FRegras.Excluir;
+    ShowMessage('Excluído com Sucesso');
 
-    btnEditar.Enabled := false;
-    btnExcluir.Enabled := false;
-    limpar;
-    listar;
+    btnEditar.Enabled := False;
+    btnExcluir.Enabled := False;
+    Limpar;
+    Listar;
   end;
 end;
 
 procedure TfrmFornecedor.btnNovoClick(Sender: TObject);
 begin
-  habilitarCampos;
+  HabilitarCampos;
   rgTpPessoa.ItemIndex := 0;
   pFormataCampos;
   btnSalvar.Enabled := True;
@@ -132,9 +128,8 @@ var
 begin
   if not validaCampos then
   begin
-    ShowMessage('Os campos não podem ser vazios');
     edtNome.SetFocus;
-    Exit;
+    raise Exception.Create('Os campos não podem ser vazios');
   end;
 
   novo := FRegras.Pesquisar(StrToInt(edtCodFornecedor.Text));
@@ -157,20 +152,20 @@ begin
   FRegras.Persistir(novo);
 
   ShowMessage('Salvo com Sucesso');
-  limpar;
-  desabilitarCampos;
+  Limpar;
+  DesabilitarCampos;
   btnSalvar.Enabled := False;
-  listar;
+  Listar;
 end;
 
 
-procedure TfrmFornecedor.buscarNome;
+procedure TfrmFornecedor.BuscarNome;
 begin
   FRegras.Dados.cdsFornecedor.DisableControls;
 
   try
     FRegras.Dados.cdsFornecedor.Filtered := False;
-    FRegras.Dados.cdsFornecedor.Filter := 'nm_fornecedor like ' + QuotedStr('%' + edtBuscarNome.Text + '%');
+    FRegras.Dados.cdsFornecedor.Filter := 'Upper(nm_fornecedor) like ' + QuotedStr('%' + edtBuscarNome.Text + '%');
     FRegras.Dados.cdsFornecedor.Filtered := True;
 
   finally
@@ -180,7 +175,7 @@ end;
 
 procedure TfrmFornecedor.dbGridProdutoCellClick(Column: TColumn);
 begin
-  habilitarCampos;
+  HabilitarCampos;
   btnEditar.Enabled := True;
   btnExcluir.Enabled := True;
 
@@ -215,16 +210,16 @@ end;
 
 procedure TfrmFornecedor.dbGridProdutoDblClick(Sender: TObject);
 begin
-if chamada = 'Forn' then
-begin
-  idFornecedor := dm.queryFornecedor.FieldByName('id_fornecedor').AsString;
-  nomeFornecedor := dm.queryFornecedor.FieldByName('nm_fornecedor').AsString;
-  Close;
-  chamada := '';
-end;
+  if chamada = 'Forn' then
+  begin
+    //idFornecedor := FRegras.Dados.cdsFornecedor.FieldByName('cd_fornecedor').AsInteger;
+    nomeFornecedor := FRegras.Dados.cdsFornecedor.FieldByName('nm_fornecedor').AsString;
+    Close;
+    chamada := '';
+  end;
 end;
 
-procedure TfrmFornecedor.desabilitarCampos;
+procedure TfrmFornecedor.DesabilitarCampos;
 begin
   edtNome.Enabled := False;
   edtLogradouro.Enabled := False;
@@ -241,7 +236,7 @@ end;
 
 procedure TfrmFornecedor.edtBuscarNomeChange(Sender: TObject);
 begin
-  buscarNome;
+  BuscarNome;
 end;
 
 procedure TfrmFornecedor.edtCEPExit(Sender: TObject);
@@ -287,9 +282,9 @@ end;
 procedure TfrmFornecedor.FormCreate(Sender: TObject);
 begin
   FRegras := TFornecedor.Create;
-  desabilitarCampos;
+  DesabilitarCampos;
   dbGridProduto.DataSource := FRegras.Dados.dsFornecedor;
-  listar;
+  Listar;
 end;
 
 procedure TfrmFornecedor.FormKeyPress(Sender: TObject; var Key: Char);
@@ -301,7 +296,7 @@ begin
   end;
 end;
 
-procedure TfrmFornecedor.habilitarCampos;
+procedure TfrmFornecedor.HabilitarCampos;
 begin
   edtNome.Enabled := True;
   edtLogradouro.Enabled := True;
@@ -316,7 +311,7 @@ begin
   edttipoProduto.Enabled := True;
 end;
 
-procedure TfrmFornecedor.limpar;
+procedure TfrmFornecedor.Limpar;
 begin
   edtNome.Clear;
   edtLogradouro.Clear;
@@ -333,7 +328,7 @@ begin
   edtCodFornecedor.Clear;
 end;
 
-procedure TfrmFornecedor.listar;
+procedure TfrmFornecedor.Listar;
 begin
   FRegras.Listar;
 end;
@@ -341,12 +336,12 @@ end;
 procedure TfrmFornecedor.pFormataCampos;
 begin
   if rgTpPessoa.ItemIndex = 0 then
-    begin
-      lblCPFCNPJ.Caption := 'CPF';
-      edtCpfCnpj.Width := 90;
-      edtCpfCnpj.EditMask := uValidaDcto.MASCARA_CPF;
-      lblRGIE.Caption := 'RG';
-    end
+  begin
+    lblCPFCNPJ.Caption := 'CPF';
+    edtCpfCnpj.Width := 90;
+    edtCpfCnpj.EditMask := uValidaDcto.MASCARA_CPF;
+    lblRGIE.Caption := 'RG';
+  end
   else
   begin
     lblCPFCNPJ.Caption := 'CNPJ';

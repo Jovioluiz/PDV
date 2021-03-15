@@ -44,6 +44,7 @@ type TFornecedor = class
     function Pesquisar(CodFornecedor: Integer): Boolean;
     procedure Persistir(Novo: Boolean);
     function GeraCodigoFornecedor: Integer;
+    procedure Excluir;
     procedure Listar;
     constructor Create;
     destructor Destroy; override;
@@ -85,6 +86,36 @@ destructor TFornecedor.Destroy;
 begin
   FDados.Free;
   inherited;
+end;
+
+procedure TFornecedor.Excluir;
+const
+  SQL = 'delete from fornecedor where cd_fornecedor = :cd_fornecedor';
+var
+  qry: TFDQuery;
+begin
+  qry := TFDQuery.Create(nil);
+  qry.Connection := dConexao.conexaoBanco;
+  qry.SQL.Add(SQL);
+
+  try
+    try
+      qry.ParamByName('cd_fornecedor').AsInteger := Fcd_fornecedor;
+      qry.ExecSQL;
+
+      dConexao.conexaoBanco.Commit;
+    except
+      on E:exception do
+      begin
+        dConexao.conexaoBanco.Rollback;
+        raise Exception.Create('Erro ao excluir os dados ' + E.Message);
+      end;
+    end;
+
+  finally
+    dConexao.conexaoBanco.Rollback;
+    qry.Free;
+  end;
 end;
 
 function TFornecedor.GeraCodigoFornecedor: Integer;

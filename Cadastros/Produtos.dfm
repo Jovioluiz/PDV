@@ -587,7 +587,7 @@ object frmProdutos: TfrmProdutos
   object edtDescricao: TMaskEdit
     Left = 396
     Top = 144
-    Width = 209
+    Width = 229
     Height = 21
     CharCase = ecUpperCase
     TabOrder = 2
@@ -616,10 +616,10 @@ object frmProdutos: TfrmProdutos
     Height = 21
     TabOrder = 4
   end
-  object edtIdProduto: TEdit
+  object edtCdProduto: TEdit
     Left = 97
     Top = 21
-    Width = 44
+    Width = 88
     Height = 21
     Enabled = False
     TabOrder = 8
@@ -629,11 +629,10 @@ object frmProdutos: TfrmProdutos
     Top = 62
     Width = 88
     Height = 21
-    EditMask = '0000000000000;1;_'
-    MaxLength = 13
     TabOrder = 0
-    Text = '             '
+    Text = ''
     OnChange = edtCodBarrasChange
+    OnEnter = edtCodBarrasEnter
   end
   object Panel2: TPanel
     Left = 97

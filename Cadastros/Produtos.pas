@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.ExtCtrls, Vcl.Mask,
   Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, System.UITypes, FireDAC.Stan.Param,
-  Vcl.ExtDlgs;
+  Vcl.ExtDlgs, uclProduto;
 
 type
   TfrmProdutos = class(TForm)
@@ -31,7 +31,7 @@ type
     Label6: TLabel;
     edtFatorConversao: TEdit;
     Label7: TLabel;
-    edtIdProduto: TEdit;
+    edtCdProduto: TEdit;
     btnImprimir: TSpeedButton;
     edtCodBarras: TMaskEdit;
     Panel2: TPanel;
@@ -58,14 +58,16 @@ type
     procedure edtCodBarrasChange(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure DBGrid1DblClick(Sender: TObject);
+    procedure edtCodBarrasEnter(Sender: TObject);
   private
+    FRegras: TProduto;
     { Private declarations }
     procedure limpar;
-    procedure habilitarCampos;
+    procedure HabilitarCampos;
     procedure desabilitarCampos;
     procedure associarCampos;
     procedure listar;
-    procedure validaCampos;
+    function ValidaCampos: Boolean;
 
     procedure GerarCodigo(codigo : String; Canvas : TCanvas);
 
@@ -76,6 +78,7 @@ type
     procedure ExibeFoto(DataSet : TDataSet; BlobFieldName : String; ImageExibicao : TImage);
   public
     { Public declarations }
+    property Regras: TProduto read FRegras;
   end;
 
 var
@@ -95,26 +98,26 @@ uses Modulo, ImprimirBarras;
 
 procedure TfrmProdutos.associarCampos;
 begin
-  dm.tbProdutos.FieldByName('nm_produto').AsString := edtNomeProduto.Text;
-  dm.tbProdutos.FieldByName('codigo_barras').AsString := edtCodBarras.Text;
-  dm.tbProdutos.FieldByName('descricao').AsString := edtDescricao.Text;
-  dm.tbProdutos.FieldByName('valor').AsString := edtValor.Text;
-  dm.tbProdutos.FieldByName('qtd_estoque').AsCurrency := 0;
-  dm.tbProdutos.FieldByName('un_medida').AsString := edtUNMedida.Text;
-  dm.tbProdutos.FieldByName('fator_conversao').AsString := edtFatorConversao.Text;
-  dm.tbProdutos.FieldByName('data_cadastro').AsString := DateToStr(Date);
+//  dm.tbProdutos.FieldByName('nm_produto').AsString := edtNomeProduto.Text;
+//  dm.tbProdutos.FieldByName('codigo_barras').AsString := edtCodBarras.Text;
+//  dm.tbProdutos.FieldByName('descricao').AsString := edtDescricao.Text;
+//  dm.tbProdutos.FieldByName('valor').AsString := edtValor.Text;
+//  dm.tbProdutos.FieldByName('qtd_estoque').AsCurrency := 0;
+//  dm.tbProdutos.FieldByName('un_medida').AsString := edtUNMedida.Text;
+//  dm.tbProdutos.FieldByName('fator_conversao').AsString := edtFatorConversao.Text;
+//  dm.tbProdutos.FieldByName('data_cadastro').AsString := DateToStr(Date);
 end;
 
 procedure TfrmProdutos.btnAddImagenClick(Sender: TObject);
 begin
- dialog.Execute();
- imgProduto.Picture.LoadFromFile(dialog.FileName);
- alterou := True;
+  dialog.Execute();
+  imgProduto.Picture.LoadFromFile(dialog.FileName);
+  alterou := True;
 end;
 
 procedure TfrmProdutos.btnEditarClick(Sender: TObject);
 begin
-  validaCampos;
+  ValidaCampos;
   associarCampos;
   dm.queryProdutos.Close;
   dm.queryProdutos.SQL.Clear;
@@ -174,7 +177,7 @@ begin
   begin
     dm.queryCoringa.Close;
     dm.queryCoringa.SQL.Text := 'delete from produtos where id_produto = :id_produto';
-    dm.queryCoringa.ParamByName('id_produto').AsInteger := StrToInt(edtIdProduto.Text);
+    dm.queryCoringa.ParamByName('id_produto').AsInteger := StrToInt(edtCdProduto.Text);
     dm.queryCoringa.ExecSQL;
 
     MessageDlg('Excluido com Sucesso', mtInformation, mbOKCancel, 0);
@@ -187,7 +190,6 @@ begin
 end;
 
 procedure TfrmProdutos.btnGerarCodigoClick(Sender: TObject);
-var cod : String;
 begin
   if Trim(edtCodBarras.Text) = '' then
   begin
@@ -195,18 +197,10 @@ begin
     Exit;
   end;
 
-
   //verifica se o código está cadastrado
-  dm.queryCoringa.Close;
-  dm.queryCoringa.SQL.Clear;
-  dm.queryCoringa.SQL.Add('select * from produtos where codigo_barras = ' + edtCodBarras.Text);
-  dm.queryCoringa.Open();
-
-  if not dm.queryCoringa.IsEmpty then
+  if not FRegras.VerificaCodigoBarras(edtCodBarras.Text) then
   begin
-    cod := dm.queryCoringa['codigo_barras'];
-    MessageDlg('O Código de Barras ' + cod + ' já está cadastrado!', mtInformation, mbOKCancel, 0);
-    edtCodBarras.Clear;
+    ShowMessage('O Código de Barras ' + edtCodBarras.Text + ' já está cadastrado!');
     edtCodBarras.SetFocus;
     Exit;
   end;
@@ -223,29 +217,33 @@ end;
 
 procedure TfrmProdutos.btnNovoClick(Sender: TObject);
 begin
-  habilitarCampos;
+  HabilitarCampos;
   limpar;
-  dm.tbProdutos.Insert;
-  edtCodBarras.SetFocus;
+  edtCdProduto.SetFocus;
 end;
 
 procedure TfrmProdutos.btnSalvarClick(Sender: TObject);
 begin
   try
-    validaCampos;
-    associarCampos;
+    if not ValidaCampos then
+    begin
+      raise Exception.Create('Os campos não podem ser vazios');
+      edtCodBarras.SetFocus;
+    end;
+
+//    associarCampos;
     SalvarFoto;
-    dm.tbProdutos.Post;
-    MessageDlg('Salvo com Sucesso', mtInformation, mbOKCancel, 0);
+//    dm.tbProdutos.Post;
+    ShowMessage('Salvo com Sucesso');
     limpar;
     desabilitarCampos;
     btnSalvar.Enabled := false;
     listar;
   except
-    MessageDlg('Erro na Imagem', mtInformation, mbOKCancel, 0);
-    dm.fd.Connected := True;
-    dm.tbProdutos.Active := True;
-    dm.tbProdutos.Insert;
+//    MessageDlg('Erro na Imagem', mtInformation, mbOKCancel, 0);
+//    dm.fd.Connected := True;
+//    dm.tbProdutos.Active := True;
+//    dm.tbProdutos.Insert;
     CarregarImagemPadrao;
     listar;
   end;
@@ -284,7 +282,7 @@ end;
 
 procedure TfrmProdutos.DBGrid1CellClick(Column: TColumn);
 begin
-  habilitarCampos;
+  HabilitarCampos;
   btnEditar.Enabled := True;
   btnExcluir.Enabled := True;
   btnImprimir.Enabled := True;
@@ -300,7 +298,7 @@ begin
   edtCodBarras.Text := dm.queryProdutos.FieldByName('codigo_barras').AsString;
   GerarCodigo(edtCodBarras.Text, imgCodBarras.Canvas);
   edtValor.Text := dm.queryProdutos.FieldByName('valor').AsString;
-  edtIdProduto.Text := dm.queryProdutos.FieldByName('id_produto').Text;
+  edtCdProduto.Text := dm.queryProdutos.FieldByName('id_produto').Text;
   id := dm.queryProdutos.FieldByName('id_produto').AsString;
   codigoProduto := dm.queryProdutos.FieldByName('codigo_barras').AsString;
 
@@ -311,7 +309,7 @@ end;
 
 procedure TfrmProdutos.DBGrid1DblClick(Sender: TObject);
 begin
-if chamada = 'Prod' then
+  if chamada = 'Prod' then
   begin
     idproduto := dm.queryProdutos.FieldByName('id_produto').AsString;
     nomeProduto := dm.queryProdutos.FieldByName('nm_produto').AsString;
@@ -347,22 +345,29 @@ end;
 
 procedure TfrmProdutos.edtCodBarrasChange(Sender: TObject);
 begin
-if edtCodBarras.Text <> '_____________' then
-  begin
-    btnGerarCodigo.Enabled := true;
-  end
-else
-  begin
-   btnGerarCodigo.Enabled := false;
-  end;
+  if Length(edtCodBarras.Text) <= 13 then
+    btnGerarCodigo.Enabled := True
+  else
+   btnGerarCodigo.Enabled := False;
+end;
+
+procedure TfrmProdutos.edtCodBarrasEnter(Sender: TObject);
+begin
+  edtCodBarras.MaxLength := 13;
+
+  if edtCodBarras.Text = '' then
+    btnGerarCodigo.Enabled := False
+  else
+   btnGerarCodigo.Enabled := True;
 end;
 
 procedure TfrmProdutos.FormCreate(Sender: TObject);
 begin
+  FRegras := TProduto.Create;
   CarregarImagemPadrao;
   desabilitarCampos;
 //  dm.tbProdutos.Active := True;
-  listar;
+//  listar;
 
   rbNome.Checked := True;
   edtBuscarCodigo.Visible := False;
@@ -372,10 +377,10 @@ end;
 procedure TfrmProdutos.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = #13 then
-    begin
-      Key := #0;
-      Perform(WM_NEXTDLGCTL, 0, 0);
-    end;
+  begin
+    Key := #0;
+    Perform(WM_NEXTDLGCTL, 0, 0);
+  end;
 end;
 
 //gera o código de barras
@@ -392,7 +397,8 @@ begin
     s := '0000';
     for i := 1 to length(codigo) div 2 do
       for j := 1 to 5 do
-      s := s + Copy(Digitos[codigo[i * 2 - 1]], j, 1) + Copy(Digitos[codigo[i * 2]], j, 1);
+        s := s + Copy(Digitos[codigo[i * 2 - 1]], j, 1) + Copy(Digitos[codigo[i * 2]], j, 1);
+
       // Caracter de fim
       s := s + '100';
       // Desenhar em um objeto canvas
@@ -425,21 +431,22 @@ begin
   end;
 end;
 
-procedure TfrmProdutos.habilitarCampos;
+procedure TfrmProdutos.HabilitarCampos;
 begin
-  edtNomeProduto.Enabled := true;
-  edtCodBarras.Enabled := true;
-  edtDescricao.Enabled := true;
-  edtValor.Enabled := true;
-  edtUNMedida.Enabled := true;
-  edtFatorConversao.Enabled := true;
-  btnAddImagen.Enabled := true;
-  imgProduto.Visible := true;
+  edtNomeProduto.Enabled := True;
+  edtCodBarras.Enabled := True;
+  edtDescricao.Enabled := True;
+  edtValor.Enabled := True;
+  edtUNMedida.Enabled := True;
+  edtFatorConversao.Enabled := True;
+  btnAddImagen.Enabled := True;
+  imgProduto.Visible := True;
+  edtCdProduto.Enabled := True;
 end;
 
 procedure TfrmProdutos.limpar;
 begin
-  edtIdProduto.Clear;
+  edtCdProduto.Clear;
   edtNomeProduto.Clear;
   edtCodBarras.Clear;
   edtDescricao.Clear;
@@ -476,31 +483,36 @@ end;
 
 procedure TfrmProdutos.SalvarFoto;
 begin
- if dialog.FileName <> '' then
- begin
-  img := TPicture.Create;
-  img.LoadFromFile(dialog.FileName);
-  dm.tbProdutos.FieldByName('imagem').Assign(img);
-  img.Free;
-  dialog.FileName := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
-  alterou := false;
- end
- else
- begin
-  dm.tbProdutos.FieldByName('imagem').Value := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
- end;
-
+  if dialog.FileName <> '' then
+  begin
+    img := TPicture.Create;
+    img.LoadFromFile(dialog.FileName);
+    dm.tbProdutos.FieldByName('imagem').Assign(img);
+    img.Free;
+    dialog.FileName := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
+    alterou := false;
+  end
+  else
+  begin
+    dm.tbProdutos.FieldByName('imagem').Value := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
+  end;
 end;
 
-procedure TfrmProdutos.validaCampos;
+function TfrmProdutos.ValidaCampos: Boolean;
 begin
-  if (Trim(edtNomeProduto.Text) = '') and (Trim(edtCodBarras.Text) = '') and
-     (Trim(edtUNMedida.Text) = '') and (Trim(edtFatorConversao.Text) = '') then
-  begin
-    MessageDlg('Os campos não podem ser vazios', mtInformation, mbOKCancel, 0);
-    edtCodBarras.SetFocus;
-    Abort;
-  end;
+  Result := True;
+
+  if (Trim(edtCdProduto.Text) = '') then
+    Exit(False);
+
+  if (Trim(edtNomeProduto.Text) = '') then
+    Exit(False);
+
+  if (Trim(edtCodBarras.Text) = '') then
+    Exit(False);
+
+  if (Trim(edtUNMedida.Text) = '') then
+    Exit(False);
 end;
 
 {PROCEDIMENTO PADRÃO PARA RECUPERAR FOTO DO BANCO}
@@ -512,8 +524,8 @@ TImage);
   OffsetMemoryStream : Int64 = 0;
 
 begin
-  if not(DataSet.IsEmpty) and
-  not((DataSet.FieldByName(BlobFieldName) as TBlobField).IsNull) then
+  if not(DataSet.IsEmpty)
+    and not((DataSet.FieldByName(BlobFieldName) as TBlobField).IsNull) then
     try
       MemoryStream := TMemoryStream.Create;
       Jpg := TPicture.Create;
