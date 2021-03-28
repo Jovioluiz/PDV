@@ -77,7 +77,6 @@ type
     procedure limparFoto;
     procedure limparProdutos;
 
-    procedure ExibeFoto(DataSet : TDataSet; BlobFieldName : String; ImageExibicao : TImage);
     procedure AssociarCamposDetalhes;
     procedure AssociarCamposVendas;
     procedure listar;
@@ -99,7 +98,7 @@ implementation
 
 {$R *.dfm}
 
-uses Modulo, CancelarItem, Usuarios;
+uses Modulo, CancelarItem, Usuarios, uUtil;
 
 { TfrmVendas }
 
@@ -175,32 +174,6 @@ begin
   edtTroco.Text := FormatFloat('R$ #,,,,0.00', FTotalTroco);
 end;
 
-{PROCEDIMENTO PADRÃO PARA RECUPERAR FOTO DO BANCO}
-procedure TfrmVendas.ExibeFoto(DataSet: TDataSet; BlobFieldName: String; ImageExibicao: TImage);
- var
-  MemoryStream: TMemoryStream;
-  jpg : TPicture;
- const
-  OffsetMemoryStream : Int64 = 0;
-begin
-  if not(DataSet.IsEmpty)
-    and not((DataSet.FieldByName(BlobFieldName) as TBlobField).IsNull) then
-    try
-      MemoryStream := TMemoryStream.Create;
-      Jpg := TPicture.Create;
-      (DataSet.FieldByName(BlobFieldName) as
-          TBlobField).SaveToStream(MemoryStream);
-      MemoryStream.Position := OffsetMemoryStream;
-      Jpg.LoadFromStream(MemoryStream);
-      ImageExibicao.Picture.Assign(Jpg);
-    finally
-     // Jpg.Free;
-      MemoryStream.Free;
-    end
-  else
-    ImageExibicao.Picture := nil;
-end;
-
 //colocar o nome do produto no grid
 procedure TfrmVendas.AssociarCamposDetalhes;
 begin
@@ -245,20 +218,30 @@ begin
 end;
 
 procedure TfrmVendas.buscarProduto;
+var
+  imagem: TUtil;
 begin
   if not Regras.BuscarProdutos(edtCodBarras.Text) then
     Exit;
 
-  edtCdProduto.Text := IntToStr(Regras.Dados.cdsProdutos.FieldByName('id_produto').AsInteger);
-  edtDescricao.Text := Regras.Dados.cdsProdutos.FieldByName('nm_produto').AsString;
-  edtQtdadeEstoque.Text := FloatToStr(Regras.Dados.cdsProdutos.FieldByName('qtd_estoque').AsFloat);
-  edtPrecoUnitario.Text := CurrToStr(Regras.Dados.cdsProdutos.FieldByName('valor').AsCurrency);
-  idproduto := IntToStr(Regras.Dados.cdsProdutos.FieldByName('id_produto').AsInteger);
+  imagem := TUtil.Create;
 
-  ExibeFoto(Regras.Dados.cdsProdutos, 'imagem', imgProduto);
+  try
 
-  if ValidaEstoque then
-    Exit;
+    edtCdProduto.Text := IntToStr(Regras.Dados.cdsProdutos.FieldByName('id_produto').AsInteger);
+    edtDescricao.Text := Regras.Dados.cdsProdutos.FieldByName('nm_produto').AsString;
+    edtQtdadeEstoque.Text := FloatToStr(Regras.Dados.cdsProdutos.FieldByName('qtd_estoque').AsFloat);
+    edtPrecoUnitario.Text := CurrToStr(Regras.Dados.cdsProdutos.FieldByName('valor').AsCurrency);
+    idproduto := IntToStr(Regras.Dados.cdsProdutos.FieldByName('id_produto').AsInteger);
+
+//    imagem.ExibeFoto(Regras.Dados.cdsProdutos, 'imagem', imgProduto);
+
+    if ValidaEstoque then
+      Exit;
+
+  finally
+    imagem.Free;
+  end;
 
   //AssociarCamposDetalhes;
   //limparProdutos;

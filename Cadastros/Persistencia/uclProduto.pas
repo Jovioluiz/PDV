@@ -44,6 +44,8 @@ type TProduto = class(TPadrao)
     procedure Persistir(Novo: Boolean); override;
     function Excluir: Boolean; override;
     procedure Listar;
+    procedure SalvarCodigoBarras(IdItem: Integer; CodigoBarras: string);
+    function PesquisarCodigoBarras(IdItem: Integer; CodigoBarras: string): Int64;
 
     constructor Create;
     destructor Destroy; override;
@@ -315,6 +317,69 @@ begin
   end;
 end;
 
+function TProduto.PesquisarCodigoBarras(IdItem: Integer; CodigoBarras: string): Int64;
+const
+  SQL = 'select id_geral from produtos_cod_barras where id_item = :id_item and codigo_barras = :codigo_barras';
+var
+  qry: TFDQuery;
+begin
+  qry := TFDQuery.Create(nil);
+  qry.Connection := dConexao.conexaoBanco;
+
+  try
+    qry.Open(SQL, [IdItem, CodigoBarras]);
+    Result := qry.FieldByName('id_geral').AsLargeInt;
+
+  finally
+    qry.Free;
+  end;
+end;
+
+procedure TProduto.SalvarCodigoBarras(IdItem: Integer; CodigoBarras: string);
+const
+  SQL_INSERT = 'insert into produtos_cod_barras (id_geral, id_item, codigo_barras) values(:id_geral, :id_item, :codigo_barras)';
+  SQL_UPDATE = 'update produtos_cod_barras set codigo_barras = :codigo_barras where id_geral = :id_geral';
+var
+  qry: TFDQuery;
+  idGeral: Int64;
+  getIdGeral: TUtil;
+begin
+  qry := TFDQuery.Create(nil);
+  qry.Connection := dConexao.conexaoBanco;
+  getIdGeral := TUtil.Create;
+
+  try
+    idGeral := PesquisarCodigoBarras(IdItem, CodigoBarras);
+    try
+      if idGeral > 0 then
+      begin
+        qry.SQL.Add(SQL_UPDATE);
+        qry.ParamByName('codigo_barras').AsString := CodigoBarras;
+        qry.ParamByName('id_geral').AsLargeInt := idGeral;
+        qry.ExecSQL;
+      end
+      else
+      begin
+        qry.SQL.Add(SQL_INSERT);
+        qry.ParamByName('id_geral').AsLargeInt := getIdGeral.GeraIdGeral;
+        qry.ParamByName('id_item').AsInteger := IdItem;
+        qry.ParamByName('codigo_barras').AsString := CodigoBarras;
+        qry.ExecSQL;
+      end;
+      dConexao.conexaoBanco.Commit;
+    except
+      on E:exception do
+      begin
+        dConexao.conexaoBanco.Rollback;
+        raise Exception.Create('Erro ao gravar os dados ' + E.Message);
+      end;
+    end;
+  finally
+    qry.Free;
+    getIdGeral.Free;
+  end;
+end;
+
 procedure TProduto.Setcd_item(const Value: string);
 begin
   Fcd_item := Value;
@@ -390,9 +455,7 @@ begin
   qry.Connection := dconexao.conexaoBanco;
 
   try
-    qry.SQL.Add(SQL);
-    qry.ParamByName('codigo_barras').AsString := CodBarras;
-    qry.Open();
+    qry.Open(SQL, [CodBarras]);
 
     Result := qry.IsEmpty;
 

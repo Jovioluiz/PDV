@@ -36,11 +36,11 @@ uses Modulo;
 
 procedure TfrmImprimirBarras.FormCreate(Sender: TObject);
 begin
-  GerarCodigo(codigoProduto, Image1.Canvas);
-  GerarCodigo(codigoProduto, Image2.Canvas);
-  GerarCodigo(codigoProduto, Image3.Canvas);
-  GerarCodigo(codigoProduto, Image4.Canvas);
-  GerarCodigo(codigoProduto, Image5.Canvas);
+  GerarCodigo(codigoBarrasProduto, Image1.Canvas);
+  GerarCodigo(codigoBarrasProduto, Image2.Canvas);
+  GerarCodigo(codigoBarrasProduto, Image3.Canvas);
+  GerarCodigo(codigoBarrasProduto, Image4.Canvas);
+  GerarCodigo(codigoBarrasProduto, Image5.Canvas);
 end;
 
 procedure TfrmImprimirBarras.FormKeyDown(Sender: TObject; var Key: Word;

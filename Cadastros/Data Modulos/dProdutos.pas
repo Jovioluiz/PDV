@@ -20,6 +20,7 @@ type
     cdsProdutosdata_cadastro: TDateField;
     cdsProdutosimagem: TBlobField;
     cdsProdutosdata_ult_compra: TDateField;
+    cdsProdutoscodigo_barras: TStringField;
   private
     { Private declarations }
   public

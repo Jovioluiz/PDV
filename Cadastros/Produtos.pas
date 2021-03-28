@@ -75,7 +75,6 @@ type
     procedure buscarCodigo;
     procedure SalvarFoto;
     procedure CarregarImagemPadrao;
-    procedure ExibeFoto(DataSet : TDataSet; BlobFieldName : String; ImageExibicao : TImage);
   public
     { Public declarations }
     property Regras: TProduto read FRegras;
@@ -92,7 +91,7 @@ implementation
 
 {$R *.dfm}
 
-uses Modulo, ImprimirBarras;
+uses Modulo, ImprimirBarras, uUtil;
 
 { TfrmProdutos }
 
@@ -228,30 +227,35 @@ begin
 end;
 
 procedure TfrmProdutos.dbGridProdutosCellClick(Column: TColumn);
+var
+  imagem: TUtil;
 begin
-  HabilitarCampos;
-  btnEditar.Enabled := True;
-  btnExcluir.Enabled := True;
-  btnImprimir.Enabled := True;
-  btnGerarCodigo.Enabled := True;
+  imagem := TUtil.Create;
 
-  dm.tbProdutos.Edit;
+  try
+    HabilitarCampos;
+    btnEditar.Enabled := True;
+    btnExcluir.Enabled := True;
+    btnImprimir.Enabled := True;
+    btnGerarCodigo.Enabled := True;
 
-  edtNomeProduto.Text := dm.queryProdutos.FieldByName('nm_produto').AsString;
-  edtCodBarras.Text := dm.queryProdutos.FieldByName('codigo_barras').AsString;
-  edtDescricao.Text := dm.queryProdutos.FieldByName('descricao').AsString;
-  edtUNMedida.Text := dm.queryProdutos.FieldByName('un_medida').AsString;
-  edtFatorConversao.Text := dm.queryProdutos.FieldByName('fator_conversao').AsString;
-  edtCodBarras.Text := dm.queryProdutos.FieldByName('codigo_barras').AsString;
-  GerarCodigo(edtCodBarras.Text, imgCodBarras.Canvas);
-  edtValor.Text := dm.queryProdutos.FieldByName('valor').AsString;
-  edtCdProduto.Text := dm.queryProdutos.FieldByName('id_produto').Text;
-  id := dm.queryProdutos.FieldByName('id_produto').AsString;
-  codigoProduto := dm.queryProdutos.FieldByName('codigo_barras').AsString;
+    edtNomeProduto.Text := FRegras.Dados.cdsProdutos.FieldByName('nm_produto').AsString;
+    edtCodBarras.Text := FRegras.Dados.cdsProdutos.FieldByName('codigo_barras').AsString;
+    edtDescricao.Text := FRegras.Dados.cdsProdutos.FieldByName('descricao').AsString;
+    edtUNMedida.Text := FRegras.Dados.cdsProdutos.FieldByName('un_medida').AsString;
+    edtFatorConversao.Text := FRegras.Dados.cdsProdutos.FieldByName('fator_conversao').AsString;
+    edtCodBarras.Text := FRegras.Dados.cdsProdutos.FieldByName('codigo_barras').AsString;
+    GerarCodigo(edtCodBarras.Text, imgCodBarras.Canvas);
+    edtValor.Text := FRegras.Dados.cdsProdutos.FieldByName('vl_unitario').AsString;
+    edtCdProduto.Text := FRegras.Dados.cdsProdutos.FieldByName('cd_item').AsString;
+    id := FRegras.Dados.cdsProdutos.FieldByName('id_item').AsString;
+    codigoBarrasProduto := FRegras.Dados.cdsProdutos.FieldByName('codigo_barras').AsString;
 
-  if dm.queryProdutos.FieldByName('imagem').Value <> null then
-    ExibeFoto(dm.queryProdutos, 'imagem', imgProduto);
-
+    if FRegras.Dados.cdsProdutos.FieldByName('imagem').Value <> null then
+      imagem.ExibeFoto(FRegras.Dados.cdsProdutos, 'imagem', imgProduto);
+  finally
+    imagem.Free;
+  end;
 end;
 
 procedure TfrmProdutos.dbGridProdutosDblClick(Sender: TObject);
@@ -464,32 +468,4 @@ begin
   if (Trim(edtUNMedida.Text) = '') then
     Exit(False);
 end;
-
-{PROCEDIMENTO PADRÃO PARA RECUPERAR FOTO DO BANCO}
-procedure TfrmProdutos.ExibeFoto(DataSet : TDataSet; BlobFieldName : String; ImageExibicao :
-TImage);
-
- var MemoryStream:TMemoryStream; jpg : TPicture;
- const
-  OffsetMemoryStream : Int64 = 0;
-
-begin
-  if not(DataSet.IsEmpty)
-    and not((DataSet.FieldByName(BlobFieldName) as TBlobField).IsNull) then
-    try
-      MemoryStream := TMemoryStream.Create;
-      Jpg := TPicture.Create;
-      (DataSet.FieldByName(BlobFieldName) as
-          TBlobField).SaveToStream(MemoryStream);
-      MemoryStream.Position := OffsetMemoryStream;
-      Jpg.LoadFromStream(MemoryStream);
-      ImageExibicao.Picture.Assign(Jpg);
-    finally
-     // Jpg.Free;
-      MemoryStream.Free;
-    end
-  else
-    ImageExibicao.Picture := Nil;
-end;
-
 end.

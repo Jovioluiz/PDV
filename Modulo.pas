@@ -154,7 +154,7 @@ var
   cargoUsuario : String;
   FCdUsuario : Integer;
 
-  codigoProduto : String;
+  codigoBarrasProduto : String;
 
   idFornecedor : String;
   nomeFornecedor : String;

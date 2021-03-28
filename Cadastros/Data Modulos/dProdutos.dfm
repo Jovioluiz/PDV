@@ -9,7 +9,7 @@ object dmProdutos: TdmProdutos
   end
   object cdsProdutos: TClientDataSet
     PersistDataPacket.Data = {
-      460100009619E0BD01000000180000000B00000000000300000046010769645F
+      680100009619E0BD01000000180000000C00000000000300000068010769645F
       6974656D04000100000000000763645F6974656D010049000000010005574944
       54480200020014000A6E6D5F70726F6475746F01004900000001000557494454
       480200020032000964657363726963616F010049000000010005574944544802
@@ -19,7 +19,8 @@ object dmProdutos: TdmProdutos
       61746F725F636F6E76657273616F08000400000000000D646174615F63616461
       7374726F040006000000000006696D6167656D04004B00000001000753554254
       59504502004900070042696E617279000F646174615F756C745F636F6D707261
-      04000600000000000000}
+      04000600000000000D636F6469676F5F62617272617301004900000001000557
+      494454480200020014000000}
     Active = True
     Aggregates = <>
     FieldDefs = <
@@ -70,6 +71,11 @@ object dmProdutos: TdmProdutos
       item
         Name = 'data_ult_compra'
         DataType = ftDate
+      end
+      item
+        Name = 'codigo_barras'
+        DataType = ftString
+        Size = 20
       end>
     IndexDefs = <>
     Params = <>
@@ -122,6 +128,10 @@ object dmProdutos: TdmProdutos
     object cdsProdutosdata_ult_compra: TDateField
       DisplayLabel = 'Data '#218'ltima Compra'
       FieldName = 'data_ult_compra'
+    end
+    object cdsProdutoscodigo_barras: TStringField
+      DisplayLabel = 'C'#243'digo Barras'
+      FieldName = 'codigo_barras'
     end
   end
 end
