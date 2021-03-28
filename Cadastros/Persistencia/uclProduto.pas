@@ -44,8 +44,7 @@ type TProduto = class(TPadrao)
     procedure Persistir(Novo: Boolean); override;
     function Excluir: Boolean; override;
     procedure Listar;
-    procedure SalvarCodigoBarras(IdItem: Integer; CodigoBarras: string);
-    function PesquisarCodigoBarras(IdItem: Integer; CodigoBarras: string): Int64;
+    function GetIdItem(CodItem: string): Integer;
 
     constructor Create;
     destructor Destroy; override;
@@ -83,8 +82,8 @@ const
               '    descricao = :descricao, ' +
               '    vl_unitario = :vl_unitario, ' +
               '    un_medida = :un_medida, ' +
-              '    fator_conversao = :fator_conversao, ' +
-              '    data_cadastro = :data_cadastro)';
+              '    fator_conversao = :fator_conversao ' +
+              'where id_item = :id_item';
 {$ENDREGION}
 var
   qry: TFDQuery;
@@ -101,7 +100,7 @@ begin
       qry.ParamByName('vl_unitario').AsCurrency := vl_unitario;
       qry.ParamByName('un_medida').AsString := un_medida;
       qry.ParamByName('fator_conversao').AsFloat := fator_conversao;
-      qry.ParamByName('data_cadastro').AsDate := data_cadastro;
+      qry.ParamByName('id_item').AsInteger := id_item;
       qry.ExecSQL;
       dConexao.conexaoBanco.Commit;
     except
@@ -178,6 +177,25 @@ begin
   end;
 end;
 
+function TProduto.GetIdItem(CodItem: string): Integer;
+const
+  SQL = 'select id_item from produtos where cd_item = :cd_item';
+var
+  qry: TFDQuery;
+begin
+  qry := TFDQuery.Create(nil);
+  qry.Connection := dConexao.conexaoBanco;
+
+  try
+    qry.Open(SQL, [CodItem]);
+
+    Result := qry.FieldByName('id_item').AsInteger;
+
+  finally
+    qry.Free;
+  end;
+end;
+
 procedure TProduto.Inserir;
 {$REGION 'Insert'}
 const
@@ -221,7 +239,7 @@ begin
       qry.ParamByName('fator_conversao').AsFloat := fator_conversao;
       qry.ParamByName('data_cadastro').AsDate := data_cadastro;
       qry.ExecSQL;
-      dConexao.conexaoBanco.Commit;
+
     except
       on E:exception do
       begin
@@ -229,7 +247,7 @@ begin
         raise Exception.Create('Erro ao gravar os dados ' + E.Message);
       end;
     end;
-
+    dConexao.conexaoBanco.Commit;
   finally
     dConexao.conexaoBanco.Rollback;
     qry.Free;
@@ -239,7 +257,7 @@ end;
 procedure TProduto.Listar;
 const
   SQL = 'select ' +
-        '    id_item, ' +
+        '    p.id_item, ' +
         '    cd_item, ' +
         '    nm_produto, ' +
         '    descricao, ' +
@@ -249,9 +267,11 @@ const
         '    fator_conversao, ' +
         '    data_cadastro, ' +
         '    imagem, ' +
-        '    data_ult_compra ' +
+        '    data_ult_compra, ' +
+        '    codigo_barras ' +
         'from ' +
-        '    produtos; ';
+        '    produtos p ' +
+        'join produtos_cod_barras pcb on pcb.id_item = p.id_item ';
 
 var
   qry: TFDQuery;
@@ -279,7 +299,9 @@ begin
       FDados.cdsProdutos.FieldByName('fator_conversao').AsFloat := qry.FieldByName('fator_conversao').AsFloat;
       FDados.cdsProdutos.FieldByName('data_cadastro').AsDateTime := qry.FieldByName('data_cadastro').AsDateTime;
       FDados.cdsProdutos.FieldByName('imagem').AsBytes := qry.FieldByName('imagem').AsBytes;
-      FDados.cdsProdutos.FieldByName('data_ult_compra').AsDateTime := qry.FieldByName('data_ult_compra').AsDateTime;
+      if qry.FieldByName('data_ult_compra').AsDateTime > 0 then
+        FDados.cdsProdutos.FieldByName('data_ult_compra').AsDateTime := qry.FieldByName('data_ult_compra').AsDateTime;
+      FDados.cdsProdutos.FieldByName('codigo_barras').AsString := qry.FieldByName('codigo_barras').AsString;
       FDados.cdsProdutos.Post;
     end
     );
@@ -314,69 +336,6 @@ begin
 
   finally
     qry.Free;
-  end;
-end;
-
-function TProduto.PesquisarCodigoBarras(IdItem: Integer; CodigoBarras: string): Int64;
-const
-  SQL = 'select id_geral from produtos_cod_barras where id_item = :id_item and codigo_barras = :codigo_barras';
-var
-  qry: TFDQuery;
-begin
-  qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
-
-  try
-    qry.Open(SQL, [IdItem, CodigoBarras]);
-    Result := qry.FieldByName('id_geral').AsLargeInt;
-
-  finally
-    qry.Free;
-  end;
-end;
-
-procedure TProduto.SalvarCodigoBarras(IdItem: Integer; CodigoBarras: string);
-const
-  SQL_INSERT = 'insert into produtos_cod_barras (id_geral, id_item, codigo_barras) values(:id_geral, :id_item, :codigo_barras)';
-  SQL_UPDATE = 'update produtos_cod_barras set codigo_barras = :codigo_barras where id_geral = :id_geral';
-var
-  qry: TFDQuery;
-  idGeral: Int64;
-  getIdGeral: TUtil;
-begin
-  qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
-  getIdGeral := TUtil.Create;
-
-  try
-    idGeral := PesquisarCodigoBarras(IdItem, CodigoBarras);
-    try
-      if idGeral > 0 then
-      begin
-        qry.SQL.Add(SQL_UPDATE);
-        qry.ParamByName('codigo_barras').AsString := CodigoBarras;
-        qry.ParamByName('id_geral').AsLargeInt := idGeral;
-        qry.ExecSQL;
-      end
-      else
-      begin
-        qry.SQL.Add(SQL_INSERT);
-        qry.ParamByName('id_geral').AsLargeInt := getIdGeral.GeraIdGeral;
-        qry.ParamByName('id_item').AsInteger := IdItem;
-        qry.ParamByName('codigo_barras').AsString := CodigoBarras;
-        qry.ExecSQL;
-      end;
-      dConexao.conexaoBanco.Commit;
-    except
-      on E:exception do
-      begin
-        dConexao.conexaoBanco.Rollback;
-        raise Exception.Create('Erro ao gravar os dados ' + E.Message);
-      end;
-    end;
-  finally
-    qry.Free;
-    getIdGeral.Free;
   end;
 end;
 

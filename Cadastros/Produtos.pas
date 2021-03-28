@@ -71,8 +71,8 @@ type
 
     procedure GerarCodigo(codigo : String; Canvas : TCanvas);
 
-    procedure buscarNome;
-    procedure buscarCodigo;
+    procedure BuscarNome;
+    procedure BuscarCodigo;
     procedure SalvarFoto;
     procedure CarregarImagemPadrao;
   public
@@ -91,7 +91,7 @@ implementation
 
 {$R *.dfm}
 
-uses Modulo, ImprimirBarras, uUtil;
+uses Modulo, ImprimirBarras, uUtil, uclProdutoCodBarras;
 
 { TfrmProdutos }
 
@@ -163,16 +163,24 @@ end;
 procedure TfrmProdutos.btnSalvarClick(Sender: TObject);
 var
   novo: Boolean;
+  codBarras: TProdutoCodBarras;
+  idItem: Integer;
 begin
+  if not ValidaCampos then
+  begin
+    raise Exception.Create('Os campos não podem ser vazios');
+    edtCodBarras.SetFocus;
+  end;
+
+  codBarras := TProdutoCodBarras.Create;
+
   try
-    if not ValidaCampos then
-    begin
-      raise Exception.Create('Os campos não podem ser vazios');
-      edtCodBarras.SetFocus;
-    end;
+    idItem := FRegras.GetIdItem(edtCdProduto.Text);
 
-    novo := FRegras.Pesquisar(StrToInt(edtCdProduto.Text));
+    novo := FRegras.Pesquisar(idItem);
 
+    if idItem > 0 then
+      FRegras.id_item := idItem;
     FRegras.cd_item := edtCdProduto.Text;
     FRegras.nm_produto := edtNomeProduto.Text;
     FRegras.descricao := edtDescricao.Text;
@@ -184,46 +192,53 @@ begin
     //SalvarFoto;
 
     FRegras.Persistir(novo);
+
+    novo := codBarras.PesquisarCodBarras(FRegras.GetIdItem(edtCdProduto.Text), edtCodBarras.Text);
+    codBarras.id_item := FRegras.GetIdItem(edtCdProduto.Text);;
+    codBarras.codigo_barras := edtCodBarras.Text;
+    codBarras.Persistir(novo);
+
     ShowMessage('Salvo com Sucesso');
     limpar;
     desabilitarCampos;
     btnSalvar.Enabled := false;
     listar;
-  except
     CarregarImagemPadrao;
-    listar;
+  finally
+    codBarras.Free;
   end;
-
 end;
 
-procedure TfrmProdutos.buscarCodigo;
+procedure TfrmProdutos.BuscarCodigo;
 begin
-  dm.queryProdutos.Close;
-  dm.queryProdutos.SQL.Clear;
-  dm.queryProdutos.SQL.Add('select * '+
-                                  'from '+
-                              'produtos '+
-                                  'where '+
-                              'codigo_barras like ' + QuotedStr('%'+edtBuscarCodigo.Text +'%'));
-  dm.queryProdutos.Open();
+  FRegras.Dados.cdsProdutos.DisableControls;
+
+  try
+    FRegras.Dados.cdsProdutos.Filtered := False;
+    FRegras.Dados.cdsProdutos.Filter := 'Upper(cd_item) like ' + QuotedStr('%' + edtBuscarCodigo.Text + '%');
+    FRegras.Dados.cdsProdutos.Filtered := True;
+  finally
+    FRegras.Dados.cdsProdutos.EnableControls;
+  end;
 end;
 
-procedure TfrmProdutos.buscarNome;
+procedure TfrmProdutos.BuscarNome;
 begin
-  dm.queryProdutos.Close;
-  dm.queryProdutos.SQL.Clear;
-  dm.queryProdutos.SQL.Add('select * '+
-                                  'from '+
-                              'produtos '+
-                                  'where '+
-                              'nm_produto like ' + QuotedStr('%'+edtBuscarNome.Text +'%'));
-  dm.queryProdutos.Open();
+  FRegras.Dados.cdsProdutos.DisableControls;
+
+  try
+    FRegras.Dados.cdsProdutos.Filtered := False;
+    FRegras.Dados.cdsProdutos.Filter := 'Upper(nm_produto) like ' + QuotedStr('%' + edtBuscarNome.Text + '%');
+    FRegras.Dados.cdsProdutos.Filtered := True;
+  finally
+    FRegras.Dados.cdsProdutos.EnableControls;
+  end;
 end;
 
 procedure TfrmProdutos.CarregarImagemPadrao;
 begin
-  caminhoimg := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
-  imgProduto.Picture.LoadFromFile(caminhoimg);
+//  caminhoimg := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
+//  imgProduto.Picture.LoadFromFile(caminhoimg);
 end;
 
 procedure TfrmProdutos.dbGridProdutosCellClick(Column: TColumn);
@@ -286,12 +301,12 @@ end;
 
 procedure TfrmProdutos.edtBuscarCodigoChange(Sender: TObject);
 begin
- buscarCodigo;
+  BuscarCodigo;
 end;
 
 procedure TfrmProdutos.edtBuscarNomeChange(Sender: TObject);
 begin
-  buscarNome;
+  BuscarNome;
 end;
 
 procedure TfrmProdutos.edtCodBarrasChange(Sender: TObject);

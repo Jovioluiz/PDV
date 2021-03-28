@@ -34,7 +34,8 @@ uses
   uclFuncionario in 'Cadastros\Persistencia\uclFuncionario.pas',
   dFuncionario in 'Cadastros\Data Modulos\dFuncionario.pas' {dmFuncionario: TDataModule},
   uclProduto in 'Cadastros\Persistencia\uclProduto.pas',
-  dProdutos in 'Cadastros\Data Modulos\dProdutos.pas' {dmProdutos: TDataModule};
+  dProdutos in 'Cadastros\Data Modulos\dProdutos.pas' {dmProdutos: TDataModule},
+  uclProdutoCodBarras in 'Cadastros\Persistencia\uclProdutoCodBarras.pas';
 
 {$R *.res}
 
