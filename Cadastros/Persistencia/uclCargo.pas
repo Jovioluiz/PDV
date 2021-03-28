@@ -5,7 +5,7 @@ interface
 uses
   uPadrao;
 
-type TCargo = class
+type TCargo = class(TPadrao)
   private
     Fcd_cargo: Integer;
     Fnm_cargo: string;
@@ -16,9 +16,9 @@ type TCargo = class
 
   public
 
-    function Pesquisar(CodCargo: Integer): Boolean;
-    procedure Persistir(Novo: Boolean);
-    function Excluir: Boolean;
+    function Pesquisar(CodCargo: Integer): Boolean; override;
+    procedure Persistir(Novo: Boolean); override;
+    function Excluir: Boolean; override;
     property cd_cargo: Integer read Fcd_cargo write Setcd_cargo;
     property nm_cargo: string read Fnm_cargo write Setnm_cargo;
 

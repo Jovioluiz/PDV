@@ -10,7 +10,7 @@ uses
 
 type
   TfrmProdutos = class(TForm)
-    DBGrid1: TDBGrid;
+    dbGridProdutos: TDBGrid;
     btnNovo: TSpeedButton;
     btnSalvar: TSpeedButton;
     btnEditar: TSpeedButton;
@@ -46,7 +46,7 @@ type
     procedure btnNovoClick(Sender: TObject);
     procedure btnSalvarClick(Sender: TObject);
     procedure btnImprimirClick(Sender: TObject);
-    procedure DBGrid1CellClick(Column: TColumn);
+    procedure dbGridProdutosCellClick(Column: TColumn);
     procedure btnGerarCodigoClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
@@ -57,15 +57,15 @@ type
     procedure btnAddImagenClick(Sender: TObject);
     procedure edtCodBarrasChange(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
-    procedure DBGrid1DblClick(Sender: TObject);
+    procedure dbGridProdutosDblClick(Sender: TObject);
     procedure edtCodBarrasEnter(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     FRegras: TProduto;
     { Private declarations }
     procedure limpar;
     procedure HabilitarCampos;
     procedure desabilitarCampos;
-    procedure associarCampos;
     procedure listar;
     function ValidaCampos: Boolean;
 
@@ -96,18 +96,6 @@ uses Modulo, ImprimirBarras;
 
 { TfrmProdutos }
 
-procedure TfrmProdutos.associarCampos;
-begin
-//  dm.tbProdutos.FieldByName('nm_produto').AsString := edtNomeProduto.Text;
-//  dm.tbProdutos.FieldByName('codigo_barras').AsString := edtCodBarras.Text;
-//  dm.tbProdutos.FieldByName('descricao').AsString := edtDescricao.Text;
-//  dm.tbProdutos.FieldByName('valor').AsString := edtValor.Text;
-//  dm.tbProdutos.FieldByName('qtd_estoque').AsCurrency := 0;
-//  dm.tbProdutos.FieldByName('un_medida').AsString := edtUNMedida.Text;
-//  dm.tbProdutos.FieldByName('fator_conversao').AsString := edtFatorConversao.Text;
-//  dm.tbProdutos.FieldByName('data_cadastro').AsString := DateToStr(Date);
-end;
-
 procedure TfrmProdutos.btnAddImagenClick(Sender: TObject);
 begin
   dialog.Execute();
@@ -117,54 +105,7 @@ end;
 
 procedure TfrmProdutos.btnEditarClick(Sender: TObject);
 begin
-  ValidaCampos;
-  associarCampos;
-  dm.queryProdutos.Close;
-  dm.queryProdutos.SQL.Clear;
-
-  if alterou then
-  begin
-    dm.queryProdutos.SQL.Add('update '+
-                                    'produtos set '+
-                                    'codigo_barras = :codigo_barras, '+
-                                    'nm_produto = :nm_produto, '+
-                                    'descricao = :descricao, '+
-                                    'valor = :valor, '+
-                                    'un_medida = :un_medida, '+
-                                    'fator_conversao = :fator_conversao, '+
-                                    'imagem = :imagem '+
-                              'where id_produto = :id_produto');
-    img := TPicture.Create;
-    img.LoadFromFile(dialog.FileName);
-    dm.queryProdutos.ParamByName('imagem').Assign(img);
-    img.Free;
-    alterou := false;
-  end
-  else
-  begin
-   dm.queryProdutos.SQL.Add('update '+
-                                  'produtos set '+
-                                  'codigo_barras = :codigo_barras, '+
-                                  'nm_produto = :nm_produto, '+
-                                  'descricao = :descricao, '+
-                                  'valor = :valor, '+
-                                  'un_medida = :un_medida, '+
-                                  'fator_conversao = :fator_conversao '+
-                            'where id_produto = :id_produto');
-  end;
-
-  dm.queryProdutos.ParamByName('codigo_barras').AsString := edtCodBarras.Text;
-  dm.queryProdutos.ParamByName('nm_produto').AsString := edtNomeProduto.Text;
-  dm.queryProdutos.ParamByName('descricao').AsString := edtDescricao.Text;
-  dm.queryProdutos.ParamByName('valor').AsCurrency := StrToCurr(edtValor.Text);
-  dm.queryProdutos.ParamByName('un_medida').AsString := edtUNMedida.Text;
-  dm.queryProdutos.ParamByName('fator_conversao').AsString := edtFatorConversao.Text;
-  dm.queryProdutos.ParamByName('id_produto').Value := id;
-  dm.queryProdutos.ExecSQL;
-
-  listar;
-  MessageDlg('Editado com Sucesso', mtInformation, mbOKCancel, 0);
-
+  btnSalvar.Click;
   btnEditar.Enabled := false;
   btnExcluir.Enabled := false;
   limpar;
@@ -175,17 +116,15 @@ procedure TfrmProdutos.btnExcluirClick(Sender: TObject);
 begin
   if MessageDlg('Deseja Excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
-    dm.queryCoringa.Close;
-    dm.queryCoringa.SQL.Text := 'delete from produtos where id_produto = :id_produto';
-    dm.queryCoringa.ParamByName('id_produto').AsInteger := StrToInt(edtCdProduto.Text);
-    dm.queryCoringa.ExecSQL;
+    if FRegras.Excluir then
+    begin
+      MessageDlg('Excluido com Sucesso', mtInformation, mbOKCancel, 0);
 
-    MessageDlg('Excluido com Sucesso', mtInformation, mbOKCancel, 0);
-
-    btnEditar.Enabled := false;
-    btnExcluir.Enabled := false;
-    limpar;
-    listar;
+      btnEditar.Enabled := False;
+      btnExcluir.Enabled := False;
+      limpar;
+      listar;
+    end;
   end;
 end;
 
@@ -223,6 +162,8 @@ begin
 end;
 
 procedure TfrmProdutos.btnSalvarClick(Sender: TObject);
+var
+  novo: Boolean;
 begin
   try
     if not ValidaCampos then
@@ -231,19 +172,25 @@ begin
       edtCodBarras.SetFocus;
     end;
 
-//    associarCampos;
-    SalvarFoto;
-//    dm.tbProdutos.Post;
+    novo := FRegras.Pesquisar(StrToInt(edtCdProduto.Text));
+
+    FRegras.cd_item := edtCdProduto.Text;
+    FRegras.nm_produto := edtNomeProduto.Text;
+    FRegras.descricao := edtDescricao.Text;
+    FRegras.vl_unitario := StrToCurr(edtValor.Text);
+    FRegras.un_medida := edtUNMedida.Text;
+    FRegras.fator_conversao := StrToFloat(edtFatorConversao.Text);
+    FRegras.data_cadastro := Now;
+
+    //SalvarFoto;
+
+    FRegras.Persistir(novo);
     ShowMessage('Salvo com Sucesso');
     limpar;
     desabilitarCampos;
     btnSalvar.Enabled := false;
     listar;
   except
-//    MessageDlg('Erro na Imagem', mtInformation, mbOKCancel, 0);
-//    dm.fd.Connected := True;
-//    dm.tbProdutos.Active := True;
-//    dm.tbProdutos.Insert;
     CarregarImagemPadrao;
     listar;
   end;
@@ -280,7 +227,7 @@ begin
   imgProduto.Picture.LoadFromFile(caminhoimg);
 end;
 
-procedure TfrmProdutos.DBGrid1CellClick(Column: TColumn);
+procedure TfrmProdutos.dbGridProdutosCellClick(Column: TColumn);
 begin
   HabilitarCampos;
   btnEditar.Enabled := True;
@@ -307,7 +254,7 @@ begin
 
 end;
 
-procedure TfrmProdutos.DBGrid1DblClick(Sender: TObject);
+procedure TfrmProdutos.dbGridProdutosDblClick(Sender: TObject);
 begin
   if chamada = 'Prod' then
   begin
@@ -361,13 +308,19 @@ begin
    btnGerarCodigo.Enabled := True;
 end;
 
+procedure TfrmProdutos.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  FRegras.Free;
+end;
+
 procedure TfrmProdutos.FormCreate(Sender: TObject);
 begin
   FRegras := TProduto.Create;
+  dbGridProdutos.DataSource := FRegras.Dados.dsProdutos;
   CarregarImagemPadrao;
   desabilitarCampos;
-//  dm.tbProdutos.Active := True;
-//  listar;
+
+  listar;
 
   rbNome.Checked := True;
   edtBuscarCodigo.Visible := False;
@@ -459,10 +412,7 @@ end;
 
 procedure TfrmProdutos.listar;
 begin
-  dm.queryProdutos.Close;
-  dm.queryProdutos.SQL.Clear;
-  dm.queryProdutos.SQL.Add('select * from produtos order by nm_produto asc');
-  dm.queryProdutos.Open();
+  FRegras.Listar;
 end;
 
 procedure TfrmProdutos.rbCpfClick(Sender: TObject);

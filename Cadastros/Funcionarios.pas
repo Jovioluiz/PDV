@@ -116,19 +116,20 @@ begin
     if MessageDlg('Deseja Excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       FRegras.cd_funcionario := StrToInt(edtCdFuncionario.Text);
-      FRegras.Excluir;
-      ShowMessage('Excluído com Sucesso');
+      if FRegras.Excluir then
+      begin
+        ShowMessage('Excluído com Sucesso');
 
-      Listar;
-      btnEditar.Enabled := False;
-      btnExcluir.Enabled := False;
-      limpar;
+        Listar;
+        btnEditar.Enabled := False;
+        btnExcluir.Enabled := False;
+        limpar;
+        qry.SQL.Add('update usuarios set fl_ativo = False where cd_funcionario = :cd_funcionario');
+        qry.ParamByName('cd_funcionario').AsInteger := FRegras.cd_funcionario;
+        qry.ExecSQL;
+        dConexao.conexaoBanco.Commit;
+      end;
     end;
-
-    qry.SQL.Add('update usuarios set fl_ativo = False where cd_funcionario = :cd_funcionario');
-    qry.ParamByName('cd_funcionario').AsInteger := FRegras.cd_funcionario;
-    qry.ExecSQL;
-    dConexao.conexaoBanco.Commit;
 
     Listar;
   finally

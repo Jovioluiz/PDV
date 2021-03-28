@@ -5,7 +5,7 @@ interface
 uses
   uPadrao, dFornecedor, uUtil, FireDAC.Stan.Param, Data.DB;
 
-type TFornecedor = class
+type TFornecedor = class(TPadrao)
   private
     Flogradouro: string;
     Fcpf_cnpj: string;
@@ -41,10 +41,10 @@ type TFornecedor = class
 
   public
 
-    function Pesquisar(CodFornecedor: Integer): Boolean;
-    procedure Persistir(Novo: Boolean);
+    function Pesquisar(CodFornecedor: Integer): Boolean; override;
+    procedure Persistir(Novo: Boolean); override;
     function GeraCodigoFornecedor: Integer;
-    procedure Excluir;
+    function Excluir: Boolean; override;
     procedure Listar;
     constructor Create;
     destructor Destroy; override;
@@ -88,7 +88,7 @@ begin
   inherited;
 end;
 
-procedure TFornecedor.Excluir;
+function TFornecedor.Excluir: Boolean;
 const
   SQL = 'delete from fornecedor where cd_fornecedor = :cd_fornecedor';
 var
@@ -111,7 +111,7 @@ begin
         raise Exception.Create('Erro ao excluir os dados ' + E.Message);
       end;
     end;
-
+    Result := True;
   finally
     dConexao.conexaoBanco.Rollback;
     qry.Free;

@@ -33,13 +33,13 @@ uses
   dmConexao in 'Conexao\dmConexao.pas' {dConexao: TDataModule},
   uclFuncionario in 'Cadastros\Persistencia\uclFuncionario.pas',
   dFuncionario in 'Cadastros\Data Modulos\dFuncionario.pas' {dmFuncionario: TDataModule},
-  uclProduto in 'Cadastros\Persistencia\uclProduto.pas';
+  uclProduto in 'Cadastros\Persistencia\uclProduto.pas',
+  dProdutos in 'Cadastros\Data Modulos\dProdutos.pas' {dmProdutos: TDataModule};
 
 {$R *.res}
 
 begin
   Application.CreateForm(TdConexao, dConexao);
-  Application.CreateForm(TdmFuncionario, dmFuncionario);
   FrmLogin := TFrmLogin.Create(nil);
   if FrmLogin.ShowModal = mrOK then
   begin

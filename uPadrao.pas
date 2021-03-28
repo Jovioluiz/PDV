@@ -5,34 +5,20 @@ interface
 uses
   dConexaoBanco;
 
-type TPadrao = class
+type TPadrao = class abstract
+
   private
 
 
   public
-
-  constructor Create;
-  destructor Destroy; override;
-
-
+    function Pesquisar(Codigo: Integer): Boolean; virtual; abstract;
+    procedure Persistir(Novo: Boolean); virtual; abstract;
+    function Excluir: Boolean; virtual; abstract;
 end;
 
 implementation
 
 { TPadrao }
 
-
-{ TPadrao }
-
-constructor TPadrao.Create;
-begin
-//
-end;
-
-destructor TPadrao.Destroy;
-begin
-  //
-  inherited;
-end;
 
 end.

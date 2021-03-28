@@ -484,3 +484,5 @@ update
     public.pagamentos for each row execute procedure gera_log();
 
 ALTER TABLE public.usuarios ADD fl_ativo bool NULL;
+ALTER TABLE public.produtos RENAME COLUMN valor TO vl_unitario;
+ALTER TABLE public.produtos RENAME COLUMN qtd_estoque TO qt_estoque;

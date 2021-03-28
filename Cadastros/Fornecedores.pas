@@ -102,13 +102,15 @@ begin
   if MessageDlg('Deseja Excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
     FRegras.cd_fornecedor := StrToInt(edtCodFornecedor.Text);
-    FRegras.Excluir;
-    ShowMessage('Excluído com Sucesso');
+    if FRegras.Excluir then
+    begin
+      ShowMessage('Excluído com Sucesso');
 
-    btnEditar.Enabled := False;
-    btnExcluir.Enabled := False;
-    Limpar;
-    Listar;
+      btnEditar.Enabled := False;
+      btnExcluir.Enabled := False;
+      Limpar;
+      Listar;
+    end;
   end;
 end;
 

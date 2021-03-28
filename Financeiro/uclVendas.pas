@@ -5,7 +5,7 @@ interface
 uses
   dVendas, uPadrao, Data.DB, uUtil, FireDAC.Stan.Param;
 
-type TVenda = class(TPadrao)
+type TVenda = class
   private
     FDados: TdmVendas;
     procedure SetFDados(const Value: TdmVendas);
@@ -102,7 +102,7 @@ end;
 
 function TVenda.SalvarVenda: Boolean;
 begin
-
+//
 end;
 
 procedure TVenda.SetFDados(const Value: TdmVendas);

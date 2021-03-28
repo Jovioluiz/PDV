@@ -3,9 +3,9 @@ unit uclFuncionario;
 interface
 
 uses
-  dFuncionario, uUtil;
+  dFuncionario, uUtil, uPadrao, FireDAC.Stan.Param, Data.DB;
 
-type TFuncionario = class
+type TFuncionario = class(TPadrao)
 
   private
     Flogradouro: string;
@@ -41,12 +41,12 @@ type TFuncionario = class
 
   public
 
-    function Pesquisar(CodFuncionario: Integer): Boolean;
-    procedure Persistir(Novo: Boolean);
+    function Pesquisar(CodFuncionario: Integer): Boolean; override;
+    procedure Persistir(Novo: Boolean); override;
     procedure Listar;
     function GeraCodFuncionario: Integer;
     function GetCodCargo(Cargo: string): Integer;
-    procedure Excluir;
+    function Excluir: Boolean; override;
     constructor Create;
     destructor Destroy; override;
 
@@ -140,7 +140,7 @@ begin
   inherited;
 end;
 
-procedure TFuncionario.Excluir;
+function TFuncionario.Excluir: Boolean;
 const
   SQL = 'delete from funcionarios where cd_funcionario = :cd_funcionario';
 var
@@ -163,7 +163,7 @@ begin
         raise Exception.Create('Erro ao excluir os dados ' + E.Message);
       end;
     end;
-
+    Result := True;
   finally
     dConexao.conexaoBanco.Rollback;
     qry.Free;

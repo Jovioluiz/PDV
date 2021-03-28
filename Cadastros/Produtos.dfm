@@ -15,6 +15,7 @@ object frmProdutos: TfrmProdutos
   KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
   PixelsPerInch = 96
@@ -560,7 +561,7 @@ object frmProdutos: TfrmProdutos
       OnClick = btnAddImagenClick
     end
   end
-  object DBGrid1: TDBGrid
+  object dbGridProdutos: TDBGrid
     Left = 25
     Top = 272
     Width = 800
@@ -573,8 +574,8 @@ object frmProdutos: TfrmProdutos
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
-    OnCellClick = DBGrid1CellClick
-    OnDblClick = DBGrid1DblClick
+    OnCellClick = dbGridProdutosCellClick
+    OnDblClick = dbGridProdutosDblClick
   end
   object edtNomeProduto: TEdit
     Left = 97
