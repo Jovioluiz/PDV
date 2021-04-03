@@ -12,8 +12,9 @@ type TDataSetHelper = class helper for TDataSet
 end;
 
 type TUtil = class
-  procedure ExibeFoto(DataSet: TDataSet; BlobFieldName: String; ImageExibicao: TImage);
-  function GeraIdGeral: Int64;
+  public
+    procedure ExibeFoto(DataSet: TDataSet; BlobFieldName: String; ImageExibicao: TImage);
+    function GeraIdGeral: Int64;
 end;
 
 implementation

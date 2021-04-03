@@ -70,6 +70,7 @@ type
     FTroco: Currency;
     FQtEstoque: Double;
     FRegras: TVenda;
+    FIDItem: Integer;
     procedure limpar;
     procedure buscarProduto;
     procedure salvarItens;
@@ -83,11 +84,12 @@ type
     procedure atualizaQtdadeEstoque;
     procedure iniciarNfce;
 
-    function ValidaEstoque : Boolean;
+    procedure ValidaEstoque;
     procedure SetRegras(const Value: TVenda);
   public
     { Public declarations }
     property Regras: TVenda read FRegras write SetRegras;
+    property IDItem: Integer read FIDItem write FIDItem;
   end;
 
 var
@@ -105,13 +107,14 @@ uses Modulo, CancelarItem, Usuarios, uUtil;
 
 procedure TfrmVendas.edtCodBarrasChange(Sender: TObject);
 begin
-  if edtCodBarras.Text <> '' then
-    buscarProduto;
+//
 end;
 
 procedure TfrmVendas.edtCodBarrasExit(Sender: TObject);
 begin
-//validar se não encontrou
+  if edtCodBarras.Text <> '' then
+    buscarProduto;
+  ValidaEstoque;
 end;
 
 procedure TfrmVendas.edtDescontoChange(Sender: TObject);
@@ -143,26 +146,25 @@ procedure TfrmVendas.edtQtdadeExit(Sender: TObject);
 begin
   if edtQtdade.Text <> '' then
   begin
-    if not ValidaEstoque then
-    begin
-      FSubTotal := 0;
-      FTotalItem := StrToFloat(edtQtdade.Text) * StrToFloat(edtPrecoUnitario.Text);
-      FTotalVenda := FTotalVenda + FTotalItem;
+    ValidaEstoque;
+    FSubTotal := 0;
+    FTotalItem := StrToFloat(edtQtdade.Text) * StrToFloat(edtPrecoUnitario.Text);
+    FTotalVenda := FTotalVenda + FTotalItem;
 
-      edtTotalItem.Text := FormatCurr('R$ 0.####', FTotalItem);
+    edtTotalItem.Text := FormatCurr('R$ 0.####', FTotalItem);
 
-      edtTotalVenda.Text := FormatCurr('R$ 0.####', FTotalVenda);
-      FTotalComDesconto := FTotalVenda;
-      FSubTotal := FSubTotal + FTotalItem;
-      edtTotalItem.Text := CurrToStr(FTotalItem);
-      edtSubTotal.Text := FormatCurr('0.####', FSubTotal);
-      edtTotalVenda.Text := CurrToStr(FTotalVenda);
+    edtTotalVenda.Text := FormatCurr('R$ 0.####', FTotalVenda);
+    FTotalComDesconto := FTotalVenda;
+    FSubTotal := FSubTotal + FTotalItem;
+    edtTotalItem.Text := CurrToStr(FTotalItem);
+    edtSubTotal.Text := FormatCurr('0.####', FSubTotal);
+    edtTotalVenda.Text := CurrToStr(FTotalVenda);
 
-      AssociarCamposDetalhes;
-      edtTotalVenda.Text := CurrToStr(FRegras.RetornaValorTotal(FRegras.Dados.cdsDetalhesVendas));
-      limparProdutos;
-      edtQtdade.SetFocus;
-    end;
+    AssociarCamposDetalhes;
+    edtTotalVenda.Text := CurrToStr(FRegras.RetornaValorTotal(FRegras.Dados.cdsDetalhesVendas));
+    SalvarVenda;
+    salvarItens;
+    limparProdutos;
   end
   else
     raise Exception.Create('Informe uma quantidade');
@@ -179,7 +181,7 @@ procedure TfrmVendas.AssociarCamposDetalhes;
 begin
   FRegras.Dados.cdsDetalhesVendas.Append;
   FRegras.Dados.cdsDetalhesVendas.FieldByName('id_venda').AsInteger := 0;
-  FRegras.Dados.cdsDetalhesVendas.FieldByName('id_produto').AsInteger := StrToInt(idproduto);
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('id_produto').AsInteger := FIDItem;
   FRegras.Dados.cdsDetalhesVendas.FieldByName('valor_unitario').AsCurrency := StrToCurr(edtPrecoUnitario.Text);
   FRegras.Dados.cdsDetalhesVendas.FieldByName('qtdade').AsFloat := StrToFloat(edtQtdade.Text);
   FRegras.Dados.cdsDetalhesVendas.FieldByName('valor_total').AsCurrency := FTotalItem;
@@ -228,16 +230,13 @@ begin
 
   try
 
-    edtCdProduto.Text := IntToStr(Regras.Dados.cdsProdutos.FieldByName('id_produto').AsInteger);
+    edtCdProduto.Text := Regras.Dados.cdsProdutos.FieldByName('cd_item').AsString;
     edtDescricao.Text := Regras.Dados.cdsProdutos.FieldByName('nm_produto').AsString;
-    edtQtdadeEstoque.Text := FloatToStr(Regras.Dados.cdsProdutos.FieldByName('qtd_estoque').AsFloat);
-    edtPrecoUnitario.Text := CurrToStr(Regras.Dados.cdsProdutos.FieldByName('valor').AsCurrency);
-    idproduto := IntToStr(Regras.Dados.cdsProdutos.FieldByName('id_produto').AsInteger);
+    edtQtdadeEstoque.Text := FloatToStr(Regras.Dados.cdsProdutos.FieldByName('qt_estoque').AsFloat);
+    edtPrecoUnitario.Text := CurrToStr(Regras.Dados.cdsProdutos.FieldByName('vl_unitario').AsCurrency);
+    FIDItem := Regras.Dados.cdsProdutos.FieldByName('id_item').AsInteger;
 
 //    imagem.ExibeFoto(Regras.Dados.cdsProdutos, 'imagem', imgProduto);
-
-    if ValidaEstoque then
-      Exit;
 
   finally
     imagem.Free;
@@ -286,15 +285,22 @@ begin
 //  edtTroco.Text := FormatCurr('R$ ###,##0.00', FTotalTroco);
 end;
 
-procedure TfrmVendas.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmVendas.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  cancelaItem: TfrmCancelarItem;
 begin
   //ao pressionar Ctrl + z, abre a tela para cancelar o item
   if (ssCtrl in Shift) then
-  if key = 90 then
   begin
-    frmCancelarItem := TfrmCancelarItem.Create(Self);
-    frmCancelarItem.Show;
+    if key = 90 then
+    begin
+      cancelaItem := TfrmCancelarItem.Create(Self);
+      try
+        cancelaItem.Show;
+      finally
+        cancelaItem.Free;
+      end;
+    end;
   end;
 
   //F4 - finaliza cupom
@@ -327,10 +333,10 @@ end;
 
 procedure TfrmVendas.FormShow(Sender: TObject);
 begin
-  limparFoto;
+  //limparFoto;
   limpar;
-  dm.tbVendas.Active := True;
-  dm.tbDetalhesVendas.Active := True;
+//  dm.tbVendas.Active := True;
+//  dm.tbDetalhesVendas.Active := True;
   //edtQtdade.Text := '1';
 
   edtCodBarras.SetFocus;
@@ -378,8 +384,9 @@ begin
   edtDescricao.Clear;
   edtValorRecebido.Text := '0';
   edtPrecoUnitario.Clear;
-  edtQtdadeEstoque.Text := '1';
-  limparFoto;
+  edtQtdadeEstoque.Clear;
+  edtCodBarras.SetFocus;
+  //limparFoto;
   FTotalItem := 0;
 end;
 
@@ -407,8 +414,7 @@ end;
 
 procedure TfrmVendas.salvarItens;
 begin
-  if ValidaEstoque = True then
-    Exit;
+  ValidaEstoque;
 
   AssociarCamposDetalhes;
   listar;
@@ -428,7 +434,7 @@ begin
                                 'where '+
                             'id_produto = :id_produto');
   dm.queryProdutos.ParamByName('qtd_estoque').Value := FQtEstoque;
-  dm.queryProdutos.ParamByName('id_produto').Value := idproduto;
+  dm.queryProdutos.ParamByName('id_produto').Value := FIDItem;
   dm.queryProdutos.ExecSQL;
   atualizaQtdadeEstoque;
 
@@ -501,20 +507,14 @@ begin
   FRegras := Value;
 end;
 
-function TfrmVendas.ValidaEstoque : Boolean;
-var
-  qtdEstoque, qtdVenda : Integer;
+procedure TfrmVendas.ValidaEstoque;
 begin
-  qtdEstoque := StrToInt(edtQtdadeEstoque.Text);
-  qtdVenda := StrToInt(edtQtdade.Text);
-  if qtdEstoque < qtdVenda then
+  if FRegras.Dados.cdsProdutos.FieldByName('qt_estoque').AsFloat < StrToFloat(edtQtdade.Text) then
   begin
-    MessageDlg('Quantidade Indisponível em estoque!', mtInformation, mbOKCancel, 0);
-    edtQtdade.Enabled := True;
-    Exit(True);
-  end
-  else
-    Result := False;
+    ShowMessage('Quantidade Indisponível em estoque!');
+    edtCodBarras.SetFocus;
+    Exit;
+  end;
 end;
 
 end.

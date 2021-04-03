@@ -263,6 +263,7 @@ begin
     GerarCodigo(edtCodBarras.Text, imgCodBarras.Canvas);
     edtValor.Text := FRegras.Dados.cdsProdutos.FieldByName('vl_unitario').AsString;
     edtCdProduto.Text := FRegras.Dados.cdsProdutos.FieldByName('cd_item').AsString;
+    edtCdProduto.Enabled := False;
     id := FRegras.Dados.cdsProdutos.FieldByName('id_item').AsString;
     codigoBarrasProduto := FRegras.Dados.cdsProdutos.FieldByName('codigo_barras').AsString;
 

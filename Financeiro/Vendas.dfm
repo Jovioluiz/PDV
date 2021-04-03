@@ -297,37 +297,36 @@ object frmVendas: TfrmVendas
     Height = 688
     Align = alClient
     TabOrder = 2
-    ExplicitWidth = 570
     object Label1: TLabel
-      Left = 16
+      Left = 6
       Top = 152
       Width = 49
       Height = 13
       Caption = 'PRODUTO'
     end
     object Label2: TLabel
-      Left = 16
+      Left = 6
       Top = 232
       Width = 59
       Height = 13
       Caption = 'DESCRI'#199#195'O'
     end
     object Label3: TLabel
-      Left = 16
-      Top = 315
+      Left = 6
+      Top = 328
       Width = 66
       Height = 13
       Caption = 'QUANTIDADE'
     end
     object Label4: TLabel
-      Left = 16
+      Left = 6
       Top = 400
       Width = 87
       Height = 13
       Caption = 'PRE'#199'O UNIT'#193'RIO'
     end
     object Label5: TLabel
-      Left = 16
+      Left = 6
       Top = 496
       Width = 47
       Height = 13
@@ -374,9 +373,9 @@ object frmVendas: TfrmVendas
       TabOrder = 6
     end
     object edtCdProduto: TEdit
-      Left = 16
+      Left = 6
       Top = 171
-      Width = 553
+      Width = 560
       Height = 32
       Enabled = False
       Font.Charset = DEFAULT_CHARSET
@@ -388,9 +387,9 @@ object frmVendas: TfrmVendas
       TabOrder = 1
     end
     object edtDescricao: TEdit
-      Left = 16
-      Top = 259
-      Width = 553
+      Left = 6
+      Top = 251
+      Width = 560
       Height = 32
       Enabled = False
       Font.Charset = DEFAULT_CHARSET
@@ -402,7 +401,7 @@ object frmVendas: TfrmVendas
       TabOrder = 2
     end
     object edtQtdade: TEdit
-      Left = 16
+      Left = 6
       Top = 347
       Width = 230
       Height = 32
@@ -418,8 +417,8 @@ object frmVendas: TfrmVendas
       OnExit = edtQtdadeExit
     end
     object edtPrecoUnitario: TEdit
-      Left = 16
-      Top = 435
+      Left = 6
+      Top = 419
       Width = 230
       Height = 32
       Enabled = False
@@ -432,8 +431,8 @@ object frmVendas: TfrmVendas
       TabOrder = 4
     end
     object edtQtdadeEstoque: TEdit
-      Left = 16
-      Top = 539
+      Left = 6
+      Top = 515
       Width = 230
       Height = 32
       Enabled = False
