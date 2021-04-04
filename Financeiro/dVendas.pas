@@ -11,13 +11,6 @@ type
     cdsProdutos: TClientDataSet;
     dsDetalhesVendas: TDataSource;
     cdsDetalhesVendas: TClientDataSet;
-    cdsDetalhesVendasid_detalhe_venda: TIntegerField;
-    cdsDetalhesVendasid_venda: TIntegerField;
-    cdsDetalhesVendasid_produto: TIntegerField;
-    cdsDetalhesVendasvalor_unitario: TCurrencyField;
-    cdsDetalhesVendasqtdade: TFloatField;
-    cdsDetalhesVendasvalor_total: TCurrencyField;
-    cdsDetalhesVendasid_funcionario: TIntegerField;
     dsVendas: TDataSource;
     cdsVendas: TClientDataSet;
     cdsVendasid_venda: TIntegerField;
@@ -29,6 +22,14 @@ type
     cdsVendasvalor_desconto: TCurrencyField;
     cdsVendasvalor_recebido: TCurrencyField;
     cdsVendasstatus: TStringField;
+    cdsDetalhesVendasid_geral: TLargeintField;
+    cdsDetalhesVendasid_venda: TLargeintField;
+    cdsDetalhesVendasid_item: TIntegerField;
+    cdsDetalhesVendasvl_unitario: TCurrencyField;
+    cdsDetalhesVendasqt_venda: TFloatField;
+    cdsDetalhesVendasvl_total: TCurrencyField;
+    cdsDetalhesVendasid_funcionario: TIntegerField;
+    cdsDetalhesVendasnm_produto: TStringField;
   private
     { Private declarations }
   public

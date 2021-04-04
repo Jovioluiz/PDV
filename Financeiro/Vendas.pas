@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, Vcl.Grids,
-  Vcl.DBGrids, Vcl.StdCtrls, Vcl.MPlayer, System.UITypes, FireDAC.Stan.Param, uclVendas;
+  Vcl.DBGrids, Vcl.StdCtrls, Vcl.MPlayer, System.UITypes, FireDAC.Stan.Param, uclVendas,
+  uFinanceiro;
 
 type
   TfrmVendas = class(TForm)
@@ -45,6 +46,7 @@ type
     Panel8: TPanel;
     Panel9: TPanel;
     Label6: TLabel;
+    Splitter1: TSplitter;
     procedure edtCodBarrasChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -71,6 +73,7 @@ type
     FQtEstoque: Double;
     FRegras: TVenda;
     FIDItem: Integer;
+    FFinanceiro: TFinanceiro;
     procedure limpar;
     procedure buscarProduto;
     procedure salvarItens;
@@ -86,10 +89,12 @@ type
 
     procedure ValidaEstoque;
     procedure SetRegras(const Value: TVenda);
+    procedure SetFinanceiro(const Value: TFinanceiro);
   public
     { Public declarations }
     property Regras: TVenda read FRegras write SetRegras;
     property IDItem: Integer read FIDItem write FIDItem;
+    property Financeiro: TFinanceiro read FFinanceiro write SetFinanceiro;
   end;
 
 var
@@ -113,8 +118,14 @@ end;
 procedure TfrmVendas.edtCodBarrasExit(Sender: TObject);
 begin
   if edtCodBarras.Text <> '' then
+  begin
     buscarProduto;
-  ValidaEstoque;
+    ValidaEstoque;
+  end;
+
+  if FRegras.Dados.cdsDetalhesVendas.RecordCount > 0 then
+    edtValorRecebido.SetFocus
+  else;
 end;
 
 procedure TfrmVendas.edtDescontoChange(Sender: TObject);
@@ -162,8 +173,8 @@ begin
 
     AssociarCamposDetalhes;
     edtTotalVenda.Text := CurrToStr(FRegras.RetornaValorTotal(FRegras.Dados.cdsDetalhesVendas));
-    SalvarVenda;
-    salvarItens;
+//    SalvarVenda;
+//    salvarItens;
     limparProdutos;
   end
   else
@@ -176,15 +187,15 @@ begin
   edtTroco.Text := FormatFloat('R$ #,,,,0.00', FTotalTroco);
 end;
 
-//colocar o nome do produto no grid
 procedure TfrmVendas.AssociarCamposDetalhes;
 begin
   FRegras.Dados.cdsDetalhesVendas.Append;
-  FRegras.Dados.cdsDetalhesVendas.FieldByName('id_venda').AsInteger := 0;
-  FRegras.Dados.cdsDetalhesVendas.FieldByName('id_produto').AsInteger := FIDItem;
-  FRegras.Dados.cdsDetalhesVendas.FieldByName('valor_unitario').AsCurrency := StrToCurr(edtPrecoUnitario.Text);
-  FRegras.Dados.cdsDetalhesVendas.FieldByName('qtdade').AsFloat := StrToFloat(edtQtdade.Text);
-  FRegras.Dados.cdsDetalhesVendas.FieldByName('valor_total').AsCurrency := FTotalItem;
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('id_venda').AsInteger := FRegras.IDVenda;
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger := FIDItem;
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('nm_produto').AsString := edtDescricao.Text;
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('vl_unitario').AsCurrency := StrToCurr(edtPrecoUnitario.Text);
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat := StrToFloat(edtQtdade.Text);
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('vl_total').AsCurrency := FTotalItem;
   FRegras.Dados.cdsDetalhesVendas.FieldByName('id_funcionario').AsInteger := FCdUsuario;
   FRegras.Dados.cdsDetalhesVendas.Post;
 end;
@@ -194,7 +205,7 @@ begin
   FRegras.Dados.cdsVendas.Append;
   FRegras.Dados.cdsVendas.FieldByName('valor_bruto').AsCurrency := FTotalVenda;
   FRegras.Dados.cdsVendas.FieldByName('valor_total').AsCurrency := FTotalComDesconto;
-  FRegras.Dados.cdsVendas.FieldByName('data_venda').AsDateTime := now;
+  FRegras.Dados.cdsVendas.FieldByName('data_venda').AsDateTime := Now;
   FRegras.Dados.cdsVendas.FieldByName('id_funcionario').AsInteger := FCdUsuario;
   FRegras.Dados.cdsVendas.FieldByName('valor_troco').AsCurrency := FTotalTroco;
   FRegras.Dados.cdsVendas.FieldByName('valor_desconto').AsCurrency := StrToCurr(edtDesconto.Text);
@@ -268,11 +279,13 @@ begin
   FTotalTroco := 0;
   totalProdutos := 0;
   FRegras.Free;
+  FFinanceiro.Free;
 end;
 
 procedure TfrmVendas.FormCreate(Sender: TObject);
 begin
   Regras := TVenda.Create;
+  FFinanceiro := TFinanceiro.Create;
   dbGridItens.DataSource := Regras.Dados.dsDetalhesVendas;
   FTotalTroco := 0;
   FTotalDesconto := 0;
@@ -306,7 +319,6 @@ begin
   //F4 - finaliza cupom
   if key = 115 then
   begin
-    dm.tbVendas.Insert;
     if edtValorRecebido.Text <= '0' then
     begin
       ShowMessage('Valor recebido deve ser maior que 0');
@@ -352,7 +364,7 @@ procedure TfrmVendas.iniciarNfce;
 var
   caminhoNFCE: string;
 begin
-  caminhoNFCE := ExtractFilePath(Application.ExeName) + 'nfe\';
+  //caminhoNFCE := ExtractFilePath(Application.ExeName) + 'nfe\';
   //nfce.Configuracoes.Arquivos.PathSchemas := caminhoNFCE;
 end;
 
@@ -416,8 +428,15 @@ procedure TfrmVendas.salvarItens;
 begin
   ValidaEstoque;
 
-  AssociarCamposDetalhes;
-  listar;
+//  AssociarCamposDetalhes;
+//  listar;
+
+  FRegras.Dados.cdsDetalhesVendas.LoopSimples(
+  procedure
+  begin
+    FRegras.SalvarDetalhesVendas;
+  end
+  );
 
   //toca audio após inserir um item
   MediaPlayer1.FileName := ExtractFileDir(GetCurrentDir) + '\Debug\img\barCode.wav';
@@ -447,43 +466,10 @@ procedure TfrmVendas.SalvarVenda;
 begin
   AssociarCamposVendas;
 
-  //relacionar o id da venda com os id_venda dos itens
-  dm.queryVendas.Close;
-  dm.queryVendas.SQL.Clear;
-  dm.queryVendas.SQL.Add('select * from vendas order by id_venda desc');
-  dm.queryVendas.Open();
-
-  if not dm.queryVendas.IsEmpty then
-    idVenda := dm.queryVendas['id_venda'];
-
-  dm.queryDetalhesVendas.Close;
-  dm.queryDetalhesVendas.SQL.Clear;
-  dm.queryDetalhesVendas.SQL.Add('update '+
-                                 '  detalhes_vendas '+
-                                 'set '+
-                                 '  id_venda = :id_venda '+
-                                 'where id_venda = 0 and '+
-                                 '  id_funcionario = :id_funcionario');
-  dm.queryDetalhesVendas.ParamByName('id_venda').AsString := idVenda;
-  dm.queryDetalhesVendas.ParamByName('id_funcionario').AsInteger := FCdUsuario;
-  dm.queryDetalhesVendas.ExecSQL;
+  Regras.SalvarVenda;
 
   //lançar o valor da venda nas movimentações
-  dm.queryMovimentacoes.Close;
-  dm.queryMovimentacoes.SQL.Clear;
-  dm.queryMovimentacoes.SQL.Add('insert '+
-                                '   into '+
-                                'movimentacoes '+
-                                '   (tipo, movimento, valor, id_funcionario, data, id_movimento) '+
-                                'values '+
-                                '   (:tipo, :movimento, :valor, :id_funcionario, curDate(), :id_movimento)');
-  dm.queryMovimentacoes.ParamByName('tipo').AsString := 'E';
-  dm.queryMovimentacoes.ParamByName('movimento').AsString := 'V';
-  dm.queryMovimentacoes.ParamByName('valor').Value := FTotalComDesconto;
-  dm.queryMovimentacoes.ParamByName('id_funcionario').Value := FCdUsuario;
-  dm.queryMovimentacoes.ParamByName('id_movimento').Value := idVenda;
-  dm.queryMovimentacoes.ExecSQL;
-
+  Financeiro.InserirMovimentacoes('E', 'V', FTotalComDesconto, FCdUsuario, FRegras.IDVenda, 0);
 
   //imprimir cupom fiscal
   iniciarNfce;
@@ -500,6 +486,11 @@ begin
   FTotalTroco := 0;
   listar;
   FRegras.Dados.cdsDetalhesVendas.EmptyDataSet;
+end;
+
+procedure TfrmVendas.SetFinanceiro(const Value: TFinanceiro);
+begin
+  FFinanceiro := Value;
 end;
 
 procedure TfrmVendas.SetRegras(const Value: TVenda);

@@ -8,17 +8,22 @@ uses
 type TVenda = class
   private
     FDados: TdmVendas;
+    FIDVenda: Int64;
     procedure SetFDados(const Value: TdmVendas);
     function GetIDVenda: Integer;
+    procedure SetIDVenda(const Value: Int64);
 
   public
     function BuscarProdutos(CodBarras: string): Boolean;
     function RetornaValorTotal(dataset: TDataset): Currency;
     procedure SalvarVenda;
+    procedure SalvarDetalhesVendas;
 
   constructor Create;
+  destructor Destroy; override;
 
   property Dados: TdmVendas read FDados write SetFDados;
+  property IDVenda: Int64 read FIDVenda write SetIDVenda;
 end;
 
 implementation
@@ -83,6 +88,13 @@ end;
 constructor TVenda.Create;
 begin
   FDados := TdmVendas.Create(nil);
+  FIDVenda := 0;
+end;
+
+destructor TVenda.Destroy;
+begin
+  FIDVenda := 0;
+  inherited;
 end;
 
 function TVenda.GetIDVenda: Integer;
@@ -119,13 +131,63 @@ begin
     dataset.First;
     while not dataset.Eof do
     begin
-      valorTotal := valorTotal + dataset.FieldByName('valor_total').AsCurrency;
+      valorTotal := valorTotal + dataset.FieldByName('vl_total').AsCurrency;
       dataset.Next;
     end;
 
     Result := valorTotal;
   finally
     dataset.EnableControls;
+  end;
+end;
+
+procedure TVenda.SalvarDetalhesVendas;
+{$REGION 'SQL'}
+const
+  SQL = 'insert ' +
+        '   into ' +
+        '      detalhes_vendas (id_geral, ' +
+        '      id_vendas, ' +
+        '      id_item, ' +
+        '      vl_unitario, ' +
+        '      qt_venda, ' +
+        '      vl_total) ' +
+        'values (:id_geral, ' +
+        '      :id_vendas, ' +
+        '      :id_item, ' +
+        '      :vl_unitario, ' +
+        '      :qt_venda, ' +
+        '      :vl_total)';
+{$ENDREGION}
+var
+  qry: TFDQuery;
+  id: TUtil;
+begin
+  qry := TFDQuery.Create(nil);
+  qry.Connection := dConexao.conexaoBanco;
+  id := TUtil.Create;
+
+  try
+    try
+      qry.SQL.Add(SQL);
+      qry.ParamByName('id_geral').AsLargeInt := id.GeraIdGeral;
+      qry.ParamByName('id_vendas').AsInteger := FIDVenda;
+      qry.ParamByName('id_item').AsInteger := Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger;
+      qry.ParamByName('vl_unitario').AsCurrency := Dados.cdsDetalhesVendas.FieldByName('vl_unitario').AsCurrency;
+      qry.ParamByName('qt_venda').AsFloat := Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat;
+      qry.ParamByName('vl_total').AsCurrency := Dados.cdsDetalhesVendas.FieldByName('vl_total').AsCurrency;
+      qry.ExecSQL;
+      dConexao.conexaoBanco.Commit;
+    except on e:Exception do
+      begin
+        dConexao.conexaoBanco.Rollback;
+        raise Exception.Create('Erro ao gravar os dados dos itens!');
+      end;
+    end;
+  finally
+    dConexao.conexaoBanco.Rollback;
+    id.Free;
+    qry.Free;
   end;
 end;
 
@@ -167,7 +229,8 @@ begin
     try
       qry.SQL.Add(SQL);
       qry.ParamByName('id_geral').AsLargeInt := id.GeraIdGeral;
-      qry.ParamByName('nr_venda').AsInteger := GetIDVenda;
+      FIDVenda := GetIDVenda;
+      qry.ParamByName('nr_venda').AsInteger := FIDVenda;
       qry.ParamByName('cd_funcionario').AsInteger := Dados.cdsVendas.FieldByName('id_funcionario').AsInteger;
       qry.ParamByName('data_venda').AsDateTime := Dados.cdsVendas.FieldByName('data_venda').AsDateTime;
       qry.ParamByName('vl_troco').AsCurrency := Dados.cdsVendas.FieldByName('valor_troco').AsCurrency;
@@ -194,6 +257,11 @@ end;
 procedure TVenda.SetFDados(const Value: TdmVendas);
 begin
   FDados := Value;
+end;
+
+procedure TVenda.SetIDVenda(const Value: Int64);
+begin
+  FIDVenda := Value;
 end;
 
 end.

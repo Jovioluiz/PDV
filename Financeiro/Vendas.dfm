@@ -1,10 +1,9 @@
 object frmVendas: TfrmVendas
   Left = 0
   Top = 0
-  BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Vendas'
   ClientHeight = 772
-  ClientWidth = 1218
+  ClientWidth = 1373
   Color = clMoneyGreen
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -71,7 +70,7 @@ object frmVendas: TfrmVendas
     end
   end
   object painelDireita: TPanel
-    Left = 948
+    Left = 1103
     Top = 0
     Width = 270
     Height = 688
@@ -79,6 +78,7 @@ object frmVendas: TfrmVendas
     Color = clSkyBlue
     ParentBackground = False
     TabOrder = 1
+    ExplicitLeft = 949
     object edtTotalItem: TEdit
       Left = 6
       Top = 67
@@ -293,57 +293,70 @@ object frmVendas: TfrmVendas
   object painelCentral: TPanel
     Left = 376
     Top = 0
-    Width = 572
+    Width = 727
     Height = 688
     Align = alClient
     TabOrder = 2
+    ExplicitWidth = 573
+    DesignSize = (
+      727
+      688)
     object Label1: TLabel
       Left = 6
-      Top = 152
+      Top = 128
       Width = 49
       Height = 13
       Caption = 'PRODUTO'
     end
     object Label2: TLabel
       Left = 6
-      Top = 232
+      Top = 201
       Width = 59
       Height = 13
       Caption = 'DESCRI'#199#195'O'
     end
     object Label3: TLabel
-      Left = 6
-      Top = 328
+      Left = 5
+      Top = 267
       Width = 66
       Height = 13
       Caption = 'QUANTIDADE'
     end
     object Label4: TLabel
-      Left = 6
-      Top = 400
+      Left = 85
+      Top = 267
       Width = 87
       Height = 13
       Caption = 'PRE'#199'O UNIT'#193'RIO'
     end
     object Label5: TLabel
-      Left = 6
-      Top = 496
+      Left = 189
+      Top = 267
       Width = 47
       Height = 13
       Caption = 'ESTOQUE'
     end
     object imgProduto: TImage
-      Left = 332
-      Top = 340
-      Width = 237
+      Left = 404
+      Top = 469
+      Width = 317
       Height = 213
+      Anchors = [akLeft, akTop, akRight, akBottom]
       Stretch = True
+      ExplicitWidth = 350
+    end
+    object Splitter1: TSplitter
+      Left = 1
+      Top = 36
+      Height = 651
+      ExplicitLeft = 2
     end
     object edtCodBarras: TEdit
-      Left = 6
-      Top = 77
-      Width = 563
+      Left = 3
+      Top = 42
+      Width = 718
       Height = 56
+      Anchors = [akLeft, akTop, akRight]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -40
@@ -353,11 +366,12 @@ object frmVendas: TfrmVendas
       TabOrder = 0
       OnChange = edtCodBarrasChange
       OnExit = edtCodBarrasExit
+      ExplicitWidth = 564
     end
     object Panel1: TPanel
       Left = 1
       Top = 1
-      Width = 570
+      Width = 725
       Height = 35
       Align = alTop
       Alignment = taLeftJustify
@@ -371,12 +385,14 @@ object frmVendas: TfrmVendas
       ParentBackground = False
       ParentFont = False
       TabOrder = 6
+      ExplicitWidth = 571
     end
     object edtCdProduto: TEdit
       Left = 6
-      Top = 171
-      Width = 560
+      Top = 147
+      Width = 715
       Height = 32
+      Anchors = [akLeft, akTop, akRight]
       Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -385,12 +401,14 @@ object frmVendas: TfrmVendas
       Font.Style = []
       ParentFont = False
       TabOrder = 1
+      ExplicitWidth = 748
     end
     object edtDescricao: TEdit
       Left = 6
-      Top = 251
-      Width = 560
+      Top = 220
+      Width = 715
       Height = 32
+      Anchors = [akLeft, akTop, akRight]
       Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -399,11 +417,12 @@ object frmVendas: TfrmVendas
       Font.Style = []
       ParentFont = False
       TabOrder = 2
+      ExplicitWidth = 748
     end
     object edtQtdade: TEdit
       Left = 6
-      Top = 347
-      Width = 230
+      Top = 291
+      Width = 65
       Height = 32
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -417,9 +436,9 @@ object frmVendas: TfrmVendas
       OnExit = edtQtdadeExit
     end
     object edtPrecoUnitario: TEdit
-      Left = 6
-      Top = 419
-      Width = 230
+      Left = 85
+      Top = 291
+      Width = 66
       Height = 32
       Enabled = False
       Font.Charset = DEFAULT_CHARSET
@@ -431,9 +450,9 @@ object frmVendas: TfrmVendas
       TabOrder = 4
     end
     object edtQtdadeEstoque: TEdit
-      Left = 6
-      Top = 515
-      Width = 230
+      Left = 189
+      Top = 291
+      Width = 66
       Height = 32
       Enabled = False
       Font.Charset = DEFAULT_CHARSET
@@ -445,8 +464,8 @@ object frmVendas: TfrmVendas
       TabOrder = 5
     end
     object MediaPlayer1: TMediaPlayer
-      Left = 160
-      Top = 608
+      Left = 6
+      Top = 652
       Width = 253
       Height = 30
       DoubleBuffered = True
@@ -458,10 +477,11 @@ object frmVendas: TfrmVendas
   object Panel3: TPanel
     Left = 0
     Top = 688
-    Width = 1218
+    Width = 1373
     Height = 84
     Align = alBottom
     TabOrder = 3
+    ExplicitWidth = 1219
     object Label12: TLabel
       Left = 8
       Top = 16
