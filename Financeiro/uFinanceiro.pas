@@ -12,7 +12,8 @@ end;
 implementation
 
 uses
-  FireDAC.Comp.Client, dmConexao, System.SysUtils, System.Math, uUtil;
+  FireDAC.Comp.Client, dmConexao, System.SysUtils, System.Math, uUtil,
+  System.Variants;
 
 { TFinanceiro }
 
@@ -42,14 +43,16 @@ begin
       qry.ParamByName('cd_funcionario').AsInteger := CodUsuario;
       qry.ParamByName('data').AsDate := Now;
       qry.ParamByName('id_venda').AsLargeInt := IDVenda;
-      qry.ParamByName('id_movimento_gasto').AsLargeInt := ifthen(IDVenda > 0, 0, IDGasto);
+      qry.ParamByName('id_movimento_gasto').Value := ifthen(IDVenda > 0, 0, IDGasto);
+      if qry.ParamByName('id_movimento_gasto').Value = 0 then
+        qry.ParamByName('id_movimento_gasto').Value := Null;
       qry.ExecSQL;
 
       dConexao.ConexaoBanco.Commit;
     except on e:Exception do
       begin
         dConexao.conexaoBanco.Rollback;
-        raise Exception.Create('Erro ao gravar os dados da movimentação!');
+        raise Exception.Create('Erro ao gravar os dados da movimentação!' + e.Message);
       end;
     end;
 

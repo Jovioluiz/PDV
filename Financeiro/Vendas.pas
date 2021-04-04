@@ -17,23 +17,13 @@ type
     edtCodBarras: TEdit;
     painelTituloDetalhes: TPanel;
     Panel1: TPanel;
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
-    edtCdProduto: TEdit;
-    edtDescricao: TEdit;
     edtQtdade: TEdit;
-    edtPrecoUnitario: TEdit;
-    edtQtdadeEstoque: TEdit;
     edtTotalItem: TEdit;
     edtSubTotal: TEdit;
     edtDesconto: TEdit;
     edtTotalVenda: TEdit;
     edtValorRecebido: TEdit;
     edtTroco: TEdit;
-    imgProduto: TImage;
     MediaPlayer1: TMediaPlayer;
     Panel3: TPanel;
     Label12: TLabel;
@@ -46,7 +36,8 @@ type
     Panel8: TPanel;
     Panel9: TPanel;
     Label6: TLabel;
-    Splitter1: TSplitter;
+    pnlImagem: TPanel;
+    imgProduto: TImage;
     procedure edtCodBarrasChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -117,6 +108,7 @@ end;
 
 procedure TfrmVendas.edtCodBarrasExit(Sender: TObject);
 begin
+  edtQtdade.Text := '1';
   if edtCodBarras.Text <> '' then
   begin
     buscarProduto;
@@ -124,8 +116,7 @@ begin
   end;
 
   if FRegras.Dados.cdsDetalhesVendas.RecordCount > 0 then
-    edtValorRecebido.SetFocus
-  else;
+    edtValorRecebido.SetFocus;
 end;
 
 procedure TfrmVendas.edtDescontoChange(Sender: TObject);
@@ -155,11 +146,11 @@ end;
 
 procedure TfrmVendas.edtQtdadeExit(Sender: TObject);
 begin
-  if edtQtdade.Text <> '' then
+  if (edtQtdade.Text <> '') and (edtCodBarras.Text <> '') then
   begin
     ValidaEstoque;
     FSubTotal := 0;
-    FTotalItem := StrToFloat(edtQtdade.Text) * StrToFloat(edtPrecoUnitario.Text);
+    FTotalItem := StrToFloat(edtQtdade.Text) * FRegras.Dados.cdsProdutos.FieldByName('vl_unitario').AsCurrency;// StrToFloat(edtPrecoUnitario.Text);
     FTotalVenda := FTotalVenda + FTotalItem;
 
     edtTotalItem.Text := FormatCurr('R$ 0.####', FTotalItem);
@@ -183,8 +174,11 @@ end;
 
 procedure TfrmVendas.edtValorRecebidoChange(Sender: TObject);
 begin
-  FTotalTroco := StrToFloat(edtValorRecebido.Text) - FTotalComDesconto;
-  edtTroco.Text := FormatFloat('R$ #,,,,0.00', FTotalTroco);
+  if edtValorRecebido.Text <> '' then
+  begin
+    FTotalTroco := StrToFloat(edtValorRecebido.Text) - FTotalComDesconto;
+    edtTroco.Text := FormatFloat('R$ #,,,,0.00', FTotalTroco);
+  end;
 end;
 
 procedure TfrmVendas.AssociarCamposDetalhes;
@@ -192,8 +186,9 @@ begin
   FRegras.Dados.cdsDetalhesVendas.Append;
   FRegras.Dados.cdsDetalhesVendas.FieldByName('id_venda').AsInteger := FRegras.IDVenda;
   FRegras.Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger := FIDItem;
-  FRegras.Dados.cdsDetalhesVendas.FieldByName('nm_produto').AsString := edtDescricao.Text;
-  FRegras.Dados.cdsDetalhesVendas.FieldByName('vl_unitario').AsCurrency := StrToCurr(edtPrecoUnitario.Text);
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('cd_item').AsString := FRegras.Dados.cdsProdutos.FieldByName('cd_item').AsString;
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('nm_produto').AsString := FRegras.Dados.cdsProdutos.FieldByName('nm_produto').AsString;
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('vl_unitario').AsCurrency := FRegras.Dados.cdsProdutos.FieldByName('vl_unitario').AsCurrency;;
   FRegras.Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat := StrToFloat(edtQtdade.Text);
   FRegras.Dados.cdsDetalhesVendas.FieldByName('vl_total').AsCurrency := FTotalItem;
   FRegras.Dados.cdsDetalhesVendas.FieldByName('id_funcionario').AsInteger := FCdUsuario;
@@ -227,7 +222,7 @@ begin
   dm.queryCoringa.ParamByName('codigo_barras').Value := edtCodBarras.Text;
   dm.queryCoringa.Open();
 
-  edtQtdadeEstoque.Text := dm.queryCoringa['qtd_estoque'];
+  //edtQtdadeEstoque.Text := dm.queryCoringa['qtd_estoque'];
 end;
 
 procedure TfrmVendas.buscarProduto;
@@ -241,10 +236,10 @@ begin
 
   try
 
-    edtCdProduto.Text := Regras.Dados.cdsProdutos.FieldByName('cd_item').AsString;
-    edtDescricao.Text := Regras.Dados.cdsProdutos.FieldByName('nm_produto').AsString;
-    edtQtdadeEstoque.Text := FloatToStr(Regras.Dados.cdsProdutos.FieldByName('qt_estoque').AsFloat);
-    edtPrecoUnitario.Text := CurrToStr(Regras.Dados.cdsProdutos.FieldByName('vl_unitario').AsCurrency);
+//    edtCdProduto.Text := Regras.Dados.cdsProdutos.FieldByName('cd_item').AsString;
+//    edtDescricao.Text := Regras.Dados.cdsProdutos.FieldByName('nm_produto').AsString;
+//    edtQtdadeEstoque.Text := FloatToStr(Regras.Dados.cdsProdutos.FieldByName('qt_estoque').AsFloat);
+//    edtPrecoUnitario.Text := CurrToStr(Regras.Dados.cdsProdutos.FieldByName('vl_unitario').AsCurrency);
     FIDItem := Regras.Dados.cdsProdutos.FieldByName('id_item').AsInteger;
 
 //    imagem.ExibeFoto(Regras.Dados.cdsProdutos, 'imagem', imgProduto);
@@ -376,27 +371,19 @@ begin
   edtTotalVenda.Text := '0';
   edtValorRecebido.Text := '0';
   edtTroco.Text := '0';
-  edtCdProduto.Clear;
-  edtDescricao.Clear;
-  edtPrecoUnitario.Clear;
-  edtQtdadeEstoque.Clear;
   edtCodBarras.SetFocus;
 end;
 
 procedure TfrmVendas.limparFoto;
 begin
   FCaminhoimg := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
-  imgProduto.Picture.LoadFromFile(FCaminhoimg);
+  //imgProduto.Picture.LoadFromFile(FCaminhoimg);
 end;
 
 procedure TfrmVendas.limparProdutos;
 begin
-  edtCdProduto.Clear;
   edtCodBarras.Clear;
-  edtDescricao.Clear;
   edtValorRecebido.Text := '0';
-  edtPrecoUnitario.Clear;
-  edtQtdadeEstoque.Clear;
   edtCodBarras.SetFocus;
   //limparFoto;
   FTotalItem := 0;
@@ -445,17 +432,9 @@ begin
 
   //diminui do estoque a qtdade do item
 
-  FQtEstoque := StrToFloat(edtQtdadeEstoque.Text) - StrToFloat(edtQtdade.Text);
-  dm.queryProdutos.Close;
-  dm.queryProdutos.SQL.Clear;
-  dm.queryProdutos.SQL.Add('update '+
-                            'produtos set qtd_estoque = :qtd_estoque '+
-                                'where '+
-                            'id_produto = :id_produto');
-  dm.queryProdutos.ParamByName('qtd_estoque').Value := FQtEstoque;
-  dm.queryProdutos.ParamByName('id_produto').Value := FIDItem;
-  dm.queryProdutos.ExecSQL;
-  atualizaQtdadeEstoque;
+  FQtEstoque := FRegras.Dados.cdsProdutos.FieldByName('qt_estoque').AsFloat - FRegras.Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat;
+  FRegras.AtualizaEstoque(FQtEstoque, FRegras.Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger);
+//  atualizaQtdadeEstoque;
 
   edtCodBarras.Clear;
   edtCodBarras.SetFocus;
@@ -484,8 +463,8 @@ begin
   FQtEstoque := 0;
   FTotalComDesconto := 0;
   FTotalTroco := 0;
-  listar;
-  FRegras.Dados.cdsDetalhesVendas.EmptyDataSet;
+//  listar;
+  //FRegras.Dados.cdsDetalhesVendas.EmptyDataSet;
 end;
 
 procedure TfrmVendas.SetFinanceiro(const Value: TFinanceiro);

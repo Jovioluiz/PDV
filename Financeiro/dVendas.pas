@@ -30,6 +30,7 @@ type
     cdsDetalhesVendasvl_total: TCurrencyField;
     cdsDetalhesVendasid_funcionario: TIntegerField;
     cdsDetalhesVendasnm_produto: TStringField;
+    cdsDetalhesVendascd_item: TStringField;
   private
     { Private declarations }
   public

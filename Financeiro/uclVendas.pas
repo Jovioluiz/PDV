@@ -10,7 +10,7 @@ type TVenda = class
     FDados: TdmVendas;
     FIDVenda: Int64;
     procedure SetFDados(const Value: TdmVendas);
-    function GetIDVenda: Integer;
+    function GetNumeroVenda: Integer;
     procedure SetIDVenda(const Value: Int64);
 
   public
@@ -18,6 +18,7 @@ type TVenda = class
     function RetornaValorTotal(dataset: TDataset): Currency;
     procedure SalvarVenda;
     procedure SalvarDetalhesVendas;
+    procedure AtualizaEstoque(Qtdade: Double; IDItem: Integer);
 
   constructor Create;
   destructor Destroy; override;
@@ -32,6 +33,37 @@ uses
   FireDAC.Comp.Client, dmConexao, System.SysUtils;
 
 { TVenda }
+
+procedure TVenda.AtualizaEstoque(Qtdade: Double; IDItem: Integer);
+const
+  SQL = 'update '+
+        'produtos set qt_estoque = :qt_estoque '+
+        'where '+
+        'id_item = :id_item';
+var
+  qry: TFDquery;
+begin
+  qry := TFDQuery.Create(nil);
+  qry.Connection := dConexao.conexaoBanco;
+
+  try
+    try
+      qry.SQL.Add(SQL);
+      qry.ParamByName('qt_estoque').AsFloat := Qtdade;
+      qry.ParamByName('id_item').AsInteger := IDItem;
+      qry.ExecSQL;
+
+    except on e:Exception do
+      begin
+        dConexao.conexaoBanco.Rollback;
+        raise Exception.Create('Erro ao atualizar o estoque do item ID Item: ' + IDItem + e.Message);
+      end;
+    end;
+  finally
+    dConexao.conexaoBanco.Rollback;
+    qry.Free;
+  end;
+end;
 
 function TVenda.BuscarProdutos(CodBarras: string): Boolean;
 const
@@ -97,7 +129,7 @@ begin
   inherited;
 end;
 
-function TVenda.GetIDVenda: Integer;
+function TVenda.GetNumeroVenda: Integer;
 const
   SQL = 'select * from func_nr_pedido() as id_venda';
 var
@@ -171,7 +203,7 @@ begin
     try
       qry.SQL.Add(SQL);
       qry.ParamByName('id_geral').AsLargeInt := id.GeraIdGeral;
-      qry.ParamByName('id_vendas').AsInteger := FIDVenda;
+      qry.ParamByName('id_vendas').AsLargeInt := FIDVenda;
       qry.ParamByName('id_item').AsInteger := Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger;
       qry.ParamByName('vl_unitario').AsCurrency := Dados.cdsDetalhesVendas.FieldByName('vl_unitario').AsCurrency;
       qry.ParamByName('qt_venda').AsFloat := Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat;
@@ -229,14 +261,14 @@ begin
     try
       qry.SQL.Add(SQL);
       qry.ParamByName('id_geral').AsLargeInt := id.GeraIdGeral;
-      FIDVenda := GetIDVenda;
-      qry.ParamByName('nr_venda').AsInteger := FIDVenda;
+      FIDVenda := qry.ParamByName('id_geral').AsLargeInt;
+      qry.ParamByName('nr_venda').AsInteger := GetNumeroVenda;
       qry.ParamByName('cd_funcionario').AsInteger := Dados.cdsVendas.FieldByName('id_funcionario').AsInteger;
       qry.ParamByName('data_venda').AsDateTime := Dados.cdsVendas.FieldByName('data_venda').AsDateTime;
       qry.ParamByName('vl_troco').AsCurrency := Dados.cdsVendas.FieldByName('valor_troco').AsCurrency;
       qry.ParamByName('vl_total').AsCurrency := Dados.cdsVendas.FieldByName('valor_total').AsCurrency;
       qry.ParamByName('vl_desconto').AsCurrency := Dados.cdsVendas.FieldByName('valor_desconto').AsCurrency;
-      //qry.ParamByName('vl_acrescimo').AsLargeInt;
+      qry.ParamByName('vl_acrescimo').AsCurrency := 0;
       qry.ParamByName('vl_recebido').AsCurrency := Dados.cdsVendas.FieldByName('valor_recebido').AsCurrency;
       qry.ParamByName('status').AsString := Dados.cdsVendas.FieldByName('status').AsString;
       qry.ExecSQL;

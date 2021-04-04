@@ -80,14 +80,14 @@ object dmVendas: TdmVendas
   end
   object cdsDetalhesVendas: TClientDataSet
     PersistDataPacket.Data = {
-      E00000009619E0BD010000001800000008000000000003000000E0000869645F
+      FC0000009619E0BD010000001800000009000000000003000000FC000869645F
       676572616C08000100000000000869645F76656E646108000100000000000769
-      645F6974656D04000100000000000B766C5F756E69746172696F080004000000
-      010007535542545950450200490006004D6F6E6579000871745F76656E646108
-      0004000000000008766C5F746F74616C08000400000001000753554254595045
-      0200490006004D6F6E6579000E69645F66756E63696F6E6172696F0400010000
-      0000000A6E6D5F70726F6475746F010049000000010005574944544802000200
-      14000000}
+      645F6974656D04000100000000000763645F6974656D01004900000001000557
+      494454480200020014000A6E6D5F70726F6475746F0100490000000100055749
+      4454480200020014000B766C5F756E69746172696F0800040000000100075355
+      42545950450200490006004D6F6E6579000871745F76656E6461080004000000
+      000008766C5F746F74616C080004000000010007535542545950450200490006
+      004D6F6E6579000E69645F66756E63696F6E6172696F04000100000000000000}
     Active = True
     Aggregates = <>
     FieldDefs = <
@@ -104,6 +104,16 @@ object dmVendas: TdmVendas
         DataType = ftInteger
       end
       item
+        Name = 'cd_item'
+        DataType = ftString
+        Size = 20
+      end
+      item
+        Name = 'nm_produto'
+        DataType = ftString
+        Size = 20
+      end
+      item
         Name = 'vl_unitario'
         DataType = ftCurrency
       end
@@ -118,11 +128,6 @@ object dmVendas: TdmVendas
       item
         Name = 'id_funcionario'
         DataType = ftInteger
-      end
-      item
-        Name = 'nm_produto'
-        DataType = ftString
-        Size = 20
       end>
     IndexDefs = <>
     Params = <>
@@ -141,6 +146,9 @@ object dmVendas: TdmVendas
       FieldName = 'id_item'
       Visible = False
     end
+    object cdsDetalhesVendascd_item: TStringField
+      FieldName = 'cd_item'
+    end
     object cdsDetalhesVendasnm_produto: TStringField
       DisplayLabel = 'Produto'
       FieldName = 'nm_produto'
@@ -150,7 +158,7 @@ object dmVendas: TdmVendas
       FieldName = 'vl_unitario'
     end
     object cdsDetalhesVendasqt_venda: TFloatField
-      DisplayLabel = 'Qtdade'
+      DisplayLabel = 'Quantidade'
       FieldName = 'qt_venda'
     end
     object cdsDetalhesVendasvl_total: TCurrencyField

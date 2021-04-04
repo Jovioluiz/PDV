@@ -487,3 +487,5 @@ ALTER TABLE public.usuarios ADD fl_ativo bool NULL;
 ALTER TABLE public.produtos RENAME COLUMN valor TO vl_unitario;
 ALTER TABLE public.produtos RENAME COLUMN qtd_estoque TO qt_estoque;
 ALTER TABLE public.produtos_cod_barras ADD CONSTRAINT fl_produtos_cod_barras_produtos FOREIGN KEY (id_item) REFERENCES produtos(id_item) on delete cascade;
+ALTER TABLE public.detalhes_vendas DROP CONSTRAINT fl_detalhes_vendas_vendas;
+ALTER TABLE public.detalhes_vendas ADD CONSTRAINT fk_detalhes_vendas_vendas FOREIGN KEY (id_vendas) REFERENCES vendas(id_geral) on delete cascade;
