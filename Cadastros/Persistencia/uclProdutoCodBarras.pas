@@ -3,7 +3,7 @@ unit uclProdutoCodBarras;
 interface
 
 uses
-  uPadrao;
+  uPadrao, FireDAC.Stan.Param, Data.DB;
 
 type TProdutoCodBarras = class(TPadrao)
   private

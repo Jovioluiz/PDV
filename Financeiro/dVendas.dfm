@@ -4,8 +4,8 @@ object dmVendas: TdmVendas
   Width = 282
   object dsProdutos: TDataSource
     DataSet = cdsProdutos
-    Left = 40
-    Top = 40
+    Left = 24
+    Top = 16
   end
   object cdsProdutos: TClientDataSet
     PersistDataPacket.Data = {
@@ -70,27 +70,33 @@ object dmVendas: TdmVendas
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 144
-    Top = 40
+    Left = 88
+    Top = 16
   end
   object dsDetalhesVendas: TDataSource
     DataSet = cdsDetalhesVendas
-    Left = 40
-    Top = 192
+    Left = 24
+    Top = 128
   end
   object cdsDetalhesVendas: TClientDataSet
     PersistDataPacket.Data = {
-      FC0000009619E0BD010000001800000009000000000003000000FC000869645F
-      676572616C08000100000000000869645F76656E646108000100000000000769
-      645F6974656D04000100000000000763645F6974656D01004900000001000557
-      494454480200020014000A6E6D5F70726F6475746F0100490000000100055749
-      4454480200020014000B766C5F756E69746172696F0800040000000100075355
-      42545950450200490006004D6F6E6579000871745F76656E6461080004000000
-      000008766C5F746F74616C080004000000010007535542545950450200490006
-      004D6F6E6579000E69645F66756E63696F6E6172696F04000100000000000000}
+      290100009619E0BD01000000180000000B000000000003000000290103736571
+      04000100000000000869645F676572616C08000100000000000869645F76656E
+      646108000100000000000769645F6974656D04000100000000000763645F6974
+      656D01004900000001000557494454480200020014000A6E6D5F70726F647574
+      6F01004900000001000557494454480200020014000B766C5F756E6974617269
+      6F080004000000010007535542545950450200490006004D6F6E657900087174
+      5F76656E6461080004000000000008766C5F746F74616C080004000000010007
+      535542545950450200490006004D6F6E6579000E69645F66756E63696F6E6172
+      696F04000100000000000C666C5F63616E63656C61646F010049000000010005
+      57494454480200020001000000}
     Active = True
     Aggregates = <>
     FieldDefs = <
+      item
+        Name = 'seq'
+        DataType = ftInteger
+      end
       item
         Name = 'id_geral'
         DataType = ftLargeint
@@ -128,12 +134,22 @@ object dmVendas: TdmVendas
       item
         Name = 'id_funcionario'
         DataType = ftInteger
+      end
+      item
+        Name = 'fl_cancelado'
+        DataType = ftString
+        Size = 1
       end>
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 136
-    Top = 184
+    Left = 120
+    Top = 128
+    object cdsDetalhesVendasseq: TIntegerField
+      DisplayLabel = 'Seq'
+      DisplayWidth = 3
+      FieldName = 'seq'
+    end
     object cdsDetalhesVendasid_geral: TLargeintField
       FieldName = 'id_geral'
       Visible = False
@@ -147,10 +163,12 @@ object dmVendas: TdmVendas
       Visible = False
     end
     object cdsDetalhesVendascd_item: TStringField
+      DisplayLabel = 'C'#243'digo Item'
       FieldName = 'cd_item'
     end
     object cdsDetalhesVendasnm_produto: TStringField
       DisplayLabel = 'Produto'
+      DisplayWidth = 30
       FieldName = 'nm_produto'
     end
     object cdsDetalhesVendasvl_unitario: TCurrencyField
@@ -169,11 +187,16 @@ object dmVendas: TdmVendas
       FieldName = 'id_funcionario'
       Visible = False
     end
+    object cdsDetalhesVendasfl_cancelado: TStringField
+      DisplayLabel = 'Cancelado'
+      FieldName = 'fl_cancelado'
+      Size = 1
+    end
   end
   object dsVendas: TDataSource
     DataSet = cdsVendas
-    Left = 32
-    Top = 112
+    Left = 24
+    Top = 72
   end
   object cdsVendas: TClientDataSet
     PersistDataPacket.Data = {
@@ -231,8 +254,8 @@ object dmVendas: TdmVendas
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 120
-    Top = 120
+    Left = 80
+    Top = 72
     object cdsVendasid_venda: TIntegerField
       FieldName = 'id_venda'
     end

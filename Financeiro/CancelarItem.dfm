@@ -4,8 +4,8 @@ object frmCancelarItem: TfrmCancelarItem
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Cancelar Item'
-  ClientHeight = 90
-  ClientWidth = 273
+  ClientHeight = 104
+  ClientWidth = 332
   Color = clMoneyGreen
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,15 +15,16 @@ object frmCancelarItem: TfrmCancelarItem
   KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
     Left = 8
     Top = 35
-    Width = 78
+    Width = 132
     Height = 19
-    Caption = 'ID do Item'
+    Caption = 'Sequ'#234'ncia do Item'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -31,8 +32,8 @@ object frmCancelarItem: TfrmCancelarItem
     Font.Style = []
     ParentFont = False
   end
-  object edtCodItem: TEdit
-    Left = 92
+  object edtSeqItem: TEdit
+    Left = 146
     Top = 32
     Width = 154
     Height = 27

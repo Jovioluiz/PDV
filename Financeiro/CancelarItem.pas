@@ -4,17 +4,28 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, FireDAC.Stan.Param, System.UITypes, Data.DB;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, FireDAC.Stan.Param, System.UITypes, Data.DB,
+  Datasnap.DBClient;
 
 type
   TfrmCancelarItem = class(TForm)
-    edtCodItem: TEdit;
+    edtSeqItem: TEdit;
     Label1: TLabel;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormCreate(Sender: TObject);
   private
+    FIDItem: Integer;
+    FDetalhesVendas: TClientDataSet;
+    FSequencia: Integer;
+    procedure SetIDItem(const Value: Integer);
+    procedure SetDetalhesVendas(const Value: TClientDataSet);
+    procedure SetSequencia(const Value: Integer);
     { Private declarations }
   public
     { Public declarations }
+    property IDItem: Integer read FIDItem write SetIDItem;
+    property DetalhesVendas: TClientDataSet read FDetalhesVendas write SetDetalhesVendas;
+    property Sequencia: Integer read FSequencia write SetSequencia;
   end;
 
 var
@@ -30,81 +41,51 @@ implementation
 uses Modulo;
 
 
-procedure TfrmCancelarItem.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmCancelarItem.FormCreate(Sender: TObject);
+begin
+  FDetalhesVendas := TClientDataSet.Create(self);
+end;
+
+procedure TfrmCancelarItem.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   //não está validando corretamente quando digitado um código que não existe
 begin
   if key = 13 then
   begin
-    if (Trim(edtCodItem.Text) = EmptyStr) then
+    if (Trim(edtSeqItem.Text) = EmptyStr) then
     begin
       MessageDlg('Digite o código do Item!', mtInformation, mbOKCancel, 0);
-      edtCodItem.Clear;
-      edtCodItem.SetFocus;
+      edtSeqItem.Clear;
+      edtSeqItem.SetFocus;
       Exit;
     end
     else
     begin
       try
-        //recuperar a quantidade, valor e ID do item vendido
-        dm.queryCoringa.Close;
-        dm.queryCoringa.SQL.Clear;
-        dm.queryCoringa.SQL.Add('select * '+
-                                        'from '+
-                                    'detalhes_vendas '+
-                                        'where '+
-                                    'id_detalhe_venda = :id_detalhe_venda');
-        dm.queryCoringa.ParamByName('id_detalhe_venda').Value := edtCodItem.Text;
-        dm.queryCoringa.Open();
-
-        if not dm.queryCoringa.IsEmpty then
-        begin
-          quantidade := dm.queryCoringa['qtdade'];
-          totalProdutos := dm.queryCoringa['valor_total'];
-          idproduto := dm.queryCoringa['id_produto'];
-        end;
-
-        //deleta da tabela detalhes_vendas
-        dm.queryCoringa.Close;
-        dm.queryCoringa.SQL.Clear;
-        dm.queryCoringa.SQL.Text := 'delete from detalhes_vendas where id_detalhe_venda = :id_detalhe_venda';
-        dm.queryCoringa.ParamByName('id_detalhe_venda').AsInteger := StrToInt(edtCodItem.Text);
-        dm.queryCoringa.ExecSQL;
-        Close;
+        FSequencia := StrToInt(edtSeqItem.Text);
       except
-        MessageDlg('Código do Produto Inválido', mtInformation, mbOKCancel, 0);
-        edtCodItem.Clear;
-        edtCodItem.SetFocus;
+        MessageDlg('Código Inválido', mtInformation, mbOKCancel, 0);
+        edtSeqItem.Clear;
+        edtSeqItem.SetFocus;
         Exit;
       end;
     end;
-
-    //recuperar o estoque do item excluido
-    dm.queryProdutos.Close;
-    dm.queryProdutos.SQL.Clear;
-    dm.queryProdutos.SQL.Add('select * '+
-                                    'from '+
-                                'produtos '+
-                                    'where '+
-                                'id_produto = :id_produto');
-    dm.queryProdutos.ParamByName('id_produto').Value := idproduto;
-    dm.queryProdutos.Open();
-
-    if not dm.queryProdutos.IsEmpty then
-      qt_estoque := dm.queryProdutos['qtd_estoque'];
-
-    //devolver quantidade para o estoque
-    qt_estoque := qt_estoque + quantidade;
-    dm.queryProdutos.Close;
-    dm.queryProdutos.SQL.Clear;
-    dm.queryProdutos.SQL.Add('update '+
-                              'produtos set qtd_estoque = :qtd_estoque '+
-                                  'where '+
-                              'id_produto = :id_produto');
-    dm.queryProdutos.ParamByName('qtd_estoque').Value := qt_estoque;
-    dm.queryProdutos.ParamByName('id_produto').Value := idproduto;
-    dm.queryProdutos.ExecSQL;
+    Close;
   end;
+end;
+
+procedure TfrmCancelarItem.SetDetalhesVendas(const Value: TClientDataSet);
+begin
+  FDetalhesVendas := Value;
+end;
+
+procedure TfrmCancelarItem.SetIDItem(const Value: Integer);
+begin
+  FIDItem := Value;
+end;
+
+procedure TfrmCancelarItem.SetSequencia(const Value: Integer);
+begin
+  FSequencia := Value;
 end;
 
 end.

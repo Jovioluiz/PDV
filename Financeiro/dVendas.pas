@@ -31,6 +31,8 @@ type
     cdsDetalhesVendasid_funcionario: TIntegerField;
     cdsDetalhesVendasnm_produto: TStringField;
     cdsDetalhesVendascd_item: TStringField;
+    cdsDetalhesVendasfl_cancelado: TStringField;
+    cdsDetalhesVendasseq: TIntegerField;
   private
     { Private declarations }
   public

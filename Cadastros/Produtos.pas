@@ -73,7 +73,7 @@ type
 
     procedure BuscarNome;
     procedure BuscarCodigo;
-    procedure SalvarFoto;
+    procedure SalvarFoto(IDItem: Integer);
     procedure CarregarImagemPadrao;
   public
     { Public declarations }
@@ -91,7 +91,8 @@ implementation
 
 {$R *.dfm}
 
-uses Modulo, ImprimirBarras, uUtil, uclProdutoCodBarras;
+uses Modulo, ImprimirBarras, uUtil, uclProdutoCodBarras, dmConexao,
+  FireDAC.Comp.Client;
 
 { TfrmProdutos }
 
@@ -189,7 +190,7 @@ begin
     FRegras.fator_conversao := StrToFloat(edtFatorConversao.Text);
     FRegras.data_cadastro := Now;
 
-    //SalvarFoto;
+    SalvarFoto(idItem);
 
     FRegras.Persistir(novo);
 
@@ -237,8 +238,8 @@ end;
 
 procedure TfrmProdutos.CarregarImagemPadrao;
 begin
-//  caminhoimg := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
-//  imgProduto.Picture.LoadFromFile(caminhoimg);
+  caminhoimg := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
+  imgProduto.Picture.LoadFromFile(caminhoimg);
 end;
 
 procedure TfrmProdutos.dbGridProdutosCellClick(Column: TColumn);
@@ -268,7 +269,9 @@ begin
     codigoBarrasProduto := FRegras.Dados.cdsProdutos.FieldByName('codigo_barras').AsString;
 
     if FRegras.Dados.cdsProdutos.FieldByName('imagem').Value <> null then
-      imagem.ExibeFoto(FRegras.Dados.cdsProdutos, 'imagem', imgProduto);
+      imagem.ExibeFoto(FRegras.Dados.cdsProdutos, 'imagem', imgProduto)
+    else
+      CarregarImagemPadrao;
   finally
     imagem.Free;
   end;
@@ -451,20 +454,44 @@ begin
   edtBuscarNome.SetFocus;
 end;
 
-procedure TfrmProdutos.SalvarFoto;
+procedure TfrmProdutos.SalvarFoto(IDItem: Integer);
+const
+  SQL = 'update produtos set imagem = :imagem where id_item = :id_item';
+var
+  qry: TFDQuery;
+  imagem: TFileStream;
 begin
-  if dialog.FileName <> '' then
-  begin
-    img := TPicture.Create;
-    img.LoadFromFile(dialog.FileName);
-    dm.tbProdutos.FieldByName('imagem').Assign(img);
-    img.Free;
-    dialog.FileName := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
-    alterou := false;
-  end
-  else
-  begin
-    dm.tbProdutos.FieldByName('imagem').Value := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
+  qry := TFDQuery.Create(Self);
+  qry.Connection := dConexao.conexaoBanco;
+  imagem := TFileStream.Create(dialog.FileName, fmOpenRead or fmShareDenyWrite);
+
+  try
+
+    if dialog.FileName <> '' then
+    begin
+
+      qry.SQL.Add(SQL);
+      qry.ParamByName('imagem').LoadFromStream(imagem, ftBlob);
+      qry.ParamByName('id_item').AsInteger := IDItem;
+      qry.ExecSQL;
+
+      img := TPicture.Create;
+      try
+        img.LoadFromFile(dialog.FileName);
+        dialog.FileName := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
+        alterou := false;
+      finally
+        img.Free;
+      end;
+    end
+    else
+    begin
+      dm.tbProdutos.FieldByName('imagem').Value := ExtractFileDir(GetCurrentDir) + '\Debug\img\sem-foto.jpg';
+    end;
+
+  finally
+    qry.Free;
+    imagem.Free;
   end;
 end;
 

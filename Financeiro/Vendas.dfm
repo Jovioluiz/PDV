@@ -30,7 +30,6 @@ object frmVendas: TfrmVendas
     Color = clSkyBlue
     ParentBackground = False
     TabOrder = 0
-    ExplicitWidth = 1189
     object dbGridItens: TDBGrid
       Left = 1
       Top = 36
@@ -68,7 +67,6 @@ object frmVendas: TfrmVendas
       ParentBackground = False
       ParentFont = False
       TabOrder = 1
-      ExplicitWidth = 1187
     end
     object pnlImagem: TPanel
       Left = 990
@@ -78,7 +76,6 @@ object frmVendas: TfrmVendas
       Align = alCustom
       Anchors = [akRight, akBottom]
       TabOrder = 2
-      ExplicitLeft = 1008
       object imgProduto: TImage
         Left = 1
         Top = 1
@@ -102,7 +99,6 @@ object frmVendas: TfrmVendas
     Color = clSkyBlue
     ParentBackground = False
     TabOrder = 1
-    ExplicitLeft = 1189
     object edtTotalItem: TEdit
       Left = 1
       Top = 63
@@ -210,8 +206,6 @@ object frmVendas: TfrmVendas
       ParentBackground = False
       ParentFont = False
       TabOrder = 6
-      ExplicitLeft = 2
-      ExplicitWidth = 262
     end
     object Panel2: TPanel
       Left = 1
@@ -323,7 +317,6 @@ object frmVendas: TfrmVendas
     Height = 139
     Align = alBottom
     TabOrder = 2
-    ExplicitWidth = 1453
     DesignSize = (
       1442
       139)
@@ -342,7 +335,6 @@ object frmVendas: TfrmVendas
       TabOrder = 0
       OnChange = edtCodBarrasChange
       OnExit = edtCodBarrasExit
-      ExplicitWidth = 1030
     end
     object Panel1: TPanel
       Left = 1
@@ -361,7 +353,6 @@ object frmVendas: TfrmVendas
       ParentBackground = False
       ParentFont = False
       TabOrder = 2
-      ExplicitWidth = 1451
     end
     object edtQtdade: TEdit
       Left = 1044
@@ -378,7 +369,6 @@ object frmVendas: TfrmVendas
       TabOrder = 1
       OnChange = edtQtdadeChange
       OnExit = edtQtdadeExit
-      ExplicitLeft = 1055
     end
     object MediaPlayer1: TMediaPlayer
       Left = 6
@@ -398,7 +388,6 @@ object frmVendas: TfrmVendas
     Height = 76
     Align = alBottom
     TabOrder = 3
-    ExplicitWidth = 1453
     object Label12: TLabel
       Left = 8
       Top = 16

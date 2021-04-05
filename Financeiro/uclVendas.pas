@@ -52,11 +52,11 @@ begin
       qry.ParamByName('qt_estoque').AsFloat := Qtdade;
       qry.ParamByName('id_item').AsInteger := IDItem;
       qry.ExecSQL;
-
+      dConexao.conexaoBanco.Commit;
     except on e:Exception do
       begin
         dConexao.conexaoBanco.Rollback;
-        raise Exception.Create('Erro ao atualizar o estoque do item ID Item: ' + IDItem + e.Message);
+        raise Exception.Create('Erro ao atualizar o estoque do item ID Item: ' + IDItem.ToString + e.Message);
       end;
     end;
   finally
@@ -183,13 +183,15 @@ const
         '      id_item, ' +
         '      vl_unitario, ' +
         '      qt_venda, ' +
-        '      vl_total) ' +
+        '      vl_total,      ' +
+        '      fl_cancelado) ' +
         'values (:id_geral, ' +
         '      :id_vendas, ' +
         '      :id_item, ' +
         '      :vl_unitario, ' +
         '      :qt_venda, ' +
-        '      :vl_total)';
+        '      :vl_total,   ' +
+        '      :fl_cancelado)';
 {$ENDREGION}
 var
   qry: TFDQuery;
@@ -208,12 +210,13 @@ begin
       qry.ParamByName('vl_unitario').AsCurrency := Dados.cdsDetalhesVendas.FieldByName('vl_unitario').AsCurrency;
       qry.ParamByName('qt_venda').AsFloat := Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat;
       qry.ParamByName('vl_total').AsCurrency := Dados.cdsDetalhesVendas.FieldByName('vl_total').AsCurrency;
+      qry.ParamByName('fl_cancelado').AsString := Dados.cdsDetalhesVendas.FieldByName('fl_cancelado').AsString;
       qry.ExecSQL;
       dConexao.conexaoBanco.Commit;
     except on e:Exception do
       begin
         dConexao.conexaoBanco.Rollback;
-        raise Exception.Create('Erro ao gravar os dados dos itens!');
+        raise Exception.Create('Erro ao gravar os dados dos itens!' + e.Message);
       end;
     end;
   finally

@@ -13,7 +13,7 @@ implementation
 
 uses
   FireDAC.Comp.Client, dmConexao, System.SysUtils, System.Math, uUtil,
-  System.Variants;
+  System.Variants, FireDAC.Stan.Param;
 
 { TFinanceiro }
 

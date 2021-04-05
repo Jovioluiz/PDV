@@ -59,12 +59,12 @@ type
     FTotalTroco,
     FSubTotal,
     FTotalDesconto,
-    FTotalRecebido,
-    FTroco: Currency;
+    FTotalRecebido: Currency;
     FQtEstoque: Double;
     FRegras: TVenda;
     FIDItem: Integer;
     FFinanceiro: TFinanceiro;
+    FSeq: Integer;
     procedure limpar;
     procedure buscarProduto;
     procedure salvarItens;
@@ -74,18 +74,19 @@ type
 
     procedure AssociarCamposDetalhes;
     procedure AssociarCamposVendas;
-    procedure listar;
-    procedure atualizaQtdadeEstoque;
     procedure iniciarNfce;
+    procedure AtualizaValores;
 
     procedure ValidaEstoque;
     procedure SetRegras(const Value: TVenda);
     procedure SetFinanceiro(const Value: TFinanceiro);
+    procedure SetSeq(const Value: Integer);
   public
     { Public declarations }
     property Regras: TVenda read FRegras write SetRegras;
     property IDItem: Integer read FIDItem write FIDItem;
     property Financeiro: TFinanceiro read FFinanceiro write SetFinanceiro;
+    property Seq: Integer read FSeq write SetSeq;
   end;
 
 var
@@ -115,7 +116,7 @@ begin
     ValidaEstoque;
   end;
 
-  if FRegras.Dados.cdsDetalhesVendas.RecordCount > 0 then
+  if (FRegras.Dados.cdsDetalhesVendas.RecordCount > 0) and (edtCodBarras.Text = '') then
     edtValorRecebido.SetFocus;
 end;
 
@@ -164,8 +165,12 @@ begin
 
     AssociarCamposDetalhes;
     edtTotalVenda.Text := CurrToStr(FRegras.RetornaValorTotal(FRegras.Dados.cdsDetalhesVendas));
-//    SalvarVenda;
-//    salvarItens;
+
+    //toca audio após inserir um item
+    MediaPlayer1.FileName := ExtractFileDir(GetCurrentDir) + '\Debug\img\barCode.wav';
+    MediaPlayer1.Open;
+    MediaPlayer1.Play;
+
     limparProdutos;
   end
   else
@@ -184,6 +189,7 @@ end;
 procedure TfrmVendas.AssociarCamposDetalhes;
 begin
   FRegras.Dados.cdsDetalhesVendas.Append;
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('seq').AsInteger := FSeq;
   FRegras.Dados.cdsDetalhesVendas.FieldByName('id_venda').AsInteger := FRegras.IDVenda;
   FRegras.Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger := FIDItem;
   FRegras.Dados.cdsDetalhesVendas.FieldByName('cd_item').AsString := FRegras.Dados.cdsProdutos.FieldByName('cd_item').AsString;
@@ -192,7 +198,9 @@ begin
   FRegras.Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat := StrToFloat(edtQtdade.Text);
   FRegras.Dados.cdsDetalhesVendas.FieldByName('vl_total').AsCurrency := FTotalItem;
   FRegras.Dados.cdsDetalhesVendas.FieldByName('id_funcionario').AsInteger := FCdUsuario;
+  FRegras.Dados.cdsDetalhesVendas.FieldByName('fl_cancelado').AsString := 'N';
   FRegras.Dados.cdsDetalhesVendas.Post;
+  Inc(FSeq);
 end;
 
 procedure TfrmVendas.AssociarCamposVendas;
@@ -209,20 +217,19 @@ begin
   FRegras.Dados.cdsVendas.Post;
 end;
 
-//atualiza o campo edtQtdadeEstoque com a quantidade em estoque do produto
-procedure TfrmVendas.atualizaQtdadeEstoque;
+procedure TfrmVendas.AtualizaValores;
 begin
-  dm.queryCoringa.Close;
-  dm.queryCoringa.SQL.Clear;
-  dm.queryCoringa.SQL.Add('select qtd_estoque '+
-                                  'from '+
-                              'produtos '+
-                                  'where '+
-                              'codigo_barras = :codigo_barras');
-  dm.queryCoringa.ParamByName('codigo_barras').Value := edtCodBarras.Text;
-  dm.queryCoringa.Open();
-
-  //edtQtdadeEstoque.Text := dm.queryCoringa['qtd_estoque'];
+  FRegras.Dados.cdsDetalhesVendas.LoopSimples(
+    procedure
+    begin
+      if FRegras.Dados.cdsDetalhesVendas.FieldByName('fl_cancelado').AsString = 'S' then
+      begin
+        FTotalVenda := FTotalVenda - FRegras.Dados.cdsDetalhesVendas.FieldByName('vl_total').AsCurrency;
+        edtTotalVenda.Text := FormatCurr('R$ ###,##0.00', FTotalVenda);
+        FTotalComDesconto := FTotalVenda;
+      end;
+    end
+  );
 end;
 
 procedure TfrmVendas.buscarProduto;
@@ -273,6 +280,7 @@ begin
   FTotalComDesconto := 0;
   FTotalTroco := 0;
   totalProdutos := 0;
+  FSeq := 1;
   FRegras.Free;
   FFinanceiro.Free;
 end;
@@ -285,6 +293,7 @@ begin
   FTotalTroco := 0;
   FTotalDesconto := 0;
   FTotalRecebido := 0;
+  FSeq := 1;
   edtSubTotal.Text := FormatCurr('R$ ###,##0.00', FTotalVenda);
   edtTotalVenda.Text := FormatCurr('R$ ###,##0.00', FTotalVenda);
   edtTotalItem.Text := FormatCurr('R$ ###,##0.00', FTotalItem);
@@ -302,10 +311,26 @@ begin
   begin
     if key = 90 then
     begin
+      FRegras.Dados.cdsDetalhesVendas.DisableControls;
       cancelaItem := TfrmCancelarItem.Create(Self);
       try
-        cancelaItem.Show;
+        cancelaItem.DetalhesVendas := FRegras.Dados.cdsDetalhesVendas;
+        if cancelaItem.ShowModal <> mrOK then
+        begin
+          FRegras.Dados.cdsDetalhesVendas.Filtered := False;
+          FRegras.Dados.cdsDetalhesVendas.Filter := 'seq = ' + cancelaItem.Sequencia.ToString;
+          FRegras.Dados.cdsDetalhesVendas.Filtered := True;
+          FRegras.Dados.cdsDetalhesVendas.Edit;
+          FRegras.Dados.cdsDetalhesVendas.FieldByName('fl_cancelado').AsString := 'S';
+          FRegras.Dados.cdsDetalhesVendas.Post;
+
+          AtualizaValores;
+        end;
       finally
+        FRegras.Dados.cdsDetalhesVendas.EnableControls;
+        FRegras.Dados.cdsDetalhesVendas.Filtered := False;
+        FRegras.Dados.cdsDetalhesVendas.Filter := '';
+        FRegras.Dados.cdsDetalhesVendas.Filtered := True;
         cancelaItem.Free;
       end;
     end;
@@ -316,7 +341,7 @@ begin
   begin
     if edtValorRecebido.Text <= '0' then
     begin
-      ShowMessage('Valor recebido deve ser maior que 0');
+      ShowMessage('Valor recebido deve ser maior que R$ 0.00');
       edtValorRecebido.SetFocus;
       Exit;
     end;
@@ -325,6 +350,7 @@ begin
     begin
       SalvarVenda;
       salvarItens;
+      FRegras.Dados.cdsDetalhesVendas.EmptyDataSet;
     end;
   end;
 end;
@@ -356,8 +382,8 @@ begin
 end;
 
 procedure TfrmVendas.iniciarNfce;
-var
-  caminhoNFCE: string;
+//var
+//  caminhoNFCE: string;
 begin
   //caminhoNFCE := ExtractFilePath(Application.ExeName) + 'nfe\';
   //nfce.Configuracoes.Arquivos.PathSchemas := caminhoNFCE;
@@ -389,52 +415,20 @@ begin
   FTotalItem := 0;
 end;
 
-procedure TfrmVendas.listar;
-begin
-  dm.queryDetalhesVendas.Close;
-  dm.queryDetalhesVendas.SQL.Clear;
-  dm.queryDetalhesVendas.SQL.Add('select '+
-                                 '    * '+
-                                 'from '+
-                                 '  detalhes_vendas '+
-                                 'where '+
-                                 '  id_venda = 0 and '+
-                                 '  id_funcionario = :id_funcionario '+
-                                 'order by '+
-                                 '  id_detalhe_venda asc');
-  dm.queryDetalhesVendas.ParamByName('id_funcionario').AsInteger := FCdUsuario;
-  dm.queryDetalhesVendas.Open();
-
-  //alinhamneto do grid
-  dbGridItens.Columns[0].Alignment := taCenter;
-  dbGridItens.Columns[1].Alignment := taCenter;
-  dbGridItens.Columns[2].Alignment := taCenter;
-end;
-
 procedure TfrmVendas.salvarItens;
 begin
-  ValidaEstoque;
-
-//  AssociarCamposDetalhes;
-//  listar;
 
   FRegras.Dados.cdsDetalhesVendas.LoopSimples(
   procedure
   begin
+    ValidaEstoque;
     FRegras.SalvarDetalhesVendas;
+    //diminui do estoque a qtdade do item
+    FQtEstoque := FRegras.Dados.cdsProdutos.FieldByName('qt_estoque').AsFloat - FRegras.Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat;
+    if FRegras.Dados.cdsDetalhesVendas.FieldByName('fl_cancelado').AsString = 'N' then
+      FRegras.AtualizaEstoque(FQtEstoque, FRegras.Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger);
   end
   );
-
-  //toca audio após inserir um item
-  MediaPlayer1.FileName := ExtractFileDir(GetCurrentDir) + '\Debug\img\barCode.wav';
-  MediaPlayer1.Open;
-  MediaPlayer1.Play;
-
-  //diminui do estoque a qtdade do item
-
-  FQtEstoque := FRegras.Dados.cdsProdutos.FieldByName('qt_estoque').AsFloat - FRegras.Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat;
-  FRegras.AtualizaEstoque(FQtEstoque, FRegras.Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger);
-//  atualizaQtdadeEstoque;
 
   edtCodBarras.Clear;
   edtCodBarras.SetFocus;
@@ -475,6 +469,11 @@ end;
 procedure TfrmVendas.SetRegras(const Value: TVenda);
 begin
   FRegras := Value;
+end;
+
+procedure TfrmVendas.SetSeq(const Value: Integer);
+begin
+  FSeq := Value;
 end;
 
 procedure TfrmVendas.ValidaEstoque;
