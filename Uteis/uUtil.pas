@@ -81,7 +81,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dconexao.conexaoBanco;
+  qry.Connection := dconexao.FConexaoBanco;
 
   try
     qry.SQL.Add(SQL);

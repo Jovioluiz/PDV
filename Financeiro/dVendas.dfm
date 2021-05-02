@@ -75,7 +75,7 @@ object dmVendas: TdmVendas
   end
   object dsDetalhesVendas: TDataSource
     DataSet = cdsDetalhesVendas
-    Left = 24
+    Left = 40
     Top = 128
   end
   object cdsDetalhesVendas: TClientDataSet
@@ -143,7 +143,7 @@ object dmVendas: TdmVendas
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 120
+    Left = 144
     Top = 128
     object cdsDetalhesVendasseq: TIntegerField
       DisplayLabel = 'Seq'

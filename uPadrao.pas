@@ -3,7 +3,7 @@ unit uPadrao;
 interface
 
 uses
-  dConexaoBanco;
+  dmConexao;
 
 type TPadrao = class abstract
 

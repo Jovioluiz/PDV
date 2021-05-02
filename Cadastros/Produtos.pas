@@ -362,7 +362,7 @@ end;
 //gera o código de barras
 procedure TfrmProdutos.GerarCodigo(codigo : String; Canvas : TCanvas);
 const
-  digitos : array['0'..'9'] of string[5]= ('00110', '10001', '01001', '11000',
+  digitos: array['0'..'9'] of string[5] = ('00110', '10001', '01001', '11000',
   '00101', '10100', '01100', '00011', '10010', '01010');
   var s : string;
   i, j, x, t : Integer;
@@ -462,7 +462,7 @@ var
   imagem: TFileStream;
 begin
   qry := TFDQuery.Create(Self);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
   imagem := TFileStream.Create(dialog.FileName, fmOpenRead or fmShareDenyWrite);
 
   try

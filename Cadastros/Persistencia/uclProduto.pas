@@ -89,7 +89,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     try
@@ -102,17 +102,17 @@ begin
       qry.ParamByName('fator_conversao').AsFloat := fator_conversao;
       qry.ParamByName('id_item').AsInteger := id_item;
       qry.ExecSQL;
-      dConexao.conexaoBanco.Commit;
+      dConexao.FConexaoBanco.Commit;
     except
       on E:exception do
       begin
-        dConexao.conexaoBanco.Rollback;
+        dConexao.FConexaoBanco.Rollback;
         raise Exception.Create('Erro ao gravar os dados ' + E.Message);
       end;
     end;
 
   finally
-    dConexao.conexaoBanco.Rollback;
+    dConexao.FConexaoBanco.Rollback;
     qry.Free;
   end;
 end;
@@ -135,19 +135,19 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     try
       qry.SQL.Add(SQL);
       qry.ParamByName('id_item').AsInteger := Fid_item;
       qry.ExecSQL;
-      dConexao.conexaoBanco.Commit;
+      dConexao.FConexaoBanco.Commit;
 
     except
       on E:exception do
       begin
-        dConexao.conexaoBanco.Rollback;
+        dConexao.FConexaoBanco.Rollback;
         raise Exception.Create('Erro ao excluir os dados ' + E.Message);
       end;
     end;
@@ -164,7 +164,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dconexao.conexaoBanco;
+  qry.Connection := dconexao.FConexaoBanco;
 
   try
     qry.SQL.Add(SQL);
@@ -184,7 +184,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     qry.Open(SQL, [CodItem]);
@@ -224,7 +224,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     try
@@ -243,13 +243,13 @@ begin
     except
       on E:exception do
       begin
-        dConexao.conexaoBanco.Rollback;
+        dConexao.FConexaoBanco.Rollback;
         raise Exception.Create('Erro ao gravar os dados ' + E.Message);
       end;
     end;
-    dConexao.conexaoBanco.Commit;
+    dConexao.FConexaoBanco.Commit;
   finally
-    dConexao.conexaoBanco.Rollback;
+    dConexao.FConexaoBanco.Rollback;
     qry.Free;
   end;
 end;
@@ -277,7 +277,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     qry.SQL.Add(SQL);
@@ -327,7 +327,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     qry.Open(SQL, [Codigo]);
@@ -411,7 +411,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dconexao.conexaoBanco;
+  qry.Connection := dconexao.FConexaoBanco;
 
   try
     qry.Open(SQL, [CodBarras]);

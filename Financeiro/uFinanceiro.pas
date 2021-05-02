@@ -30,7 +30,7 @@ var
   id: TUtil;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.ConexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
   id := TUtil.Create;
 
   try
@@ -48,10 +48,10 @@ begin
         qry.ParamByName('id_movimento_gasto').Value := Null;
       qry.ExecSQL;
 
-      dConexao.ConexaoBanco.Commit;
+      dConexao.FConexaoBanco.Commit;
     except on e:Exception do
       begin
-        dConexao.conexaoBanco.Rollback;
+        dConexao.FConexaoBanco.Rollback;
         raise Exception.Create('Erro ao gravar os dados da movimentação!' + e.Message);
       end;
     end;

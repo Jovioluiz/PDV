@@ -40,24 +40,24 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
-  dConexao.conexaoBanco.StartTransaction;
+  qry.Connection := dConexao.FConexaoBanco;
+  dConexao.FConexaoBanco.StartTransaction;
 
   try
     try
       qry.ParamByName('cd_cargo').AsInteger := Fcd_cargo;
       qry.ParamByName('nm_cargo').AsString := Fnm_cargo;
       qry.ExecSQL;
-      dConexao.conexaoBanco.Commit;
+      dConexao.FConexaoBanco.Commit;
     except
       on E:exception do
       begin
-        dConexao.conexaoBanco.Rollback;
+        dConexao.FConexaoBanco.Rollback;
         raise Exception.Create('Erro ao gravar os dados' + E.Message);
       end;
     end;
   finally
-    dConexao.conexaoBanco.Rollback;
+    dConexao.FConexaoBanco.Rollback;
     qry.Free;
   end;
 end;
@@ -79,25 +79,25 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     try
       qry.SQL.Add(SQL);
       qry.ParamByName('cd_cargo').AsInteger := Fcd_cargo;
       qry.ExecSQL;
-      dConexao.conexaoBanco.Commit;
+      dConexao.FConexaoBanco.Commit;
 
     except
       on E:exception do
       begin
-        dConexao.conexaoBanco.Rollback;
+        dConexao.FConexaoBanco.Rollback;
         raise Exception.Create('Erro ao excluir ' + E.Message);
       end;
     end;
     Result := True;
   finally
-    dConexao.conexaoBanco.Rollback;
+    dConexao.FConexaoBanco.Rollback;
     qry.Free;
   end;
 end;
@@ -109,8 +109,8 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
-  dConexao.conexaoBanco.StartTransaction;
+  qry.Connection := dConexao.FConexaoBanco;
+  dConexao.FConexaoBanco.StartTransaction;
 
   try
     try
@@ -118,16 +118,16 @@ begin
       qry.ParamByName('cd_cargo').AsInteger := Fcd_cargo;
       qry.ParamByName('nm_cargo').AsString := Fnm_cargo;
       qry.ExecSQL;
-      dConexao.conexaoBanco.Commit;
+      dConexao.FConexaoBanco.Commit;
     except
       on E:exception do
       begin
-        dConexao.conexaoBanco.Rollback;
+        dConexao.FConexaoBanco.Rollback;
         raise Exception.Create('Erro ao gravar os dados ' + E.Message);
       end;
     end;
   finally
-    dConexao.conexaoBanco.Rollback;
+    dConexao.FConexaoBanco.Rollback;
     qry.Free;
   end;
 end;
@@ -139,7 +139,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     qry.SQL.Add(SQL_CARGO);

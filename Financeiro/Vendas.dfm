@@ -15,6 +15,7 @@ object frmVendas: TfrmVendas
   Position = poScreenCenter
   OnActivate = FormActivate
   OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress

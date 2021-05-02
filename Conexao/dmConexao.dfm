@@ -1,6 +1,7 @@
 object dConexao: TdConexao
   OldCreateOrder = False
   OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
   Height = 159
   Width = 341
   object driver: TFDPhysPgDriverLink
@@ -12,7 +13,7 @@ object dConexao: TdConexao
     Left = 248
     Top = 64
   end
-  object conexaoBanco: TFDConnection
+  object FConexaoBanco: TFDConnection
     Left = 56
     Top = 64
   end

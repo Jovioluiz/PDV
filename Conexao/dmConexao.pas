@@ -13,8 +13,9 @@ type
   TdConexao = class(TDataModule)
     driver: TFDPhysPgDriverLink;
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
-    conexaoBanco: TFDConnection;
+    FConexaoBanco: TFDConnection;
     procedure DataModuleCreate(Sender: TObject);
+    procedure DataModuleDestroy(Sender: TObject);
   private
     { Private declarations }
   public
@@ -38,28 +39,38 @@ var
   conexaoIni: TIniFile;
 begin
   conexaoIni := TIniFile.Create(GetCurrentDir + '\conexao\conexao.ini');
-  conexaoBanco := TFDConnection.Create(nil);
-
-  conexaoBanco.DriverName := 'PG';
-
-  conexaoBanco.Params.Values['Server'] := conexaoIni.ReadString('configuracoes', 'servidor', conexaoBanco.Params.Values['Server']);
-  conexaoBanco.Params.Database := conexaoIni.ReadString('configuracoes', 'banco', conexaoBanco.Params.Database);
-  conexaoBanco.Params.UserName := conexaoIni.ReadString('configuracoes', 'usuario', conexaoBanco.Params.UserName);
-  conexaoBanco.Params.Password := conexaoIni.ReadString('configuracoes', 'senha', conexaoBanco.Params.Password);
-  conexaoBanco.Params.Values['Port'] := conexaoIni.ReadString('configuracoes', 'porta', conexaoBanco.Params.Values['Port']);
-
-  driver.VendorLib := GetCurrentDir + '\lib\libpq.dll';
+  FConexaoBanco := TFDConnection.Create(nil);
 
   try
-//    conexaoBanco.Open();
-    conexaoBanco.Connected := True;
-  except
-    on e:Exception do
-    begin
-      ShowMessage('Não foi possível efetuar a conexão. Erro: ' + e.Message);
-      conexaoBanco := nil;
+
+    FConexaoBanco.DriverName := 'PG';
+
+    FConexaoBanco.Params.Values['Server'] := conexaoIni.ReadString('configuracoes', 'servidor', FConexaoBanco.Params.Values['Server']);
+    FConexaoBanco.Params.Database := conexaoIni.ReadString('configuracoes', 'banco', FConexaoBanco.Params.Database);
+    FConexaoBanco.Params.UserName := conexaoIni.ReadString('configuracoes', 'usuario', FConexaoBanco.Params.UserName);
+    FConexaoBanco.Params.Password := conexaoIni.ReadString('configuracoes', 'senha', FConexaoBanco.Params.Password);
+    FConexaoBanco.Params.Values['Port'] := conexaoIni.ReadString('configuracoes', 'porta', FConexaoBanco.Params.Values['Port']);
+
+    driver.VendorLib := GetCurrentDir + '\lib\libpq.dll';
+
+    try
+  //    conexaoBanco.Open();
+      FConexaoBanco.Connected := True;
+    except
+      on e:Exception do
+      begin
+        ShowMessage('Não foi possível efetuar a conexão. Erro: ' + e.Message);
+        FConexaoBanco := nil;
+      end;
     end;
+  finally
+    conexaoIni.Free;
   end;
+end;
+
+procedure TdConexao.DataModuleDestroy(Sender: TObject);
+begin
+  FConexaoBanco.Free;
 end;
 
 end.

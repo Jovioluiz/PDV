@@ -44,7 +44,7 @@ var
 implementation
 
 uses
-  uclCargo, FireDAC.Comp.Client, uUtil, dConexaoBanco, dmConexao;
+  uclCargo, FireDAC.Comp.Client, uUtil, dmConexao;
 
 {$R *.dfm}
 
@@ -180,7 +180,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     cdsCargos.EmptyDataSet;

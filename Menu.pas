@@ -69,21 +69,21 @@ begin
 end;
 
 procedure TFrmMenu.CertificadoDigital1Click(Sender: TObject);
-var
-  addLinha: boolean;
-  i: integer;
-  serie: string;
-  certificadoDig: string;
-  caminhoNFCE: string;
+//var
+//  addLinha: boolean;
+//  i: integer;
+//  serie: string;
+//  certificadoDig: string;
+//  caminhoNFCE: string;
 begin
 
-  frmCertificado := TFrmCertificado.Create(self);
-  frmVendas := TfrmVendas.Create(Self);
+//  frmCertificado := TFrmCertificado.Create(self);
+//  frmVendas := TfrmVendas.Create(Self);
 
   try
 
     //APONTANDO PARA A PASTA ONDE ESTAO OS COMPONENTES NFCE
-    caminhoNFCE := ExtractFilePath(Application.ExeName) + 'nfe\';
+//    caminhoNFCE := ExtractFilePath(Application.ExeName) + 'nfe\';
     //frmVendas.nfce.Configuracoes.Arquivos.PathSchemas := caminhoNFCE;
 
     //frmVendas.nfce.SSL.LerCertificadosStore;
@@ -144,7 +144,7 @@ begin
 //    ShowMessage(frmVendas.nfce.WebServices.StatusServico.Msg);
 
   finally
-    FrmCertificado.Free;
+//    FrmCertificado.Free;
   end;
 end;
 

@@ -110,7 +110,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(Self);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     if MessageDlg('Deseja Excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
@@ -127,7 +127,7 @@ begin
         qry.SQL.Add('update usuarios set fl_ativo = False where cd_funcionario = :cd_funcionario');
         qry.ParamByName('cd_funcionario').AsInteger := FRegras.cd_funcionario;
         qry.ExecSQL;
-        dConexao.conexaoBanco.Commit;
+        dConexao.FConexaoBanco.Commit;
       end;
     end;
 
@@ -154,7 +154,7 @@ var
   novo: Boolean;
 begin
   qry := TFDQuery.Create(Self);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   if not ValidaCampos then
   begin
@@ -240,7 +240,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(Self);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     qry.SQL.Add(SQL);

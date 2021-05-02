@@ -20,6 +20,8 @@ type
       var Resize: Boolean);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure edtSenhaExit(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     procedure CentralizarPainel;
@@ -61,6 +63,17 @@ begin
   CentralizarPainel;
 end;
 
+procedure TFrmLogin.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  imgLogin.Free;
+  imgFundo.Free;
+end;
+
+procedure TFrmLogin.FormCreate(Sender: TObject);
+begin
+  ReportMemoryLeaksOnShutdown := True;
+end;
+
 procedure TFrmLogin.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = #13 then
@@ -84,7 +97,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(Self);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     qry.SQL.Add(SQL);

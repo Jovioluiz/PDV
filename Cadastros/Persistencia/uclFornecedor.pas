@@ -95,7 +95,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
   qry.SQL.Add(SQL);
 
   try
@@ -103,17 +103,17 @@ begin
       qry.ParamByName('cd_fornecedor').AsInteger := Fcd_fornecedor;
       qry.ExecSQL;
 
-      dConexao.conexaoBanco.Commit;
+      dConexao.FConexaoBanco.Commit;
     except
       on E:exception do
       begin
-        dConexao.conexaoBanco.Rollback;
+        dConexao.FConexaoBanco.Rollback;
         raise Exception.Create('Erro ao excluir os dados ' + E.Message);
       end;
     end;
     Result := True;
   finally
-    dConexao.conexaoBanco.Rollback;
+    dConexao.FConexaoBanco.Rollback;
     qry.Free;
   end;
 end;
@@ -125,7 +125,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
   qry.SQL.Add(SQL);
 
   try
@@ -163,8 +163,8 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
-  dConexao.conexaoBanco.StartTransaction;
+  qry.Connection := dConexao.FConexaoBanco;
+  dConexao.FConexaoBanco.StartTransaction;
 
   try
     try
@@ -184,16 +184,16 @@ begin
       qry.ParamByName('tipo_produto').AsString := Ftipo_produto;
       qry.ParamByName('data_cadastro').AsDate := Fdata_cadastro;
       qry.ExecSQL;
-      dConexao.conexaoBanco.Commit;
+      dConexao.FConexaoBanco.Commit;
     except
       on E:exception do
       begin
-        dConexao.conexaoBanco.Rollback;
+        dConexao.FConexaoBanco.Rollback;
         raise Exception.Create('Erro ao gravar os dados ' + E.Message);
       end;
     end;
   finally
-    dConexao.conexaoBanco.Rollback;
+    dConexao.FConexaoBanco.Rollback;
     qry.Free;
   end;
 end;
@@ -236,8 +236,8 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
-  dConexao.conexaoBanco.StartTransaction;
+  qry.Connection := dConexao.FConexaoBanco;
+  dConexao.FConexaoBanco.StartTransaction;
 
   try
     try
@@ -257,16 +257,16 @@ begin
       qry.ParamByName('tipo_produto').AsString := Ftipo_produto;
       qry.ParamByName('data_cadastro').AsDate := Fdata_cadastro;
       qry.ExecSQL;
-      dConexao.conexaoBanco.Commit;
+      dConexao.FConexaoBanco.Commit;
     except
       on E:exception do
       begin
-        dConexao.conexaoBanco.Rollback;
+        dConexao.FConexaoBanco.Rollback;
         raise Exception.Create('Erro ao gravar os dados ' + E.Message);
       end;
     end;
   finally
-    dConexao.conexaoBanco.Rollback;
+    dConexao.FConexaoBanco.Rollback;
     qry.Free;
   end;
 end;
@@ -294,7 +294,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     qry.SQL.Add(SQL);
@@ -344,7 +344,7 @@ var
   qry: TFDQuery;
 begin
   qry := TFDQuery.Create(nil);
-  qry.Connection := dConexao.conexaoBanco;
+  qry.Connection := dConexao.FConexaoBanco;
 
   try
     qry.SQL.Add(SQL);
