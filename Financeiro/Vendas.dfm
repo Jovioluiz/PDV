@@ -408,7 +408,7 @@ object frmVendas: TfrmVendas
       Top = 54
       Width = 122
       Height = 13
-      Caption = 'Cancelar Cupom: Ctrl + Z'
+      Caption = 'Cancelar Cupom: Ctrl + X'
     end
   end
 end
