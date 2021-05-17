@@ -33,9 +33,10 @@ type
   private
     FCdCargo: Integer;
     { Private declarations }
-    procedure listar;
+
   public
     { Public declarations }
+    procedure listar;
   end;
 
 var
@@ -54,9 +55,8 @@ var
 begin
   if (Trim(edtNomeCargo.Text) = '') or (Trim(edtCdCargo.Text) = '') then
   begin
-    MessageDlg('Preencha o Cargo!', mtInformation, mbOKCancel, 0);
-    edtCdCargo.SetFocus;
-    exit;
+    edtNomeCargo.SetFocus;
+    raise Exception.Create('Preencha o Cargo!');
   end;
 
   persistencia := TCargo.Create;
@@ -125,9 +125,8 @@ var
 begin
   if (Trim(edtNomeCargo.Text) = '') or (Trim(edtCdCargo.Text) = '') then
   begin
-    MessageDlg('Preencha o Cargo!', mtInformation, mbOKCancel, 0);
     edtNomeCargo.SetFocus;
-    exit;
+    raise Exception.Create('Preencha o Cargo!');
   end;
 
   persistencia := TCargo.Create;
