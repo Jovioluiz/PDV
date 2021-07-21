@@ -22,6 +22,7 @@ type TFuncionario = class(TPadrao)
     Fcidade: string;
     Ftelefone: string;
     FDados: TdmFuncionario;
+    Fcd_usuario: Integer;
     procedure Setbairro(const Value: string);
     procedure Setcd_cargo(const Value: Integer);
     procedure Setcd_funcionario(const Value: Integer);
@@ -35,7 +36,9 @@ type TFuncionario = class(TPadrao)
     procedure Setrg(const Value: string);
     procedure Settelefone(const Value: string);
     procedure Setuf(const Value: string);
+    procedure Setcd_usuario(const Value: Integer);
 
+  protected
     procedure Inserir;
     procedure Atualizar;
 
@@ -63,6 +66,7 @@ type TFuncionario = class(TPadrao)
     property uf: string read Fuf write Setuf;
     property cep: string read Fcep write Setcep;
     property data_cadastro: TDate read Fdata_cadastro write Setdata_cadastro;
+    property cd_usuario: Integer read Fcd_usuario write Setcd_usuario;
     property Dados: TdmFuncionario read FDados;
 
 end;
@@ -382,6 +386,11 @@ end;
 procedure TFuncionario.Setcd_funcionario(const Value: Integer);
 begin
   Fcd_funcionario := Value;
+end;
+
+procedure TFuncionario.Setcd_usuario(const Value: Integer);
+begin
+  Fcd_usuario := Value;
 end;
 
 procedure TFuncionario.Setcep(const Value: string);

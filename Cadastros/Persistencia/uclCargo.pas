@@ -11,11 +11,11 @@ type TCargo = class(TPadrao)
     Fnm_cargo: string;
     procedure Setcd_cargo(const Value: Integer);
     procedure Setnm_cargo(const Value: string);
-    procedure Inserir;
-    procedure Atualizar;
+
 
   public
-
+    procedure Inserir;
+    procedure Atualizar;
     function Pesquisar(CodCargo: Integer): Boolean; override;
     procedure Persistir(Novo: Boolean); override;
     function Excluir: Boolean; override;

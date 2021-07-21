@@ -15,14 +15,19 @@ program TestesPDV;
 {$ENDIF}
 
 uses
+  Vcl.Forms,
+  dmConexao,
   TesteCargos in 'TesteCargos.pas',
   Cargos in '..\Cadastros\Cargos.pas',
   DUnitTestRunner,
-  uclCargo in '..\Cadastros\Persistencia\uclCargo.pas';
+  uclCargo in '..\Cadastros\Persistencia\uclCargo.pas',
+  TestuclCargo in 'TestuclCargo.pas';
 
 { *.RES}
 
 begin
+  //inicia o datamodulo da conexão
+  Application.CreateForm(TdConexao, dConexao);
   DUnitTestRunner.RunRegisteredTests;
 end.
 

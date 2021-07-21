@@ -192,6 +192,7 @@ begin
     FRegras.uf := edtUf.Text;
     FRegras.cep := edtCEP.Text;
     FRegras.data_cadastro := Now;
+//    FRegras.cd_usuario := ??
 
     FRegras.Persistir(novo);
 

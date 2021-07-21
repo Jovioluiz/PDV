@@ -17618,6 +17618,7 @@ object FrmLogin: TFrmLogin
         Font.Style = []
         ParentFont = False
         TabOrder = 0
+        OnExit = edtUsuarioExit
       end
       object edtSenha: TEdit
         Left = 64

@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, Vcl.Grids,
   Vcl.DBGrids, Vcl.StdCtrls, Vcl.MPlayer, System.UITypes, FireDAC.Stan.Param, uclVendas,
-  uFinanceiro;
+  uFinanceiro, Vcl.NumberBox;
 
 type
   TfrmVendas = class(TForm)
@@ -18,14 +18,7 @@ type
     painelTituloDetalhes: TPanel;
     Panel1: TPanel;
     edtQtdade: TEdit;
-    edtTotalItem: TEdit;
-    edtSubTotal: TEdit;
-    edtDesconto: TEdit;
-    edtTotalVenda: TEdit;
-    edtValorRecebido: TEdit;
-    edtTroco: TEdit;
     MediaPlayer1: TMediaPlayer;
-    Panel3: TPanel;
     Label12: TLabel;
     Label13: TLabel;
     Panel4: TPanel;
@@ -38,6 +31,12 @@ type
     Label6: TLabel;
     pnlImagem: TPanel;
     imgProduto: TImage;
+    edtTotalItem: TNumberBox;
+    edtSubTotal: TNumberBox;
+    edtDesconto: TNumberBox;
+    edtTotalVenda: TNumberBox;
+    edtValorRecebido: TNumberBox;
+    edtTroco: TNumberBox;
     procedure edtCodBarrasChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -79,6 +78,7 @@ type
     procedure AtualizaValores;
 
     procedure ValidaEstoque;
+    procedure CancelaVenda;
     procedure SetRegras(const Value: TVenda);
     procedure SetFinanceiro(const Value: TFinanceiro);
     procedure SetSeq(const Value: Integer);
@@ -124,7 +124,7 @@ end;
 procedure TfrmVendas.edtDescontoChange(Sender: TObject);
 begin
   FTotalComDesconto := FTotalVenda - StrToFloat(edtDesconto.Text);
-  edtTotalVenda.Text := FormatFloat('R$ #,,,,0.00', FTotalComDesconto);
+  edtTotalVenda.ValueCurrency := FTotalComDesconto;
 end;
 
 procedure TfrmVendas.edtQtdadeChange(Sender: TObject);
@@ -155,17 +155,17 @@ begin
     FTotalItem := StrToFloat(edtQtdade.Text) * FRegras.Dados.cdsProdutos.FieldByName('vl_unitario').AsCurrency;
     FTotalVenda := FTotalVenda + FTotalItem;
 
-    edtTotalItem.Text := FormatCurr('R$ 0.####', FTotalItem);
+    edtTotalItem.ValueCurrency := FTotalItem;
 
-    edtTotalVenda.Text := FormatCurr('R$ 0.####', FTotalVenda);
+    edtTotalVenda.ValueCurrency := FTotalVenda;
     FTotalComDesconto := FTotalVenda;
     FSubTotal := FSubTotal + FTotalItem;
-    edtTotalItem.Text := CurrToStr(FTotalItem);
-    edtSubTotal.Text := FormatCurr('0.####', FSubTotal);
-    edtTotalVenda.Text := CurrToStr(FTotalVenda);
+    edtTotalItem.ValueCurrency := FTotalItem;
+    edtSubTotal.ValueCurrency := FSubTotal;
+    edtTotalVenda.ValueCurrency := FTotalVenda;
 
     AssociarCamposDetalhes;
-    edtTotalVenda.Text := CurrToStr(FRegras.RetornaValorTotal(FRegras.Dados.cdsDetalhesVendas));
+    edtTotalVenda.ValueCurrency := FRegras.RetornaValorTotal(FRegras.Dados.cdsDetalhesVendas);
 
     //toca audio após inserir um item
     MediaPlayer1.FileName := ExtractFileDir(GetCurrentDir) + '\Debug\img\barCode.wav';
@@ -188,8 +188,8 @@ procedure TfrmVendas.edtValorRecebidoChange(Sender: TObject);
 begin
   if edtValorRecebido.Text <> '' then
   begin
-    FTotalTroco := StrToFloat(edtValorRecebido.Text) - FTotalComDesconto;
-    edtTroco.Text := FormatFloat('R$ #,,,,0.00', FTotalTroco);
+    FTotalTroco := edtValorRecebido.ValueCurrency - FTotalComDesconto;
+    edtTroco.ValueCurrency := FTotalTroco;
   end;
 end;
 
@@ -228,8 +228,8 @@ begin
   FRegras.Dados.cdsVendas.FieldByName('data_venda').AsDateTime := Now;
   FRegras.Dados.cdsVendas.FieldByName('id_funcionario').AsInteger := FCdUsuario;
   FRegras.Dados.cdsVendas.FieldByName('valor_troco').AsCurrency := FTotalTroco;
-  FRegras.Dados.cdsVendas.FieldByName('valor_desconto').AsCurrency := StrToCurr(edtDesconto.Text);
-  FRegras.Dados.cdsVendas.FieldByName('valor_recebido').AsCurrency := StrToCurr(edtValorRecebido.Text);
+  FRegras.Dados.cdsVendas.FieldByName('valor_desconto').AsCurrency := edtDesconto.ValueCurrency;
+  FRegras.Dados.cdsVendas.FieldByName('valor_recebido').AsCurrency := edtValorRecebido.ValueCurrency;
 //  FRegras.Dados.cdsVendas.FieldByName('status').AsString := 'C';
   FRegras.Dados.cdsVendas.Post;
 end;
@@ -242,7 +242,7 @@ begin
       if FRegras.Dados.cdsDetalhesVendas.FieldByName('fl_cancelado').AsString = 'S' then
       begin
         FTotalVenda := FTotalVenda - FRegras.Dados.cdsDetalhesVendas.FieldByName('vl_total').AsCurrency;
-        edtTotalVenda.Text := FormatCurr('R$ ###,##0.00', FTotalVenda);
+        edtTotalVenda.ValueCurrency := FTotalVenda;
         FTotalComDesconto := FTotalVenda;
       end;
     end
@@ -268,33 +268,7 @@ begin
   end;
 end;
 
-procedure TfrmVendas.FormActivate(Sender: TObject);
-begin
-//  listar;
-//  FTotalVenda := FTotalVenda - totalProdutos;
-
-  //ver uma maneira de atualizar a quantidade de estoque ao cancelar um item //atualizaQtdadeEstoque;
-end;
-
-procedure TfrmVendas.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  edtTotalItem.Text := '0';
-  edtSubTotal.Text := '0';
-  edtDesconto.Text := '0';
-  edtTotalVenda.Text := '0';
-  edtValorRecebido.Text := '0';
-  edtTroco.Text := '0';
-  FTotalItem := 0;
-  FTotalVenda := 0;
-  FTotalComDesconto := 0;
-  FTotalTroco := 0;
-  totalProdutos := 0;
-  FSeq := 1;
-  FRegras.Free;
-  FFinanceiro.Free;
-end;
-
-procedure TfrmVendas.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+procedure TfrmVendas.CancelaVenda;
 var
   qtdade: Double;
 begin
@@ -316,18 +290,49 @@ begin
   end;
 end;
 
+procedure TfrmVendas.FormActivate(Sender: TObject);
+begin
+//  listar;
+//  FTotalVenda := FTotalVenda - totalProdutos;
+
+  //ver uma maneira de atualizar a quantidade de estoque ao cancelar um item //atualizaQtdadeEstoque;
+end;
+
+procedure TfrmVendas.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  edtTotalItem.ValueCurrency := 0;
+  edtSubTotal.ValueCurrency := 0;
+  edtDesconto.ValueCurrency := 0;
+  edtTotalVenda.ValueCurrency := 0;
+  edtValorRecebido.ValueCurrency := 0;
+  edtTroco.ValueCurrency := 0;
+  FTotalItem := 0;
+  FTotalVenda := 0;
+  FTotalComDesconto := 0;
+  FTotalTroco := 0;
+  totalProdutos := 0;
+  FSeq := 1;
+  FRegras.Free;
+  FFinanceiro.Free;
+end;
+
+procedure TfrmVendas.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  CancelaVenda;
+end;
+
 procedure TfrmVendas.FormCreate(Sender: TObject);
 begin
-  Regras := TVenda.Create;
+  FRegras := TVenda.Create;
   FFinanceiro := TFinanceiro.Create;
-  dbGridItens.DataSource := Regras.Dados.dsDetalhesVendas;
+  dbGridItens.DataSource := FRegras.Dados.dsDetalhesVendas;
   FTotalTroco := 0;
   FTotalDesconto := 0;
   FTotalRecebido := 0;
   FSeq := 1;
-  edtSubTotal.Text := FormatCurr('R$ ###,##0.00', FTotalVenda);
-  edtTotalVenda.Text := FormatCurr('R$ ###,##0.00', FTotalVenda);
-  edtTotalItem.Text := FormatCurr('R$ ###,##0.00', FTotalItem);
+  edtSubTotal.ValueCurrency := FTotalVenda;
+  edtTotalVenda.ValueCurrency := FTotalVenda;
+  edtTotalItem.ValueCurrency := FTotalItem;
 end;
 
 procedure TfrmVendas.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -367,6 +372,13 @@ begin
       end;
       AtualizaValores;
     end;
+
+    if key = 88 then
+    begin
+      CancelaVenda;
+      limpar;
+      FRegras.Dados.cdsDetalhesVendas.EmptyDataSet;
+    end;
   end;
 
   //F4 - finaliza cupom
@@ -379,7 +391,7 @@ begin
       Exit;
     end;
 
-    if edtTotalVenda.Text = '0' then
+    if edtTotalVenda.ValueCurrency = 0 then
     begin
       ShowMessage('Não foi vendido nenhum item!');
       edtCodBarras.SetFocus;
@@ -433,13 +445,14 @@ end;
 
 procedure TfrmVendas.limpar;
 begin
-  edtTotalItem.Text := '0';
-  edtSubTotal.Text := '0';
-  edtDesconto.Text := '0';
-  edtTotalVenda.Text := '0';
-  edtValorRecebido.Text := '0';
-  edtTroco.Text := '0';
+  edtTotalItem.ValueCurrency := 0;
+  edtSubTotal.ValueCurrency := 0;
+  edtDesconto.ValueCurrency := 0;
+  edtTotalVenda.ValueCurrency := 0;
+  edtValorRecebido.ValueCurrency := 0;
+  edtTroco.ValueCurrency := 0;
   edtCodBarras.SetFocus;
+  limparFoto;
 end;
 
 procedure TfrmVendas.limparFoto;
@@ -451,7 +464,7 @@ end;
 procedure TfrmVendas.limparProdutos;
 begin
   edtCodBarras.Clear;
-  edtValorRecebido.Text := '0';
+  edtValorRecebido.ValueCurrency := 0;
   edtCodBarras.SetFocus;
   //limparFoto;
   FTotalItem := 0;

@@ -68,7 +68,7 @@ end;
 
 function TProdutoCodBarras.Excluir: Boolean;
 begin
-
+  Result := False;
 end;
 
 procedure TProdutoCodBarras.Persistir(Novo: Boolean);
@@ -100,7 +100,7 @@ end;
 
 function TProdutoCodBarras.Pesquisar(Codigo: Integer): Boolean;
 begin
-//
+ Result := False;
 end;
 
 procedure TProdutoCodBarras.Inserir;

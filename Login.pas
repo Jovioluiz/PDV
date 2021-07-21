@@ -22,6 +22,7 @@ type
     procedure edtSenhaExit(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure edtUsuarioExit(Sender: TObject);
   private
     { Private declarations }
     procedure CentralizarPainel;
@@ -37,7 +38,7 @@ implementation
 
 {$R *.dfm}
 
-uses Menu, FireDAC.Comp.Client;
+uses Menu, FireDAC.Comp.Client, uCadastrarSenha;
 
 procedure TFrmLogin.CentralizarPainel;
 begin
@@ -55,6 +56,41 @@ begin
   end;
 
   Login;
+end;
+
+procedure TFrmLogin.edtUsuarioExit(Sender: TObject);
+const
+  SQL = 'select cd_usuario, ' +
+        '   senha ' +
+        'from ' +
+        '   usuarios ' +
+        'where ' +
+        '   nm_usuario = :nm_usuario ';
+
+var
+  qry: TFDQuery;
+  cadSenha: TfrmCadastraSenha;
+begin
+  qry := TFDQuery.Create(Self);
+  qry.Connection := dConexao.FConexaoBanco;
+  cadSenha := TfrmCadastraSenha.Create(Self);
+  try
+    qry.Open(SQL, [edtUsuario.Text]);
+
+    if qry.IsEmpty then
+      raise Exception.Create('Usuário não cadastrado. Verifique!');
+
+    if qry.FieldByName('senha').IsNull then
+    begin
+      ShowMessage('Usuário não possui senha cadastrada!');
+      cadSenha.edtUsuario.Text := edtUsuario.Text;
+      cadSenha.ShowModal;
+    end;
+
+  finally
+    cadSenha.Free;
+    qry.Free;
+  end;
 end;
 
 procedure TFrmLogin.FormCanResize(Sender: TObject; var NewWidth,

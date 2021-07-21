@@ -36,7 +36,8 @@ uses
   uclProduto in 'Cadastros\Persistencia\uclProduto.pas',
   dProdutos in 'Cadastros\Data Modulos\dProdutos.pas' {dmProdutos: TDataModule},
   uclProdutoCodBarras in 'Cadastros\Persistencia\uclProdutoCodBarras.pas',
-  uFinanceiro in 'Financeiro\uFinanceiro.pas';
+  uFinanceiro in 'Financeiro\uFinanceiro.pas',
+  uCadastrarSenha in 'Cadastros\uCadastrarSenha.pas' {frmCadastraSenha};
 
 {$R *.res}
 
@@ -45,10 +46,10 @@ begin
   FrmLogin := TFrmLogin.Create(nil);
   if FrmLogin.ShowModal = mrOK then
   begin
-    FreeAndNil(frmLogin);
     Application.Initialize;
     Application.MainFormOnTaskbar := True;
     Application.CreateForm(TFrmMenu, FrmMenu);
     Application.Run;
   end;
+  FreeAndNil(frmLogin);
 end.

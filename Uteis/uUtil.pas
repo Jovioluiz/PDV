@@ -15,12 +15,13 @@ type TUtil = class
   public
     procedure ExibeFoto(DataSet: TDataSet; BlobFieldName: String; ImageExibicao: TImage);
     function GeraIdGeral: Int64;
+    function GetSenhaMD5(Senha: string): string;
 end;
 
 implementation
 
 uses
-  System.Classes, Vcl.Graphics, FireDAC.Comp.Client, dmConexao;
+  System.Classes, Vcl.Graphics, FireDAC.Comp.Client, dmConexao, IdHashMessageDigest;
 
 { TDataSetHelper }
 
@@ -91,6 +92,19 @@ begin
 
   finally
     qry.Free;
+  end;
+end;
+
+function TUtil.GetSenhaMD5(Senha: string): string;
+var
+  md5: TIdHashMessageDigest5;
+begin
+  md5 := TIdHashMessageDigest5.Create;
+
+  try
+    Result := md5.HashStringAsHex(Senha);
+  finally
+    md5.Free;
   end;
 end;
 

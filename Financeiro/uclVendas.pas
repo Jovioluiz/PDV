@@ -155,6 +155,7 @@ destructor TVenda.Destroy;
 begin
   FIDVenda := 0;
   FIDDetalhesVenda := 0;
+  FDados.Free;
   inherited;
 end;
 
@@ -221,7 +222,6 @@ const
         '      :qt_venda, ' +
         '      :vl_total, '+
         '      :fl_cancelado)';
-
   SQL_UPDATE =  'update ' +
                 '    detalhes_vendas ' +
                 'set ' +
@@ -232,7 +232,6 @@ const
                 '    fl_cancelado = :fl_cancelado ' +
                 'where ' +
                 '    id_geral = :id_geral';
-
 {$ENDREGION}
 var
   qry: TFDQuery;
