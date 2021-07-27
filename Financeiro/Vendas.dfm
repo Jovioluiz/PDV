@@ -32,7 +32,6 @@ object frmVendas: TfrmVendas
     Color = clSkyBlue
     ParentBackground = False
     TabOrder = 0
-    ExplicitWidth = 1171
     object dbGridItens: TDBGrid
       Left = 1
       Top = 36
@@ -70,7 +69,6 @@ object frmVendas: TfrmVendas
       ParentBackground = False
       ParentFont = False
       TabOrder = 1
-      ExplicitWidth = 1169
     end
   end
   object painelDireita: TPanel
@@ -83,7 +81,6 @@ object frmVendas: TfrmVendas
     Color = clSkyBlue
     ParentBackground = False
     TabOrder = 1
-    ExplicitLeft = 1167
     object Panel4: TPanel
       Left = 1
       Top = 1
@@ -101,8 +98,6 @@ object frmVendas: TfrmVendas
       ParentBackground = False
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = 2
-      ExplicitWidth = 273
     end
     object Panel2: TPanel
       Left = 2
@@ -268,6 +263,7 @@ object frmVendas: TfrmVendas
       ParentFont = False
       TabOrder = 10
       OnChange = edtDescontoChange
+      OnExit = edtDescontoExit
     end
     object edtTotalVenda: TNumberBox
       Left = 3
@@ -380,23 +376,7 @@ object frmVendas: TfrmVendas
       Font.Style = []
       ParentBackground = False
       ParentFont = False
-      TabOrder = 2
-    end
-    object edtQtdade: TEdit
-      Left = 1073
-      Top = 42
-      Width = 98
-      Height = 56
-      Anchors = [akTop, akRight]
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -40
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
       TabOrder = 1
-      OnChange = edtQtdadeChange
-      OnExit = edtQtdadeExit
     end
     object MediaPlayer1: TMediaPlayer
       Left = 6
@@ -406,7 +386,23 @@ object frmVendas: TfrmVendas
       DoubleBuffered = True
       Visible = False
       ParentDoubleBuffered = False
+      TabOrder = 2
+    end
+    object edtQtdade: TNumberBox
+      Left = 1067
+      Top = 42
+      Width = 97
+      Height = 56
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -40
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Mode = nbmFloat
+      ParentFont = False
       TabOrder = 3
+      OnChange = edtQtdadeChange
+      OnExit = edtQtdadeExit
     end
   end
 end

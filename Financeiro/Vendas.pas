@@ -17,7 +17,6 @@ type
     edtCodBarras: TEdit;
     painelTituloDetalhes: TPanel;
     Panel1: TPanel;
-    edtQtdade: TEdit;
     MediaPlayer1: TMediaPlayer;
     Label12: TLabel;
     Label13: TLabel;
@@ -37,6 +36,7 @@ type
     edtTotalVenda: TNumberBox;
     edtValorRecebido: TNumberBox;
     edtTroco: TNumberBox;
+    edtQtdade: TNumberBox;
     procedure edtCodBarrasChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -50,6 +50,7 @@ type
     procedure edtQtdadeExit(Sender: TObject);
     procedure edtQtdadeChange(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure edtDescontoExit(Sender: TObject);
   private
     { Private declarations }
     FCaminhoimg: string;
@@ -110,7 +111,7 @@ end;
 
 procedure TfrmVendas.edtCodBarrasExit(Sender: TObject);
 begin
-  edtQtdade.Text := '1';
+  edtQtdade.ValueFloat := 1;
   if edtCodBarras.Text <> '' then
   begin
     buscarProduto;
@@ -125,6 +126,15 @@ procedure TfrmVendas.edtDescontoChange(Sender: TObject);
 begin
   FTotalComDesconto := FTotalVenda - StrToFloat(edtDesconto.Text);
   edtTotalVenda.ValueCurrency := FTotalComDesconto;
+end;
+
+procedure TfrmVendas.edtDescontoExit(Sender: TObject);
+begin
+  if edtDesconto.ValueCurrency > edtTotalVenda.ValueCurrency then
+  begin
+    edtDesconto.SetFocus;
+    raise Exception.Create('O valor de desconto não pode ser superior ao total da venda!');
+  end;
 end;
 
 procedure TfrmVendas.edtQtdadeChange(Sender: TObject);
@@ -148,11 +158,11 @@ end;
 
 procedure TfrmVendas.edtQtdadeExit(Sender: TObject);
 begin
-  if (edtQtdade.Text <> '') and (edtCodBarras.Text <> '') then
+  if (edtQtdade.ValueFloat > 0) and (edtCodBarras.Text <> '') then
   begin
     ValidaEstoque;
     FSubTotal := 0;
-    FTotalItem := StrToFloat(edtQtdade.Text) * FRegras.Dados.cdsProdutos.FieldByName('vl_unitario').AsCurrency;
+    FTotalItem := edtQtdade.ValueFloat * FRegras.Dados.cdsProdutos.FieldByName('vl_unitario').AsCurrency;
     FTotalVenda := FTotalVenda + FTotalItem;
 
     edtTotalItem.ValueCurrency := FTotalItem;
@@ -209,7 +219,7 @@ begin
     FRegras.Dados.cdsDetalhesVendas.FieldByName('cd_item').AsString := FRegras.Dados.cdsProdutos.FieldByName('cd_item').AsString;
     FRegras.Dados.cdsDetalhesVendas.FieldByName('nm_produto').AsString := FRegras.Dados.cdsProdutos.FieldByName('nm_produto').AsString;
     FRegras.Dados.cdsDetalhesVendas.FieldByName('vl_unitario').AsCurrency := FRegras.Dados.cdsProdutos.FieldByName('vl_unitario').AsCurrency;;
-    FRegras.Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat := StrToFloat(edtQtdade.Text);
+    FRegras.Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat := edtQtdade.ValueFloat;
     FRegras.Dados.cdsDetalhesVendas.FieldByName('vl_total').AsCurrency := FTotalItem;
     FRegras.Dados.cdsDetalhesVendas.FieldByName('id_funcionario').AsInteger := FCdUsuario;
     FRegras.Dados.cdsDetalhesVendas.FieldByName('fl_cancelado').AsString := 'N';
@@ -384,7 +394,7 @@ begin
   //F4 - finaliza cupom
   if key = 115 then
   begin
-    if edtValorRecebido.Text <= '0' then
+    if edtValorRecebido.ValueCurrency <= 0 then
     begin
       ShowMessage('Valor recebido deve ser maior que R$ 0.00');
       edtValorRecebido.SetFocus;
@@ -395,6 +405,13 @@ begin
     begin
       ShowMessage('Não foi vendido nenhum item!');
       edtCodBarras.SetFocus;
+      Exit;
+    end;
+
+    if edtTroco.ValueCurrency < 0 then
+    begin
+      ShowMessage('Valor de troco não pode ser negativo!');
+      edtValorRecebido.SetFocus;
       Exit;
     end;
 
@@ -487,7 +504,8 @@ begin
       if FRegras.Dados.cdsDetalhesVendas.FieldByName('fl_cancelado').AsString = 'S' then
       begin
         FQtEstoque := FRegras.TotalEstoque(FRegras.Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger)
-                      + FRegras.Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat;
+                                           + FRegras.Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat;
+
         FRegras.AtualizaEstoque(FQtEstoque, FRegras.Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger);
       end;
     end
@@ -500,15 +518,16 @@ begin
     //diminui do estoque a qtdade do item
     FQtEstoque := FRegras.TotalEstoque(FRegras.Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger)
                   - FRegras.Dados.cdsDetalhesVendas.FieldByName('qt_venda').AsFloat;
-    if FRegras.Dados.cdsDetalhesVendas.FieldByName('fl_cancelado').AsString = 'N' then
+
+    if FRegras.Dados.cdsDetalhesVendas.FieldByName('fl_cancelado').AsString.Equals('N') then
       FRegras.AtualizaEstoque(FQtEstoque, FRegras.Dados.cdsDetalhesVendas.FieldByName('id_item').AsInteger);
   end;
 
   edtCodBarras.Clear;
   edtCodBarras.SetFocus;
-  edtQtdade.Text := '1';
+  edtQtdade.ValueFloat := 1;
   limparFoto;
-  edtQtdade.Text := '1';
+  edtQtdade.ValueFloat := 1;
   FTotalItem := 0;
 //  FTotalVenda := 0;
   FQtEstoque := 0;
@@ -556,7 +575,7 @@ end;
 
 procedure TfrmVendas.ValidaEstoque;
 begin
-  if FRegras.Dados.cdsProdutos.FieldByName('qt_estoque').AsFloat < StrToFloat(edtQtdade.Text) then
+  if FRegras.Dados.cdsProdutos.FieldByName('qt_estoque').AsFloat < edtQtdade.ValueFloat then
   begin
     edtCodBarras.SetFocus;
     raise Exception.Create('Quantidade Indisponível em estoque!');
