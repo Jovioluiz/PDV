@@ -1,5 +1,4 @@
 object dConexao: TdConexao
-  OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Height = 159
@@ -14,6 +13,7 @@ object dConexao: TdConexao
     Top = 64
   end
   object FConexaoBanco: TFDConnection
+    TxOptions.AutoStop = False
     Left = 56
     Top = 64
   end

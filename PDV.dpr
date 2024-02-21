@@ -37,12 +37,14 @@ uses
   dProdutos in 'Cadastros\Data Modulos\dProdutos.pas' {dmProdutos: TDataModule},
   uclProdutoCodBarras in 'Cadastros\Persistencia\uclProdutoCodBarras.pas',
   uFinanceiro in 'Financeiro\uFinanceiro.pas',
-  uCadastrarSenha in 'Cadastros\uCadastrarSenha.pas' {frmCadastraSenha};
+  uCadastrarSenha in 'Cadastros\uCadastrarSenha.pas' {frmCadastraSenha},
+  dCargos in 'Cadastros\Data Modulos\dCargos.pas' {dmCargos: TDataModule};
 
 {$R *.res}
 
 begin
   Application.CreateForm(TdConexao, dConexao);
+  Application.CreateForm(TdmCargos, dmCargos);
   FrmLogin := TFrmLogin.Create(nil);
   if FrmLogin.ShowModal = mrOK then
   begin

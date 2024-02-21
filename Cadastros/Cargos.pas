@@ -7,7 +7,7 @@ uses
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Buttons, Vcl.Grids,
   Vcl.DBGrids, Vcl.StdCtrls, System.UITypes, Modulo, FireDAC.Stan.Param,
-  Datasnap.DBClient;
+  Datasnap.DBClient, dCargos;
 
 type
   TFrmCargos = class(TForm)
@@ -20,19 +20,21 @@ type
     btnExcluir: TSpeedButton;
     edtCdCargo: TEdit;
     Label1: TLabel;
-    dsCargos: TDataSource;
-    cdsCargos: TClientDataSet;
-    cdsCargoscd_cargo: TIntegerField;
-    cdsCargosnm_cargo: TStringField;
     procedure btnNovoClick(Sender: TObject);
     procedure btnSalvarClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure gridCargosCellClick(Column: TColumn);
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     FCdCargo: Integer;
-    { Private declarations }
+    FDados: TdmCargos;
+    procedure CarregaEdicaoCargo;
+    procedure ExcluirCargo;
+    procedure Salvar;
+    procedure Editar;
+    procedure HabilitarDesabilitarBotoes(Habilitar: Boolean);
 
   public
     { Public declarations }
@@ -50,62 +52,13 @@ uses
 {$R *.dfm}
 
 procedure TFrmCargos.btnEditarClick(Sender: TObject);
-var
-  persistencia: TCargo;
 begin
-  if (Trim(edtNomeCargo.Text) = '') or (Trim(edtCdCargo.Text) = '') then
-  begin
-    edtNomeCargo.SetFocus;
-    raise Exception.Create('Preencha o Cargo!');
-  end;
-
-  persistencia := TCargo.Create;
-
-  try
-    if persistencia.Pesquisar(StrToInt(edtCdCargo.Text)) then
-      raise Exception.Create('Cargo não encontrado');
-
-    persistencia.cd_cargo := StrToInt(edtCdCargo.Text);
-    persistencia.nm_cargo := edtNomeCargo.Text;
-
-    persistencia.Persistir(False);
-
-    listar;
-    MessageDlg('Editado com Sucesso', mtInformation, mbOKCancel, 0);
-
-    btnEditar.Enabled := false;
-    btnExcluir.Enabled := false;
-    edtNomeCargo.Clear;
-    edtCdCargo.Clear;
-  finally
-    persistencia.Free;
-  end;
+  Editar;
 end;
 
 procedure TFrmCargos.btnExcluirClick(Sender: TObject);
-var
-  persistencia: TCargo;
 begin
-  persistencia := TCargo.Create;
-
-  try
-    if MessageDlg('Deseja Excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-    begin
-      persistencia.cd_cargo := StrToInt(edtCdCargo.Text);
-      if persistencia.Excluir then
-      begin
-        cdsCargos.Delete;
-        MessageDlg('Excluído com Sucesso', mtInformation, mbOKCancel, 0);
-        listar;
-        btnEditar.Enabled := False;
-        btnExcluir.Enabled := False;
-        edtNomeCargo.Clear;
-        edtCdCargo.Clear;
-      end;
-    end;
-  finally
-    persistencia.Free;
-  end;
+  ExcluirCargo;
 end;
 
 procedure TFrmCargos.btnNovoClick(Sender: TObject);
@@ -119,57 +72,25 @@ begin
 end;
 
 procedure TFrmCargos.btnSalvarClick(Sender: TObject);
-var
-  persistencia: TCargo;
-  novo: Boolean;
 begin
-  if (Trim(edtNomeCargo.Text) = '') or (Trim(edtCdCargo.Text) = '') then
-  begin
-    edtNomeCargo.SetFocus;
-    raise Exception.Create('Preencha o Cargo!');
-  end;
-
-  persistencia := TCargo.Create;
-
-  try
-    novo := persistencia.Pesquisar(StrToInt(edtCdCargo.Text));
-
-    persistencia.cd_cargo := StrToInt(edtCdCargo.Text);
-    persistencia.nm_cargo := edtNomeCargo.Text;
-
-    persistencia.Persistir(novo);
-
-    edtCdCargo.Clear;
-    edtCdCargo.SetFocus;
-    edtNomeCargo.Clear;
-    edtNomeCargo.Enabled := False;
-    edtCdCargo.Enabled := False;
-    btnSalvar.Enabled := False;
-    listar;
-  finally
-    persistencia.Free;
-  end;
+  Salvar;
 end;
 
 procedure TFrmCargos.FormCreate(Sender: TObject);
 begin
+  FDados := TdmCargos.Create(nil);
+  gridCargos.DataSource := FDados.dsCargos;
   listar;
+end;
+
+procedure TFrmCargos.FormDestroy(Sender: TObject);
+begin
+  FDados.Free;
 end;
 
 procedure TFrmCargos.gridCargosCellClick(Column: TColumn);
 begin
-  edtNomeCargo.Enabled := True;
-  btnEditar.Enabled := True;
-  btnExcluir.Enabled := True;
-
-  if cdsCargos.RecordCount > 0 then
-  begin
-    edtNomeCargo.Text := cdsCargos.FieldByName('nm_cargo').AsString;
-    edtCdCargo.Text := IntToStr(cdsCargos.FieldByName('cd_cargo').AsInteger);
-  end;
-
-  FCdCargo := cdsCargos.FieldByName('cd_cargo').AsInteger;
-
+  CarregaEdicaoCargo;
 end;
 
 procedure TFrmCargos.listar;
@@ -182,9 +103,8 @@ begin
   qry.Connection := dConexao.FConexaoBanco;
 
   try
-    cdsCargos.EmptyDataSet;
-    qry.SQL.Add(SQL);
-    qry.Open();
+    FDados.cdsCargos.EmptyDataSet;
+    qry.Open(SQL);
 
     if qry.IsEmpty then
       Exit;
@@ -192,15 +112,112 @@ begin
     qry.loopSimples(
     procedure
     begin
-      cdsCargos.Append;
-      cdsCargos.FieldByName('cd_cargo').AsInteger := qry.FieldByName('cd_cargo').AsInteger;
-      cdsCargos.FieldByName('nm_cargo').AsString := qry.FieldByName('nm_cargo').AsString;
-      cdsCargos.Post;
+      FDados.cdsCargos.Append;
+      FDados.cdsCargos.FieldByName('cd_cargo').AsInteger := qry.FieldByName('cd_cargo').AsInteger;
+      FDados.cdsCargos.FieldByName('nm_cargo').AsString := qry.FieldByName('nm_cargo').AsString;
+      FDados.cdsCargos.Post;
     end
     );
   finally
     qry.Free;
   end;
+end;
+
+procedure TFrmCargos.HabilitarDesabilitarBotoes(Habilitar: Boolean);
+begin
+  btnEditar.Enabled := Habilitar;
+  btnExcluir.Enabled := Habilitar;
+end;
+
+procedure TFrmCargos.Editar;
+var
+  persistencia: TCargo;
+begin
+  if (Trim(edtNomeCargo.Text) = '') or (Trim(edtCdCargo.Text) = '') then
+  begin
+    edtNomeCargo.SetFocus;
+    raise Exception.Create('Preencha o Cargo!');
+  end;
+
+  persistencia := TCargo.Create;
+  try
+    if persistencia.Pesquisar(StrToInt(edtCdCargo.Text)) then
+      raise Exception.Create('Cargo não encontrado');
+    persistencia.cd_cargo := StrToInt(edtCdCargo.Text);
+    persistencia.nm_cargo := edtNomeCargo.Text;
+    persistencia.Persistir(False);
+    listar;
+    MessageDlg('Editado com Sucesso', mtInformation, mbOKCancel, 0);
+    HabilitarDesabilitarBotoes(False);
+    edtNomeCargo.Clear;
+    edtCdCargo.Clear;
+  finally
+    persistencia.Free;
+  end;
+end;
+
+procedure TFrmCargos.Salvar;
+var
+  persistencia: TCargo;
+  novo: Boolean;
+begin
+  if (Trim(edtNomeCargo.Text) = '') or (Trim(edtCdCargo.Text) = '') then
+  begin
+    edtNomeCargo.SetFocus;
+    raise Exception.Create('Preencha o Cargo!');
+  end;
+  persistencia := TCargo.Create;
+  try
+    novo := persistencia.Pesquisar(StrToInt(edtCdCargo.Text));
+    persistencia.cd_cargo := StrToInt(edtCdCargo.Text);
+    persistencia.nm_cargo := edtNomeCargo.Text;
+    persistencia.Persistir(novo);
+    edtCdCargo.Clear;
+    edtCdCargo.SetFocus;
+    edtNomeCargo.Clear;
+    edtNomeCargo.Enabled := False;
+    edtCdCargo.Enabled := False;
+    btnSalvar.Enabled := False;
+    listar;
+  finally
+    persistencia.Free;
+  end;
+end;
+
+procedure TFrmCargos.ExcluirCargo;
+var
+  persistencia: TCargo;
+begin
+  persistencia := TCargo.Create;
+  try
+    if MessageDlg('Deseja Excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      persistencia.cd_cargo := StrToInt(edtCdCargo.Text);
+      if persistencia.Excluir then
+      begin
+        FDados.cdsCargos.Delete;
+        MessageDlg('Excluído com Sucesso', mtInformation, mbOKCancel, 0);
+        listar;
+        HabilitarDesabilitarBotoes(False);
+        edtNomeCargo.Clear;
+        edtCdCargo.Clear;
+      end;
+    end;
+  finally
+    persistencia.Free;
+  end;
+end;
+
+procedure TFrmCargos.CarregaEdicaoCargo;
+begin
+  edtNomeCargo.Enabled := True;
+  HabilitarDesabilitarBotoes(True);
+  if FDados.cdsCargos.RecordCount > 0 then
+  begin
+    edtNomeCargo.Text := FDados.cdsCargos.FieldByName('nm_cargo').AsString;
+    edtCdCargo.Text := IntToStr(FDados.cdsCargos.FieldByName('cd_cargo').AsInteger);
+  end;
+  FCdCargo := FDados.cdsCargos.FieldByName('cd_cargo').AsInteger;
 end;
 
 end.

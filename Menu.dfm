@@ -12,11 +12,9 @@ object FrmMenu: TFrmMenu
   Font.Name = 'Tahoma'
   Font.Style = []
   Menu = MainMenu1
-  OldCreateOrder = False
   Position = poDesktopCenter
   WindowState = wsMaximized
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object MainMenu1: TMainMenu
     Left = 16

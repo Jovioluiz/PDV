@@ -11,14 +11,12 @@ object FrmLogin: TFrmLogin
   Font.Name = 'Tahoma'
   Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poScreenCenter
   WindowState = wsMaximized
   OnCanResize = FormCanResize
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
-  PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
@@ -27,6 +25,8 @@ object FrmLogin: TFrmLogin
     Height = 794
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 1100
+    ExplicitHeight = 793
     object imgFundo: TImage
       Left = 1
       Top = 1
